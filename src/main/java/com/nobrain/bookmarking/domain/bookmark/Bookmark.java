@@ -31,7 +31,6 @@ public class Bookmark {
     private LocalDateTime createdAt;
     private boolean isPublic;
     private boolean isStar;
-    private String addColumn;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
