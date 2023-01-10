@@ -11,8 +11,6 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 @Table(name = "users")
 public class User {
 
@@ -28,4 +26,15 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Bookmark> bookmarks = new ArrayList<>();
+
+    @Builder
+    public User(String id, String email, String password, String name, String phoneNumber, LocalDate birthDate, List<Bookmark> bookmarks) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.phoneNumber = phoneNumber;
+        this.birthDate = birthDate;
+        this.bookmarks = bookmarks;
+    }
 }
