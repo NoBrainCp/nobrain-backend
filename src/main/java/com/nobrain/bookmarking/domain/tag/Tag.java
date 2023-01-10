@@ -11,8 +11,6 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Tag {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +22,12 @@ public class Tag {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bookmark_id")
     private Bookmark bookmark;
+
+    @Builder
+    public Tag(String name, Bookmark bookmark) {
+        this.name = name;
+        this.bookmark = bookmark;
+    }
 
     /**
      * 연관관계 편의 메서드
