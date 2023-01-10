@@ -17,8 +17,6 @@ import java.util.Set;
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Bookmark {
 
     @Id @GeneratedValue
@@ -44,6 +42,19 @@ public class Bookmark {
 
     @OneToMany(mappedBy = "bookmark")
     private Set<Tag> tags = new HashSet<>();
+
+    @Builder
+    public Bookmark(String url, String title, String description, LocalDateTime createdAt, boolean isPublic, boolean isStar, User user, Category category, Set<Tag> tags) {
+        this.url = url;
+        this.title = title;
+        this.description = description;
+        this.createdAt = createdAt;
+        this.isPublic = isPublic;
+        this.isStar = isStar;
+        this.user = user;
+        this.category = category;
+        this.tags = tags;
+    }
 
     @Override
     public boolean equals(Object o) {
