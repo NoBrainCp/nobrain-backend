@@ -15,9 +15,10 @@ import java.util.List;
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    @Column(name = "user_id")
+    private Long id;
 
-    private String id;
+    private String loginId;
     private String email;
     private String password;
     private String name;
@@ -28,8 +29,8 @@ public class User {
     private List<Bookmark> bookmarks = new ArrayList<>();
 
     @Builder
-    public User(String id, String email, String password, String name, String phoneNumber, LocalDate birthDate, List<Bookmark> bookmarks) {
-        this.id = id;
+    public User(String loginId, String email, String password, String name, String phoneNumber, LocalDate birthDate, List<Bookmark> bookmarks) {
+        this.loginId = loginId;
         this.email = email;
         this.password = password;
         this.name = name;
