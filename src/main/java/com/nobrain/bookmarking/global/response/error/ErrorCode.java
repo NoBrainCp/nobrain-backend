@@ -10,8 +10,8 @@ public enum ErrorCode {
 
     // User
     EMAIL_DUPLICATION(400, "U001", "Email is Duplication"),
-    LOGIN_ID_DUPLICATION(400, "U001", "Login Id is Duplication"),
-    ;
+    LOGIN_ID_DUPLICATION(400, "U002", "Login id is Duplication"),
+    PHONE_NUMBER_DUPLICATION(400, "U003", "Phone number is Duplication");
 
     private int status;
     private final String code;
