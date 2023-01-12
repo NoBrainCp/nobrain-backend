@@ -12,3 +12,6 @@ spring:
       hibernate:
         format_sql: true
     show-sql: true
+
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
