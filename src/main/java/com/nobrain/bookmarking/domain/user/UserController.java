@@ -2,7 +2,7 @@ package com.nobrain.bookmarking.domain.user;
 
 import com.nobrain.bookmarking.domain.user.dto.request.UserSignupRequest;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
-import com.nobrain.bookmarking.global.response.service.ResponseService;
+import com.nobrain.bookmarking.global.service.ResponseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

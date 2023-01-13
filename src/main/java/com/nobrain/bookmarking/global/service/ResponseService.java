@@ -1,4 +1,4 @@
-package com.nobrain.bookmarking.global.response.service;
+package com.nobrain.bookmarking.global.service;
 
 import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.model.ListResult;
