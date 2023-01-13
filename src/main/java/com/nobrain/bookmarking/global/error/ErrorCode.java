@@ -1,4 +1,4 @@
-package com.nobrain.bookmarking.global.response.error;
+package com.nobrain.bookmarking.global.error;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
