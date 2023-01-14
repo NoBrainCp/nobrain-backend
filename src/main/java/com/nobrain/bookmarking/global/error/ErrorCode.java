@@ -11,7 +11,9 @@ public enum ErrorCode {
     // User
     EMAIL_DUPLICATION(400, "U001", "Email is Duplication"),
     LOGIN_ID_DUPLICATION(400, "U002", "Login id is Duplication"),
-    PHONE_NUMBER_DUPLICATION(400, "U003", "Phone number is Duplication");
+    LOGIN_ID_NOT_FOUND(400, "U003", "Login id is not found"),
+    INVALID_PASSWORD(400, "U004", "Password is not correct"),
+    PHONE_NUMBER_DUPLICATION(400, "U005", "Phone number is Duplication"),;
 
     private int status;
     private final String code;
