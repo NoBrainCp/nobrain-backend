@@ -1,23 +1,20 @@
 package com.nobrain.bookmarking.domain.follow.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 
-@Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @Table(
         uniqueConstraints = @UniqueConstraint(columnNames = {"follower_id", "following_id"})
 )
 @IdClass(Follow.PK.class)
+@Entity
 public class Follow {
 
     @Id

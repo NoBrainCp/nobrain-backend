@@ -1,15 +1,16 @@
 package com.nobrain.bookmarking.domain.tag.entity;
 
 import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class Tag {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
