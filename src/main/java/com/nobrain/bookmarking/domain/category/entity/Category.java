@@ -1,6 +1,6 @@
-package com.nobrain.bookmarking.domain.category;
+package com.nobrain.bookmarking.domain.category.entity;
 
-import com.nobrain.bookmarking.domain.bookmark.Bookmark;
+import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

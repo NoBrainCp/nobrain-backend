@@ -1,4 +1,4 @@
-package com.nobrain.bookmarking.domain.follow;
+package com.nobrain.bookmarking.domain.follow.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

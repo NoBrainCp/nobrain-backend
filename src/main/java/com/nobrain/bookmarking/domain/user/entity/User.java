@@ -1,6 +1,6 @@
 package com.nobrain.bookmarking.domain.user.entity;
 
-import com.nobrain.bookmarking.domain.bookmark.Bookmark;
+import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
