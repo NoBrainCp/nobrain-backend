@@ -1,6 +1,7 @@
-package com.nobrain.bookmarking.domain.category;
+package com.nobrain.bookmarking.domain.category.entity;
 
-import com.nobrain.bookmarking.domain.bookmark.Bookmark;
+import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,9 +10,9 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class Category {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

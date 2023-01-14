@@ -1,8 +1,10 @@
-package com.nobrain.bookmarking.domain.bookmark;
+package com.nobrain.bookmarking.domain.bookmark.entity;
 
-import com.nobrain.bookmarking.domain.category.Category;
-import com.nobrain.bookmarking.domain.tag.Tag;
+import com.nobrain.bookmarking.domain.category.entity.Category;
+import com.nobrain.bookmarking.domain.tag.entity.Tag;
 import com.nobrain.bookmarking.domain.user.entity.User;
+import com.nobrain.bookmarking.global.entity.BaseTimeEntity;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,10 +15,10 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@Entity
 @Getter
-@NoArgsConstructor
-public class Bookmark {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+public class Bookmark extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "bookmark_id")
