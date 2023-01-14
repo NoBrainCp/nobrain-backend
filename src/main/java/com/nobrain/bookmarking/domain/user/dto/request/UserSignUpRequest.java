@@ -22,7 +22,7 @@ public class UserSignUpRequest {
         this.password = encodedPassword;
     }
 
-    public User encodePasswordToEntity() {
+    public User toEntity() {
         return User.builder()
                 .loginId(this.loginId)
                 .email(this.email)

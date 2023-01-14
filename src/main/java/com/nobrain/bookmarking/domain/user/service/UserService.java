@@ -24,7 +24,7 @@ public class UserService {
     public void signUp(UserSignUpRequest dto) {
         validateUserDuplication(dto);
         dto.encodePassword(passwordEncoder.encode(dto.getPassword()));
-        userRepository.save(dto.encodePasswordToEntity());
+        userRepository.save(dto.toEntity());
     }
 
     public String signIn(UserSignInRequest dto) {
