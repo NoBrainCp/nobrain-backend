@@ -1,7 +1,7 @@
 package com.nobrain.bookmarking;
 
 import com.nobrain.bookmarking.domain.bookmark.Bookmark;
-import com.nobrain.bookmarking.domain.user.User;
+import com.nobrain.bookmarking.domain.user.entity.User;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

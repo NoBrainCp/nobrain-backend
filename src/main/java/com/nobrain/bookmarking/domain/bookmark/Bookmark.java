@@ -2,8 +2,7 @@ package com.nobrain.bookmarking.domain.bookmark;
 
 import com.nobrain.bookmarking.domain.category.Category;
 import com.nobrain.bookmarking.domain.tag.Tag;
-import com.nobrain.bookmarking.domain.user.User;
-import lombok.AllArgsConstructor;
+import com.nobrain.bookmarking.domain.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

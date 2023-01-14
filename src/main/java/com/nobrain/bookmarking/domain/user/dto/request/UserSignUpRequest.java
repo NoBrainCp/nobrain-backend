@@ -1,14 +1,12 @@
 package com.nobrain.bookmarking.domain.user.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.nobrain.bookmarking.domain.user.User;
+import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.global.type.RoleType;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)

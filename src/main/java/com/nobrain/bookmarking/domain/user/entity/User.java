@@ -1,4 +1,4 @@
-package com.nobrain.bookmarking.domain.user;
+package com.nobrain.bookmarking.domain.user.entity;
 
 import com.nobrain.bookmarking.domain.bookmark.Bookmark;
 import lombok.*;

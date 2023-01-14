@@ -1,8 +1,10 @@
-package com.nobrain.bookmarking.domain.user;
+package com.nobrain.bookmarking.domain.user.service;
 
 import com.nobrain.bookmarking.domain.user.dto.request.UserSignInRequest;
 import com.nobrain.bookmarking.domain.user.dto.request.UserSignUpRequest;
+import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.*;
+import com.nobrain.bookmarking.domain.user.repository.UserRepository;
 import com.nobrain.bookmarking.global.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

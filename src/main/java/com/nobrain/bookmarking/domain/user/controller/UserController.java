@@ -1,5 +1,6 @@
-package com.nobrain.bookmarking.domain.user;
+package com.nobrain.bookmarking.domain.user.controller;
 
+import com.nobrain.bookmarking.domain.user.service.UserService;
 import com.nobrain.bookmarking.domain.user.dto.request.UserSignInRequest;
 import com.nobrain.bookmarking.domain.user.dto.request.UserSignUpRequest;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
