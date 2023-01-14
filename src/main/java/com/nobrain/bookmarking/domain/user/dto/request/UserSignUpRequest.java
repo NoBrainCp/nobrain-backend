@@ -2,14 +2,17 @@ package com.nobrain.bookmarking.domain.user.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.nobrain.bookmarking.domain.user.User;
+import com.nobrain.bookmarking.global.type.RoleType;
 import lombok.Getter;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserSignupRequest {
+public class UserSignUpRequest {
     String loginId;
     String email;
     String password;
@@ -17,14 +20,19 @@ public class UserSignupRequest {
     String phoneNumber;
     LocalDate birthDate;
 
-    public User encodePasswordToEntity(PasswordEncoder passwordEncoder) {
+    public void encodePassword(String encodedPassword) {
+        this.password = encodedPassword;
+    }
+
+    public User encodePasswordToEntity() {
         return User.builder()
                 .loginId(this.loginId)
                 .email(this.email)
-                .password(passwordEncoder.encode(this.password))
+                .password(this.password)
                 .name(this.name)
                 .phoneNumber(this.phoneNumber)
                 .birthDate(this.birthDate)
+                .roles(Collections.singletonList(RoleType.USER.getKey()))
                 .build();
     }
 }

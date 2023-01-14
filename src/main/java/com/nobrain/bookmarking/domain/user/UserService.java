@@ -1,9 +1,9 @@
 package com.nobrain.bookmarking.domain.user;
 
-import com.nobrain.bookmarking.domain.user.dto.request.UserSignupRequest;
-import com.nobrain.bookmarking.domain.user.exception.UserEmailDuplicationException;
-import com.nobrain.bookmarking.domain.user.exception.UserLoginIdDuplicationException;
-import com.nobrain.bookmarking.domain.user.exception.UserPhoneNumberDuplicationException;
+import com.nobrain.bookmarking.domain.user.dto.request.UserSignInRequest;
+import com.nobrain.bookmarking.domain.user.dto.request.UserSignUpRequest;
+import com.nobrain.bookmarking.domain.user.exception.*;
+import com.nobrain.bookmarking.global.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,14 +16,25 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     @Transactional
-    public void signUp(UserSignupRequest dto) {
+    public void signUp(UserSignUpRequest dto) {
         validateUserDuplication(dto);
-        userRepository.save(dto.encodePasswordToEntity(passwordEncoder));
+        dto.encodePassword(passwordEncoder.encode(dto.getPassword()));
+        userRepository.save(dto.encodePasswordToEntity());
     }
 
-    private void validateUserDuplication(UserSignupRequest dto) {
+    public String signIn(UserSignInRequest dto) {
+        User user = userRepository.findByLoginId(dto.getLoginId()).orElseThrow(() -> new UserLoginIdNotFoundException(dto.getLoginId()));
+        if (isNotSamePassword(dto.getPassword(), user.getPassword())) {
+            throw new UserNotCorrectPasswordException(dto.getPassword());
+        }
+
+        return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+    }
+
+    private void validateUserDuplication(UserSignUpRequest dto) {
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new UserEmailDuplicationException(dto.getEmail());
         }
@@ -35,5 +46,9 @@ public class UserService {
         if (userRepository.existsByPhoneNumber(dto.getPhoneNumber())) {
             throw new UserPhoneNumberDuplicationException(dto.getPhoneNumber());
         }
+    }
+
+    private boolean isNotSamePassword(String rawPassword, String encodedPassword) {
+        return !passwordEncoder.matches(rawPassword, encodedPassword);
     }
 }
