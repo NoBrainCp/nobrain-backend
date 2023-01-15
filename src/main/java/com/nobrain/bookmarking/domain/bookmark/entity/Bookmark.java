@@ -49,8 +49,8 @@ public class Bookmark extends BaseTimeEntity {
         this.description = description;
         this.isPublic = isPublic;
         this.isStar = isStar;
-        this.user = user;
-        this.category = category;
+        addUser(user);
+        addCategory(category);
         this.tags = tags;
     }
 
