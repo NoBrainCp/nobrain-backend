@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 public class BookmarkController {
+    String id;
 
 //    @PostMapping("{categoryName}/add-bookmark")
 //    public CommonResult addBookmark(@PathVariable String categoryName) {
