@@ -11,12 +11,14 @@ public enum ErrorCode {
     // User
     EMAIL_DUPLICATION(400, "U001", "Email is Duplication"),
     LOGIN_ID_DUPLICATION(400, "U002", "Login id is Duplication"),
-    LOGIN_ID_NOT_FOUND(400, "U003", "Login id is not found"),
-    INVALID_PASSWORD(400, "U004", "Password is not correct"),
-    PHONE_NUMBER_DUPLICATION(400, "U005", "Phone number is Duplication"),
+    LOGIN_ID_NOT_FOUND(400, "U003", "Login id is not Found"),
+    USERNAME_NOT_FOUND(400, "U004", "Username is not Found"),
+    INVALID_PASSWORD(400, "U005", "Password is not Correct"),
+    PHONE_NUMBER_DUPLICATION(400, "U006", "Phone number is Duplication"),
 
     // Category
-    CATEGORY_NAME_DUPLICATION(400, "C001", "Category name is Duplication");
+    CATEGORY_NAME_DUPLICATION(400, "C001", "Category name is Duplication"),
+    CATEGORY_NAME_NOT_FOUND(400, "C002", "Category name is not Found");
 
     private int status;
     private final String code;
