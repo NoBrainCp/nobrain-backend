@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -29,7 +28,6 @@ public class Bookmark extends BaseTimeEntity {
 
     @Lob
     private String description;
-    private LocalDateTime createdAt;
     private boolean isPublic;
     private boolean isStar;
 
@@ -45,11 +43,10 @@ public class Bookmark extends BaseTimeEntity {
     private Set<Tag> tags = new HashSet<>();
 
     @Builder
-    public Bookmark(String url, String title, String description, LocalDateTime createdAt, boolean isPublic, boolean isStar, User user, Category category, Set<Tag> tags) {
+    public Bookmark(String url, String title, String description, boolean isPublic, boolean isStar, User user, Category category, Set<Tag> tags) {
         this.url = url;
         this.title = title;
         this.description = description;
-        this.createdAt = createdAt;
         this.isPublic = isPublic;
         this.isStar = isStar;
         this.user = user;
