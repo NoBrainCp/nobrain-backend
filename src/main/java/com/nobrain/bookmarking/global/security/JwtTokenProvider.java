@@ -1,5 +1,6 @@
 package com.nobrain.bookmarking.global.security;
 
+import com.nobrain.bookmarking.domain.user.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
@@ -33,9 +35,10 @@ public class JwtTokenProvider {
     }
 
     // JWT Token 생성
-    public String createToken(String userPk, List<String> roles) {
+    public String createToken(String userPk, Long userId, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(userPk);
         claims.put("roles", roles);
+        claims.put("userId", userId);
         Date now = new Date();
 
         return Jwts.builder()
@@ -48,13 +51,21 @@ public class JwtTokenProvider {
 
     // JWT Token 으로 인증 정보 조회
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserLoginId(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    // JWT Token 에서 회원 구별 정보 추출
-    public String getUserPk(String token) {
+    public String getUserLoginId(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    }
+
+    public Long getUserId(String token) {
+        return Long.parseLong(Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("userId").toString());
+    }
+
+    public Long getId() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return user.getId();
     }
 
     // Request 의 Header 에서 Token 값을 가져옴. "Authorization" : "Token value"
