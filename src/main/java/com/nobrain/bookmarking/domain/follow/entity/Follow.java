@@ -7,26 +7,26 @@ import java.io.Serializable;
 
 
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Builder
 @Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"follower_id", "following_id"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"to_user", "from_user"})
 )
 @IdClass(Follow.PK.class)
 @Entity
 public class Follow {
 
     @Id
-    @Column(name = "follower_id", insertable = false, updatable = false)
-    private Long follower_id;
+    @Column(name = "to_user", insertable = false, updatable = false)
+    private Long toUser;
 
     @Id
-    @Column(name = "following_id", insertable = false, updatable = false)
-    private Long following_id;
+    @Column(name = "from_user", insertable = false, updatable = false)
+    private Long fromUser;
 
     public static class PK implements Serializable {
-        Long follower_id;
-        Long following_id;
+        Long toUser;
+        Long fromUser;
     }
 }
