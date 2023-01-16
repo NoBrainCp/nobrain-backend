@@ -33,7 +33,7 @@ public class UserService {
             throw new UserNotCorrectPasswordException(dto.getPassword());
         }
 
-        return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+        return jwtTokenProvider.createToken(user.getUsername(), user.getId(), user.getRoles());
     }
 
     private void validateUserDuplication(UserSignUpRequest dto) {
