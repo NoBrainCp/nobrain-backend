@@ -30,11 +30,11 @@ public class FollowService {
             return;
         }
 
-        unFollow(follow);
+        unfollow(follow);
     }
 
     @Transactional
-    public void unFollow(Follow follow) {
+    public void unfollow(Follow follow) {
         followRepository.delete(follow);
     }
 }
