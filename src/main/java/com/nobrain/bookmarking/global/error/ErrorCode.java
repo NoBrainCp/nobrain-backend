@@ -5,8 +5,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ErrorCode {
 
-    // Common
-    INVALID_INPUT_VALUE(400, "C001", "Invalid Input Value"),
+    // General
+    INVALID_INPUT_VALUE(400, "G001", "Invalid Input Value"),
+    METHOD_NOT_ALLOWED(405, "G002", "Not Allowed HTTP Method"),
+    INTERNAL_SERVER_ERROR(500, "G003", "Server Error"),
+    HANDLE_ACCESS_DENIED(403, "G004", "Access is Denied"),
 
     // User
     EMAIL_DUPLICATION(400, "U001", "Email is Duplication"),
