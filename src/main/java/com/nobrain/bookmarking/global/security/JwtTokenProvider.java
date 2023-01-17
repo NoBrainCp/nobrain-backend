@@ -35,10 +35,9 @@ public class JwtTokenProvider {
     }
 
     // JWT Token 생성
-    public String createToken(String userPk, Long userId, List<String> roles) {
+    public String createToken(String userPk, List<String> roles) {
         Claims claims = Jwts.claims().setSubject(userPk);
         claims.put("roles", roles);
-        claims.put("userId", userId);
         Date now = new Date();
 
         return Jwts.builder()
@@ -51,16 +50,12 @@ public class JwtTokenProvider {
 
     // JWT Token 으로 인증 정보 조회
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserLoginId(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getId(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    public String getUserLoginId(String token) {
+    public String getId(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-    }
-
-    public Long getUserId(String token) {
-        return Long.parseLong(Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().get("userId").toString());
     }
 
     public Long getId() {
