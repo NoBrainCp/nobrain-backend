@@ -1,9 +1,8 @@
 package com.nobrain.bookmarking.domain.user.controller;
 
-import com.nobrain.bookmarking.domain.user.service.UserService;
 import com.nobrain.bookmarking.domain.user.dto.request.UserSignInRequest;
 import com.nobrain.bookmarking.domain.user.dto.request.UserSignUpRequest;
-import com.nobrain.bookmarking.global.response.model.CommonResult;
+import com.nobrain.bookmarking.domain.user.service.UserSignService;
 import com.nobrain.bookmarking.global.response.model.SingleResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
 import lombok.RequiredArgsConstructor;
@@ -17,22 +16,21 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-public class UserController {
+public class UserSignController {
 
-    private final UserService userService;
+    private final UserSignService userService;
     private final ResponseService responseService;
 
     @PostMapping("/signup")
-    public CommonResult signUp(@Valid @RequestBody UserSignUpRequest dto) {
-        userService.signUp(dto);
-        return responseService.getSuccessResult();
+    public SingleResult<Long> signUp(@Valid @RequestBody UserSignUpRequest dto) {
+        return responseService.getSingleResult(userService.signUp(dto));
     }
 
+    /**
+     * @return accessToken
+     */
     @PostMapping("/signin")
-    public CommonResult signIn(@Valid @RequestBody UserSignInRequest dto) {
-        SingleResult<String> result = new SingleResult<>();
-        result.setData(userService.signIn(dto));
-        responseService.setSuccessResult(result);
-        return result;
+    public SingleResult<String> signIn(@Valid @RequestBody UserSignInRequest dto) {
+        return responseService.getSingleResult(userService.signIn(dto));
     }
 }
