@@ -12,11 +12,12 @@ public enum ErrorCode {
     HANDLE_ACCESS_DENIED(403, "G004", "Access is Denied"),
 
     // User
-    EMAIL_DUPLICATION(400, "U001", "Email is Duplication"),
-    LOGIN_ID_DUPLICATION(400, "U002", "Login id is Duplication"),
-    LOGIN_ID_NOT_FOUND(400, "U003", "Login id is not Found"),
-    USERNAME_NOT_FOUND(400, "U004", "Username is not Found"),
-    INVALID_PASSWORD(400, "U005", "Password is not Correct"),
+    USER_NOT_FOUND(400, "U001", "User is not Found"),
+    EMAIL_DUPLICATION(400, "U002", "Email is Duplication"),
+    LOGIN_ID_DUPLICATION(400, "U003", "Login id is Duplication"),
+    LOGIN_ID_NOT_FOUND(400, "U004", "Login id is not Found"),
+    USERNAME_NOT_FOUND(400, "U005", "Username is not Found"),
+    INVALID_PASSWORD(400, "U006", "Password is not Correct"),
     PHONE_NUMBER_DUPLICATION(400, "U006", "Phone number is Duplication"),
 
     // Category

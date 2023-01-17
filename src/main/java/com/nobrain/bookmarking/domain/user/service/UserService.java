@@ -1,13 +1,10 @@
 package com.nobrain.bookmarking.domain.user.service;
 
-import com.nobrain.bookmarking.domain.user.dto.request.UserSignInRequest;
-import com.nobrain.bookmarking.domain.user.dto.request.UserSignUpRequest;
 import com.nobrain.bookmarking.domain.user.entity.User;
-import com.nobrain.bookmarking.domain.user.exception.*;
+import com.nobrain.bookmarking.domain.user.exception.UserLoginIdNotFoundException;
+import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
-import com.nobrain.bookmarking.global.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,40 +14,25 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
+
+    public User findById(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.valueOf(id)));
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+    }
+
+    public User findByName(String name) {
+        return userRepository.findByName(name).orElseThrow(() -> new UserNotFoundException(name));
+    }
+
+    public User findByLoginId(String loginId) {
+        return userRepository.findByLoginId(loginId).orElseThrow(() -> new UserLoginIdNotFoundException(loginId));
+    }
 
     @Transactional
-    public void signUp(UserSignUpRequest dto) {
-        validateUserDuplication(dto);
-        dto.encodePassword(passwordEncoder.encode(dto.getPassword()));
-        userRepository.save(dto.toEntity());
-    }
-
-    public String signIn(UserSignInRequest dto) {
-        User user = userRepository.findByLoginId(dto.getLoginId()).orElseThrow(() -> new UserLoginIdNotFoundException(dto.getLoginId()));
-        if (isNotSamePassword(dto.getPassword(), user.getPassword())) {
-            throw new UserNotCorrectPasswordException(dto.getPassword());
-        }
-
-        return jwtTokenProvider.createToken(user.getUsername(), user.getId(), user.getRoles());
-    }
-
-    private void validateUserDuplication(UserSignUpRequest dto) {
-        if (userRepository.existsByEmail(dto.getEmail())) {
-            throw new UserEmailDuplicationException(dto.getEmail());
-        }
-
-        if (userRepository.existsByLoginId(dto.getLoginId())) {
-            throw new UserLoginIdDuplicationException(dto.getLoginId());
-        }
-
-        if (userRepository.existsByPhoneNumber(dto.getPhoneNumber())) {
-            throw new UserPhoneNumberDuplicationException(dto.getPhoneNumber());
-        }
-    }
-
-    private boolean isNotSamePassword(String rawPassword, String encodedPassword) {
-        return !passwordEncoder.matches(rawPassword, encodedPassword);
+    public void delete(Long id) {
+        userRepository.deleteById(id);
     }
 }

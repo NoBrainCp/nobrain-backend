@@ -58,7 +58,7 @@ public class User extends BaseTimeEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.loginId;
+        return String.valueOf(id);
     }
 
     @Override
