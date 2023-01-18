@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserSignService {
 
     private final UserRepository userRepository;
-    private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -28,7 +27,8 @@ public class UserSignService {
     }
 
     public String signIn(UserRequest.SignIn dto) {
-        User user = userService.findByLoginId(dto.getLoginId());
+        User user = userRepository.findByLoginId(dto.getLoginId())
+                .orElseThrow(() -> new UserLoginIdNotFoundException(dto.getLoginId()));
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new UserNotCorrectPasswordException(dto.getPassword());
         }

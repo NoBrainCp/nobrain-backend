@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
-@RestController
 @RequiredArgsConstructor
+@RestController
 public class UserSignController {
 
     private final UserSignService userService;
