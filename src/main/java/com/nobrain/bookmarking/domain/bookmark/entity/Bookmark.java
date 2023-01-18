@@ -1,23 +1,23 @@
-package com.nobrain.bookmarking.domain.bookmark;
+package com.nobrain.bookmarking.domain.bookmark.entity;
 
-import com.nobrain.bookmarking.domain.category.Category;
-import com.nobrain.bookmarking.domain.tag.Tag;
-import com.nobrain.bookmarking.domain.user.User;
-import lombok.AllArgsConstructor;
+import com.nobrain.bookmarking.domain.category.entity.Category;
+import com.nobrain.bookmarking.domain.tag.entity.Tag;
+import com.nobrain.bookmarking.domain.user.entity.User;
+import com.nobrain.bookmarking.global.entity.BaseTimeEntity;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@Entity
 @Getter
-@NoArgsConstructor
-public class Bookmark {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+public class Bookmark extends BaseTimeEntity {
 
     @Id @GeneratedValue
     @Column(name = "bookmark_id")
@@ -28,7 +28,6 @@ public class Bookmark {
 
     @Lob
     private String description;
-    private LocalDateTime createdAt;
     private boolean isPublic;
     private boolean isStar;
 
@@ -44,15 +43,14 @@ public class Bookmark {
     private Set<Tag> tags = new HashSet<>();
 
     @Builder
-    public Bookmark(String url, String title, String description, LocalDateTime createdAt, boolean isPublic, boolean isStar, User user, Category category, Set<Tag> tags) {
+    public Bookmark(String url, String title, String description, boolean isPublic, boolean isStar, User user, Category category, Set<Tag> tags) {
         this.url = url;
         this.title = title;
         this.description = description;
-        this.createdAt = createdAt;
         this.isPublic = isPublic;
         this.isStar = isStar;
-        this.user = user;
-        this.category = category;
+        addUser(user);
+        addCategory(category);
         this.tags = tags;
     }
 
