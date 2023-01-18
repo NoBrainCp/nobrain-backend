@@ -10,7 +10,7 @@ import lombok.*;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class BookmarkDto {
+public class BookmarkRequestDto {
 
     @Getter
     @NoArgsConstructor
