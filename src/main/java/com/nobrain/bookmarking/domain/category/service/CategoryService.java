@@ -1,6 +1,6 @@
 package com.nobrain.bookmarking.domain.category.service;
 
-import com.nobrain.bookmarking.domain.category.dto.request.AddCategoryRequest;
+import com.nobrain.bookmarking.domain.category.dto.request.CategoryRequest;
 import com.nobrain.bookmarking.domain.category.exception.CategoryNameDuplicationException;
 import com.nobrain.bookmarking.domain.category.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +15,11 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public void addCategory(AddCategoryRequest dto) {
+    public String create(CategoryRequest.Create dto) {
         if (categoryRepository.existsByName(dto.getName())) {
             throw new CategoryNameDuplicationException(dto.getName());
         }
 
-        categoryRepository.save(dto.toEntity());
+        return categoryRepository.save(dto.toEntity()).getName();
     }
 }

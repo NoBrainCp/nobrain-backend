@@ -1,8 +1,7 @@
 package com.nobrain.bookmarking.domain.category.controller;
 
-import com.nobrain.bookmarking.domain.category.dto.request.AddCategoryRequest;
+import com.nobrain.bookmarking.domain.category.dto.request.CategoryRequest;
 import com.nobrain.bookmarking.domain.category.service.CategoryService;
-import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.model.SingleResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +19,7 @@ public class CategoryController {
     private final ResponseService responseService;
 
     @PostMapping("/add-category")
-    public CommonResult addCategory(@Valid @RequestBody AddCategoryRequest dto) {
-        categoryService.addCategory(dto);
-        SingleResult<String> result = new SingleResult<>();
-        result.setData(dto.getName());
-        responseService.setSuccessResult(result);
-        return result;
+    public SingleResult<String> addCategory(@Valid @RequestBody CategoryRequest.Create dto) {
+        return responseService.getSingleResult(categoryService.create(dto));
     }
 }
