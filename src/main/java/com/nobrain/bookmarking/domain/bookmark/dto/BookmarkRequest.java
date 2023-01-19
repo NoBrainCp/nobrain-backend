@@ -15,7 +15,7 @@ public class BookmarkRequest {
     @NoArgsConstructor
     @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Builder
-    public static class AddBookmarkRequest {
+    public static class Create {
         private String url;
         private String title;
         private String description;
