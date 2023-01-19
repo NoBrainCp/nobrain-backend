@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -19,20 +19,11 @@ public class TagService {
 
     @Transactional
     public void createTags(Bookmark bookmark) {
-        for (Tag tag : bookmark.getTags()) {
+        List<Tag> tags = new CopyOnWriteArrayList<>(bookmark.getTags());
+        for (Tag tag : tags) {
             tag.addBookmark(bookmark);
         }
 
         tagRepository.saveAll(bookmark.getTags());
-    }
-
-    public Set<Tag> converToTagSet(String tags) {
-        Set<Tag> result = new HashSet<>();
-        for (String tagName : tags.split(" ")) {
-            Tag tag = Tag.builder().name(tagName).build();
-            result.add(tag);
-        }
-
-        return result;
     }
 }
