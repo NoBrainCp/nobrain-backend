@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
 public class BookmarkRequest {
 
     @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor(access = AccessLevel.PRIVATE)
     @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public static class Create {
         private String url;
         private String title;
@@ -37,7 +37,10 @@ public class BookmarkRequest {
                     .isPublic(this.isPublic)
                     .isStar(this.isStar)
                     .category(category)
-                    .tags(Arrays.stream(this.tags.split(" ")).map((tagName) -> Tag.builder().name(tagName).build()).collect(Collectors.toList()))
+                    .tags(Arrays.stream(this.tags.split(" "))
+                            .map((tagName) -> Tag.builder()
+                            .name(tagName).build())
+                            .collect(Collectors.toList()))
                     .build();
         }
     }
