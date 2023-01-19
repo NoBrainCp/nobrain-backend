@@ -7,7 +7,6 @@ import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,11 +20,9 @@ public class BookmarkController {
     private final TagService tagService;
     private final ResponseService responseService;
 
-    @PostMapping({"/{username}/{categoryName}/add-bookmark", "/{username}/add-bookmark"})
-    public CommonResult addBookmark(@PathVariable String username,
-                                    @RequestBody BookmarkDto.AddBookmarkRequest dto) {
-
-        tagService.createTags(bookmarkService.createBookmark(username, dto));
+    @PostMapping("/add-bookmark")
+    public CommonResult addBookmark(@RequestBody BookmarkDto.AddBookmarkRequest dto) {
+        tagService.createTags(bookmarkService.createBookmark(dto));
         return responseService.getSuccessResult();
     }
 }
