@@ -37,10 +37,13 @@ public class BookmarkService {
                         .description(bookmark.getDescription())
                         .isPublic(bookmark.isPublic())
                         .isStar(bookmark.isStar())
-                        .tags(bookmark.getTags()).build())
+                        .build())
                 .collect(Collectors.toList());
     }
 
+    /**
+     * https::// 없을시 추가 로직 구현 예정
+     */
     @Transactional
     public Bookmark createBookmark(BookmarkRequest.Create dto) {
         Category category = categoryRepository.findByName(dto.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(dto.getCategoryName()));

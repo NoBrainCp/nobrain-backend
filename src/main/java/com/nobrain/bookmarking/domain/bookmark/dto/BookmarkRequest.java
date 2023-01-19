@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 public class BookmarkRequest {
 
     @Getter
+    @Setter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
