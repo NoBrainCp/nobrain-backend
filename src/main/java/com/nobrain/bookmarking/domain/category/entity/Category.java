@@ -8,9 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,10 +26,10 @@ public class Category {
     private User user;
 
     @OneToMany(mappedBy = "category")
-    private Set<Bookmark> bookmarks = new HashSet<>();
+    private List<Bookmark> bookmarks = new ArrayList<>();
 
     @Builder
-    public Category(String name, User user, Set<Bookmark> bookmarks) {
+    public Category(String name, User user, List<Bookmark> bookmarks) {
         this.name = name;
         addUser(user);
         this.bookmarks = bookmarks;

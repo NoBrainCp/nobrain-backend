@@ -37,7 +37,7 @@ public class BookmarkRequest {
                     .isPublic(this.isPublic)
                     .isStar(this.isStar)
                     .category(category)
-                    .tags(Arrays.stream(this.tags.split(" ")).map((tagName) -> Tag.builder().name(tagName).build()).collect(Collectors.toSet()))
+                    .tags(Arrays.stream(this.tags.split(" ")).map((tagName) -> Tag.builder().name(tagName).build()).collect(Collectors.toList()))
                     .build();
         }
     }
