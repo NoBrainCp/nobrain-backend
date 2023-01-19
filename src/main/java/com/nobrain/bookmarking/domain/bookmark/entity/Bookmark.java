@@ -10,9 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,10 +34,10 @@ public class Bookmark extends BaseTimeEntity {
     private Category category;
 
     @OneToMany(mappedBy = "bookmark")
-    private Set<Tag> tags = new HashSet<>();
+    private List<Tag> tags = new ArrayList<>();
 
     @Builder
-    public Bookmark(String url, String title, String description, boolean isPublic, boolean isStar, User user, Category category, Set<Tag> tags) {
+    public Bookmark(String url, String title, String description, boolean isPublic, boolean isStar, User user, Category category, List<Tag> tags) {
         this.url = url;
         this.title = title;
         this.description = description;
