@@ -4,6 +4,9 @@ import com.nobrain.bookmarking.domain.category.dto.CategoryRequest;
 import com.nobrain.bookmarking.domain.category.dto.CategoryResponse;
 import com.nobrain.bookmarking.domain.category.exception.CategoryNameDuplicationException;
 import com.nobrain.bookmarking.domain.category.repository.CategoryRepository;
+import com.nobrain.bookmarking.domain.user.entity.User;
+import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
+import com.nobrain.bookmarking.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +20,7 @@ import java.util.stream.Collectors;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
     public List<CategoryResponse.Info> getCategories(String username) {
 
@@ -28,11 +32,12 @@ public class CategoryService {
     }
 
     @Transactional
-    public String create(CategoryRequest.Create dto) {
+    public String create(String username, CategoryRequest.Create dto) {
         if (categoryRepository.existsByName(dto.getName())) {
             throw new CategoryNameDuplicationException(dto.getName());
         }
 
-        return categoryRepository.save(dto.toEntity()).getName();
+        User user = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
+        return categoryRepository.save(dto.toEntity(user)).getName();
     }
 }

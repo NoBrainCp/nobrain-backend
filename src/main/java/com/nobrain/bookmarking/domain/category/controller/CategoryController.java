@@ -24,8 +24,10 @@ public class CategoryController {
         return responseService.getListResult(categoryService.getCategories(username));
     }
 
-    @PostMapping("/add-category")
-    public SingleResult<String> addCategory(@Valid @RequestBody CategoryRequest.Create dto) {
-        return responseService.getSingleResult(categoryService.create(dto));
+    @PostMapping("/{username}/add-category")
+    public SingleResult<String> addCategory(
+            @PathVariable String username,
+            @Valid @RequestBody CategoryRequest.Create dto) {
+        return responseService.getSingleResult(categoryService.create(username, dto));
     }
 }
