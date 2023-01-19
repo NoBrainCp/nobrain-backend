@@ -5,7 +5,6 @@ import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
 import com.nobrain.bookmarking.domain.bookmark.repository.BookmarkRepository;
 import com.nobrain.bookmarking.domain.category.exception.CategoryNameNotFoundException;
 import com.nobrain.bookmarking.domain.category.repository.CategoryRepository;
-import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,9 +20,8 @@ public class BookmarkService {
     private final CategoryRepository categoryRepository;
 
     @Transactional
-    public Bookmark createBookmark(String userName, BookmarkRequest.AddBookmarkRequest dto) {
+    public Bookmark createBookmark(BookmarkRequest.AddBookmarkRequest dto) {
         Bookmark bookmark = dto.toEntity(
-                userRepository.findByName(userName).orElseThrow(() -> new UserNotFoundException(userName)),
                 categoryRepository.findByName(dto.getCategoryName()).orElseThrow(() -> new CategoryNameNotFoundException(dto.getCategoryName())));
         bookmarkRepository.save(bookmark);
         return bookmark;
