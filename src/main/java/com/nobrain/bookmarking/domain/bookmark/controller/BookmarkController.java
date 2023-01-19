@@ -1,6 +1,6 @@
 package com.nobrain.bookmarking.domain.bookmark.controller;
 
-import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkDto;
+import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkRequest;
 import com.nobrain.bookmarking.domain.bookmark.service.BookmarkService;
 import com.nobrain.bookmarking.domain.tag.service.TagService;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
@@ -21,7 +21,7 @@ public class BookmarkController {
     private final ResponseService responseService;
 
     @PostMapping("/add-bookmark")
-    public CommonResult addBookmark(@RequestBody BookmarkDto.AddBookmarkRequest dto) {
+    public CommonResult addBookmark(@RequestBody BookmarkRequest.AddBookmarkRequest dto) {
         tagService.createTags(bookmarkService.createBookmark(dto));
         return responseService.getSuccessResult();
     }
