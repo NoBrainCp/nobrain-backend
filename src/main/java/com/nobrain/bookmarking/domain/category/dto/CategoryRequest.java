@@ -1,4 +1,4 @@
-package com.nobrain.bookmarking.domain.category.dto.request;
+package com.nobrain.bookmarking.domain.category.dto;
 
 import com.nobrain.bookmarking.domain.category.entity.Category;
 import lombok.Getter;
