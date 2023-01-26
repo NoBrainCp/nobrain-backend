@@ -35,6 +35,10 @@ public class UserService {
         return userRepository.existsByName(username);
     }
 
+    public boolean existsEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
     @Transactional
     public Long update(Long id, String username) {
         findById(id).updateName(username);

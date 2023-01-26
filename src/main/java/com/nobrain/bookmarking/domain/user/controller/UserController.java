@@ -26,6 +26,11 @@ public class UserController {
         return responseService.getSingleResult(userService.existsUsername(username));
     }
 
+    @GetMapping("/email/{email}/exists")
+    public SingleResult<Boolean> existsEmail(@PathVariable String email) {
+        return responseService.getSingleResult(userService.existsUsername(email));
+    }
+
     @PutMapping("/user")
     public SingleResult<Long> update(
             @RequestParam Long userId,
