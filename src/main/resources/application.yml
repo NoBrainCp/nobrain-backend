@@ -19,5 +19,9 @@ spring:
   jwt:
     secret: govlepel@$&
 
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
 app:
   domain: /api
