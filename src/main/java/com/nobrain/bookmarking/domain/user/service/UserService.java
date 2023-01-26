@@ -31,6 +31,10 @@ public class UserService {
                 .build();
     }
 
+    public boolean existsUsername(String username) {
+        return userRepository.existsByName(username);
+    }
+
     @Transactional
     public Long update(Long id, String username) {
         findById(id).updateName(username);

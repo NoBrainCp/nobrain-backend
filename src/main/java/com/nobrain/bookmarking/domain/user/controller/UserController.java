@@ -21,6 +21,11 @@ public class UserController {
         return responseService.getSingleResult(userService.getMyProfile());
     }
 
+    @GetMapping("/username/{username}/exists")
+    public SingleResult<Boolean> existsUsername(@PathVariable String username) {
+        return responseService.getSingleResult(userService.existsUsername(username));
+    }
+
     @PutMapping("/user")
     public SingleResult<Long> update(
             @RequestParam Long userId,
