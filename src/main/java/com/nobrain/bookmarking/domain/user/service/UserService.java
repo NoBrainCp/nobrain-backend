@@ -35,6 +35,10 @@ public class UserService {
         return userRepository.existsByName(username);
     }
 
+    public boolean existsLoginId(String loginId) {
+        return userRepository.existsByLoginId(loginId);
+    }
+
     public boolean existsEmail(String email) {
         return userRepository.existsByEmail(email);
     }

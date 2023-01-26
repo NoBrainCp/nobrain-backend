@@ -26,9 +26,14 @@ public class UserController {
         return responseService.getSingleResult(userService.existsUsername(username));
     }
 
+    @GetMapping("/loginId/{loginId}/exists")
+    public SingleResult<Boolean> existsLoginId(@PathVariable String loginId) {
+        return responseService.getSingleResult(userService.existsLoginId(loginId));
+    }
+
     @GetMapping("/email/{email}/exists")
     public SingleResult<Boolean> existsEmail(@PathVariable String email) {
-        return responseService.getSingleResult(userService.existsUsername(email));
+        return responseService.getSingleResult(userService.existsEmail(email));
     }
 
     @PutMapping("/user")
