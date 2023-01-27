@@ -2,6 +2,8 @@ package com.nobrain.bookmarking.domain.bookmark.dto;
 
 import lombok.*;
 
+import java.time.LocalDate;
+
 public class BookmarkResponse {
 
     @Data
@@ -14,5 +16,6 @@ public class BookmarkResponse {
         private String description;
         private boolean isPublic;
         private boolean isStar;
+        private LocalDate createdAt;
     }
 }
