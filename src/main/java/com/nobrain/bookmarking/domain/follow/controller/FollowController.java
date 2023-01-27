@@ -17,17 +17,17 @@ public class FollowController {
     private final FollowService followService;
     private final ResponseService responseService;
 
-    @GetMapping("/{username}/follows")
+    @GetMapping("/{username}/follow-cnt")
     public SingleResult<FollowResponse.FollowCount> getFollowCount(@PathVariable String username) {
         return responseService.getSingleResult(followService.getFollowCount(username));
     }
 
-    @GetMapping("/{username}/follower")
+    @GetMapping("/{username}/followers")
     public ListResult<FollowResponse.Info> getFollowerList(@PathVariable String username) {
         return responseService.getListResult(followService.getFollowerList(username));
     }
 
-    @GetMapping("/{username}/following")
+    @GetMapping("/{username}/followings")
     public ListResult<FollowResponse.Info> getFollowingList(@PathVariable String username) {
         return responseService.getListResult(followService.getFollowingList(username));
     }
