@@ -28,7 +28,7 @@ public class BookmarkController {
         return responseService.getListResult(bookmarkService.getBookmarks(username, category));
     }
 
-    @PostMapping("/add-bookmark")
+    @PostMapping("/bookmark")
     public CommonResult addBookmark(@RequestBody BookmarkRequest.Create dto) {
         tagService.createTags(bookmarkService.createBookmark(dto));
         return responseService.getSuccessResult();
