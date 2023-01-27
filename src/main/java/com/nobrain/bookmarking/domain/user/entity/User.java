@@ -1,8 +1,11 @@
 package com.nobrain.bookmarking.domain.user.entity;
 
-import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
+import com.nobrain.bookmarking.domain.category.entity.Category;
 import com.nobrain.bookmarking.global.entity.BaseTimeEntity;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,20 +35,20 @@ public class User extends BaseTimeEntity implements UserDetails {
     private LocalDate birthDate;
 
     @OneToMany(mappedBy = "user")
-    private List<Bookmark> bookmarks = new ArrayList<>();
+    private List<Category> category;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
     @Builder
-    public User(String loginId, String email, String password, String name, String phoneNumber, LocalDate birthDate, List<Bookmark> bookmarks, List<String> roles) {
+    public User(String loginId, String email, String password, String name, String phoneNumber, LocalDate birthDate, List<Category> category, List<String> roles) {
         this.loginId = loginId;
         this.email = email;
         this.password = password;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.birthDate = birthDate;
-        this.bookmarks = bookmarks;
+        this.category = category;
         this.roles = roles;
     }
 

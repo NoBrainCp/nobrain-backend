@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("${app.domain}")
 public class UserController {
 
     private final UserService userService;
@@ -18,6 +19,21 @@ public class UserController {
     @GetMapping("/profile/my")
     public SingleResult<UserResponse.Profile> getMyProfile() {
         return responseService.getSingleResult(userService.getMyProfile());
+    }
+
+    @GetMapping("/username/{username}/exists")
+    public SingleResult<Boolean> existsUsername(@PathVariable String username) {
+        return responseService.getSingleResult(userService.existsUsername(username));
+    }
+
+    @GetMapping("/loginId/{loginId}/exists")
+    public SingleResult<Boolean> existsLoginId(@PathVariable String loginId) {
+        return responseService.getSingleResult(userService.existsLoginId(loginId));
+    }
+
+    @GetMapping("/email/{email}/exists")
+    public SingleResult<Boolean> existsEmail(@PathVariable String email) {
+        return responseService.getSingleResult(userService.existsEmail(email));
     }
 
     @PutMapping("/user")

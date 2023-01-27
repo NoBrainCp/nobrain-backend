@@ -10,9 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,24 +30,19 @@ public class Bookmark extends BaseTimeEntity {
     private boolean isStar;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
     @OneToMany(mappedBy = "bookmark")
-    private Set<Tag> tags = new HashSet<>();
+    private List<Tag> tags = new ArrayList<>();
 
     @Builder
-    public Bookmark(String url, String title, String description, boolean isPublic, boolean isStar, User user, Category category, Set<Tag> tags) {
+    public Bookmark(String url, String title, String description, boolean isPublic, boolean isStar, User user, Category category, List<Tag> tags) {
         this.url = url;
         this.title = title;
         this.description = description;
         this.isPublic = isPublic;
         this.isStar = isStar;
-        addUser(user);
         addCategory(category);
         this.tags = tags;
     }
@@ -59,22 +52,17 @@ public class Bookmark extends BaseTimeEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Bookmark bookmark = (Bookmark) o;
-        return Objects.equals(getUrl(), bookmark.getUrl()) && Objects.equals(getUser(), bookmark.getUser());
+        return Objects.equals(getUrl(), bookmark.getUrl()) && Objects.equals(getCategory(), bookmark.getCategory());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUrl(), getUser());
+        return Objects.hash(getUrl(), getCategory());
     }
 
     /**
-     * 연관관계 편의 메서드
+     * 연관관계 메서드
      */
-    public void addUser(User user) {
-        this.user = user;
-        user.getBookmarks().add(this);
-    }
-
     public void addCategory(Category category) {
         this.category = category;
         category.getBookmarks().add(this);

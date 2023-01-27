@@ -31,6 +31,18 @@ public class UserService {
                 .build();
     }
 
+    public boolean existsUsername(String username) {
+        return userRepository.existsByName(username);
+    }
+
+    public boolean existsLoginId(String loginId) {
+        return userRepository.existsByLoginId(loginId);
+    }
+
+    public boolean existsEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
     @Transactional
     public Long update(Long id, String username) {
         findById(id).updateName(username);
