@@ -11,5 +11,7 @@ public class CategoryResponse {
     @AllArgsConstructor
     public static class Info {
         private String name;
+        private String description;
+        private boolean isPublic;
     }
 }
