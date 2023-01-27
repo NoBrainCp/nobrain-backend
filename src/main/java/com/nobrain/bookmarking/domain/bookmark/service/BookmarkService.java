@@ -37,6 +37,7 @@ public class BookmarkService {
                         .description(bookmark.getDescription())
                         .isPublic(bookmark.isPublic())
                         .isStar(bookmark.isStar())
+                        .createdAt(bookmark.getCreatedAt().toLocalDate())
                         .build())
                 .collect(Collectors.toList());
     }
