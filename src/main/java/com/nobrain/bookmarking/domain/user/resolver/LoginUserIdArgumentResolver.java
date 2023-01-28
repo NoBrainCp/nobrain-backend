@@ -1,9 +1,9 @@
 package com.nobrain.bookmarking.domain.user.resolver;
 
+import com.nobrain.bookmarking.domain.auth.service.TokenService;
 import com.nobrain.bookmarking.domain.user.annotation.LoginUserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
-import org.springframework.security.core.token.TokenService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -25,6 +25,6 @@ public class LoginUserIdArgumentResolver implements HandlerMethodArgumentResolve
     @Override
     public Long resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         String accessToken = webRequest.getHeader("Authorization").split("Bearer ")[1];
-        return tokenService.extractUserId(accessToken);
+        return Long.parseLong(tokenService.getId(accessToken));
     }
 }
