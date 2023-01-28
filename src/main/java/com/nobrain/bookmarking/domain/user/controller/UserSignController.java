@@ -1,5 +1,6 @@
 package com.nobrain.bookmarking.domain.user.controller;
 
+import com.nobrain.bookmarking.domain.user.annotation.LoginUserId;
 import com.nobrain.bookmarking.domain.user.dto.UserRequest;
 import com.nobrain.bookmarking.domain.user.service.UserSignService;
 import com.nobrain.bookmarking.global.response.model.SingleResult;
@@ -29,7 +30,7 @@ public class UserSignController {
      * @return accessToken
      */
     @PostMapping("/signin")
-    public SingleResult<String> signIn(@Valid @RequestBody UserRequest.SignIn dto) {
+    public SingleResult<String> signIn(@LoginUserId @Valid @RequestBody UserRequest.SignIn dto) {
         return responseService.getSingleResult(userService.signIn(dto));
     }
 }
