@@ -1,9 +1,8 @@
-package com.nobrain.bookmarking.domain.security;
+package com.nobrain.bookmarking.domain.auth.entity;
 
 import lombok.Getter;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
-
-import javax.persistence.Id;
 
 @Getter
 @RedisHash(value = "refreshToken", timeToLive = 60 * 60 * 24 * 12)

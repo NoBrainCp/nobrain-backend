@@ -1,5 +1,6 @@
 package com.nobrain.bookmarking.global.security;
 
+import com.nobrain.bookmarking.domain.auth.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
