@@ -19,12 +19,12 @@ public class CategoryController {
     private final CategoryService categoryService;
     private final ResponseService responseService;
 
-    @GetMapping("/{username}/get-categories")
+    @GetMapping("/{username}/categories")
     public ListResult<CategoryResponse.Info> getCategories(@PathVariable String username) {
         return responseService.getListResult(categoryService.getCategories(username));
     }
 
-    @PostMapping("/{username}/add-category")
+    @PostMapping("/{username}/category")
     public SingleResult<String> addCategory(
             @PathVariable String username,
             @Valid @RequestBody CategoryRequest.Create dto) {

@@ -27,6 +27,8 @@ public class CategoryService {
         return categoryRepository.findAllByUser(user).stream()
                 .map(category -> CategoryResponse.Info.builder()
                 .name(category.getName())
+                .description(category.getDescription())
+                .isPublic(category.isPublic())
                 .build())
                 .collect(Collectors.toList());
     }

@@ -5,7 +5,7 @@ import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserLoginIdNotFoundException;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
-import com.nobrain.bookmarking.global.security.JwtTokenProvider;
+import com.nobrain.bookmarking.domain.auth.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,10 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenService tokenService;
 
     public UserResponse.Profile getMyProfile() {
-        User user = findById(jwtTokenProvider.getId());
+        User user = findById(tokenService.getId());
 
         return UserResponse.Profile.builder()
                 .loginId(user.getLoginId())

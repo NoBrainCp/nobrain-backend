@@ -4,7 +4,7 @@ import com.nobrain.bookmarking.domain.user.dto.UserRequest;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.*;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
-import com.nobrain.bookmarking.global.security.JwtTokenProvider;
+import com.nobrain.bookmarking.domain.auth.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public class UserSignService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenService tokenService;
 
     @Transactional
     public Long signUp(UserRequest.SignUp dto) {
@@ -33,7 +33,7 @@ public class UserSignService {
             throw new UserNotCorrectPasswordException(dto.getPassword());
         }
 
-        return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+        return tokenService.createToken(user.getUsername(), user.getRoles());
     }
 
     private void validateUserDuplication(UserRequest.SignUp dto) {

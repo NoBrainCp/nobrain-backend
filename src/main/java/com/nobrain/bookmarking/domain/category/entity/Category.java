@@ -21,6 +21,10 @@ public class Category {
 
     private String name;
 
+    @Lob
+    private String description;
+    private boolean isPublic;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -29,8 +33,10 @@ public class Category {
     private List<Bookmark> bookmarks = new ArrayList<>();
 
     @Builder
-    public Category(String name, User user, List<Bookmark> bookmarks) {
+    public Category(String name, String description, boolean isPublic, User user, List<Bookmark> bookmarks) {
         this.name = name;
+        this.description = description;
+        this.isPublic = isPublic;
         addUser(user);
         this.bookmarks = bookmarks;
     }
