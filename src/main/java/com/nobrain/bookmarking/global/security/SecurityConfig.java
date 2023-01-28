@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenService tokenService;
 
     @Bean
     public PasswordEncoder encoder() {
@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .antMatchers("/*/signin", "/*/signin/**/" , "/*/signup", "/*/signup/**" , "/social/**").permitAll()
 //                .anyRequest().hasRole("USER")
             .and()
-            .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+            .addFilterBefore(new JwtAuthenticationFilter(tokenService),
                     UsernamePasswordAuthenticationFilter.class); // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 전에 넣는다.
 
         return http.build();

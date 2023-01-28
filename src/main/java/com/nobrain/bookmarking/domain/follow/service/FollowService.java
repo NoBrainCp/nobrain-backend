@@ -6,7 +6,7 @@ import com.nobrain.bookmarking.domain.follow.repository.FollowRepository;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
-import com.nobrain.bookmarking.global.security.JwtTokenProvider;
+import com.nobrain.bookmarking.global.security.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +21,7 @@ public class FollowService {
 
     private final FollowRepository followRepository;
     private final UserRepository userRepository;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final TokenService tokenService;
 
     public FollowResponse.FollowCount getFollowCount(String username) {
         Long userId = getUserIdByName(username);
@@ -47,7 +47,7 @@ public class FollowService {
 
     @Transactional
     public void follow(Long toUserId) {
-        Long fromUserId = jwtTokenProvider.getId();
+        Long fromUserId = tokenService.getId();
         Follow follow = followRepository.findByFromUserAndToUser(fromUserId, toUserId)
                 .orElse(null);
 
