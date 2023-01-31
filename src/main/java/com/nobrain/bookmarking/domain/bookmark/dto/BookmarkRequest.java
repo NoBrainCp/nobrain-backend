@@ -6,7 +6,7 @@ import com.nobrain.bookmarking.domain.category.entity.Category;
 import com.nobrain.bookmarking.domain.tag.entity.Tag;
 import lombok.*;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class BookmarkRequest {
@@ -28,7 +28,7 @@ public class BookmarkRequest {
         private boolean isStar;
 
         private String categoryName;
-        private String tags;
+        private List<String> tags;
 
         public Bookmark toEntity(Category category) {
             return Bookmark.builder()
@@ -38,9 +38,8 @@ public class BookmarkRequest {
                     .isPublic(this.isPublic)
                     .isStar(this.isStar)
                     .category(category)
-                    .tags(Arrays.stream(this.tags.split(" "))
-                            .map((tagName) -> Tag.builder()
-                            .name(tagName).build())
+                    .tags(this.tags.stream()
+                            .map((tagName) -> Tag.builder().name(tagName).build())
                             .collect(Collectors.toList()))
                     .build();
         }
