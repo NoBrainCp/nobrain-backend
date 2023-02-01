@@ -31,7 +31,8 @@ public class UserService {
                 .roles(user.getRoles())
                 .build();
     }
-    public String findByForgotLoginId(UserRequest.FindLoginIdBy request){
+
+    public String findByForgotLoginId(UserRequest.FindLoginIdByPhoneNumber request){
         return userRepository.findByNameAndPhoneNumber(request.getName(), request.getPhoneNumber())
                 .orElseThrow(()->new UserNotFoundException(request.getName())).getLoginId();
     }
