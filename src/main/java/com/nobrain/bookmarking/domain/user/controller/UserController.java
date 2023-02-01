@@ -1,5 +1,6 @@
 package com.nobrain.bookmarking.domain.user.controller;
 
+import com.nobrain.bookmarking.domain.user.dto.UserRequest;
 import com.nobrain.bookmarking.domain.user.dto.UserResponse;
 import com.nobrain.bookmarking.domain.user.service.UserService;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
@@ -35,7 +36,10 @@ public class UserController {
     public SingleResult<Boolean> existsEmail(@PathVariable String email) {
         return responseService.getSingleResult(userService.existsEmail(email));
     }
-
+    @PostMapping("/forget/loginId")
+    public SingleResult<String> findLoginIdByPhoneNumber(@RequestBody UserRequest.FindLoginIdBy request){
+        return responseService.getSingleResult(userService.findByForgotLoginId(request));
+    }
     @PutMapping("/user")
     public SingleResult<Long> update(
             @RequestParam Long userId,
