@@ -11,7 +11,7 @@ import java.util.List;
 @Service
 public class MailService {
     
-    private static final String AUTHENTICATION_MAIL_SUBJECT = "Nobrain 인증 메일";
+    private static final String AUTHENTICATION_MAIL_SUBJECT = "Nobrain 인증코드 메일입니다.";
     private final JavaMailSender mailSender;
 
     public void sendMailToUsers(List<String> emails, String subject, String text) {
