@@ -40,4 +40,11 @@ public class UserRequest {
                     .build();
         }
     }
+
+    @Getter
+    public static class FindLoginIdBy {
+        private String name;
+        private String phoneNumber;
+
+    }
 }

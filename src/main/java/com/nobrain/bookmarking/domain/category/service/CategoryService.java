@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class CategoryService {
-
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 

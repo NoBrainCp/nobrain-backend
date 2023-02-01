@@ -1,5 +1,6 @@
 package com.nobrain.bookmarking.domain.user.service;
 
+import com.nobrain.bookmarking.domain.user.dto.UserRequest;
 import com.nobrain.bookmarking.domain.user.dto.UserResponse;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserLoginIdNotFoundException;
@@ -29,6 +30,10 @@ public class UserService {
                 .birthDate(user.getBirthDate())
                 .roles(user.getRoles())
                 .build();
+    }
+    public String findByForgotLoginId(UserRequest.FindLoginIdBy request){
+        return userRepository.findByNameAndPhoneNumber(request.getName(), request.getPhoneNumber())
+                .orElseThrow(()->new UserNotFoundException(request.getName())).getLoginId();
     }
 
     public boolean existsUsername(String username) {
@@ -69,4 +74,5 @@ public class UserService {
     private User findByLoginId(String loginId) {
         return userRepository.findByLoginId(loginId).orElseThrow(() -> new UserLoginIdNotFoundException(loginId));
     }
+
 }
