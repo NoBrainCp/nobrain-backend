@@ -27,5 +27,17 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: nobraincp@gmail.com
+    password: ndppfxfwklbtytzv
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 app:
   domain: /api
