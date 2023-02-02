@@ -25,9 +25,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.security:spring-security-test'
+    implementation 'mysql:mysql-connector-java:8.0.28'
 
     // redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.3.1.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
     // jwt
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
@@ -40,6 +41,9 @@ dependencies {
 
     // mail
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    // jasypt
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'

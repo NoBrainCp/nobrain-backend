@@ -13,12 +13,13 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
@@ -29,11 +30,11 @@ import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-@Component
+@Service
 public class TokenService {
 
-//    @Value("${spring.jwt.secret}")
-    private static final String SECRET_KEY = "TEMPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP";
+    @Value("${spring.jwt.secret}")
+    private String secretStringKey;
     private static final int ACCESS_TOKEN_EXPIRES = 30 * 60 * 1000;
 
     private final UserRepository userRepository;
@@ -43,7 +44,7 @@ public class TokenService {
 
     @PostConstruct
     protected void init() {
-        secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
+        secretKey = Keys.hmacShaKeyFor(secretStringKey.getBytes(StandardCharsets.UTF_8));
     }
 
     public RefreshToken generateRefreshToken(RefreshTokenRequest request) {

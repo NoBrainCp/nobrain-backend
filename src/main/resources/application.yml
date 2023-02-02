@@ -1,17 +1,17 @@
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/nobrain
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    url: ENC(itu2+6u52iN9BbDTvugHyUYS9ZT9L7WE0Ikn5zBqDRveJpsA2b6SD/OuXGK273u0dVU86RTm6urfLusiIULErklql9YSiXAY8jSMflNOgywBMD9dGirryWkQFnsEUJFf9lx8QlAOAV4wdhjmypVwxsRZz1YH74JdUFDYekshyExxE31xM3TMCV/kZa7/7+zs73pDIwDnpmk=)
+    username: ENC(++igq5vlq69jELYCl5i/kg==)
+    password: ENC(PUWPyNf79K7oxgcTV2BDpcqvRpPU58ST)
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   redis:
-    host: localhost
+    host: ENC(tUJI6ptGZON23SQCV/ug7+Jc7K/IBc7+)
     port: 6379
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -21,7 +21,7 @@ spring:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
   jwt:
-    secret: govlepel@$&
+    secret: ENC(zoV04jn/ttqdTIsRL/QTriKYAHCsjsoihsm5KjXfm2C+Z0TsX8ZHdWHmoizPf2rU)
 
   mvc:
     pathmatch:
@@ -30,8 +30,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: nobraincp@gmail.com
-    password: ndppfxfwklbtytzv
+    username: ENC8Ch6YMbst3xIvWjKBEz87+2wQGHqD4ZuevX0fZL31BE=)
+    password: ENC(sqA/vcW1F78l/2v5npMUUNQIApgwYMGbfApsJKuCuUo=)
     properties:
       mail:
         smtp:
@@ -41,3 +41,11 @@ spring:
 
 app:
   domain: /api
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    algorithm: PBEWithMD5AndDes
+    pool-size: 1
+    output-type: base64
+    iterations: 1000
