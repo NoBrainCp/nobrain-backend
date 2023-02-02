@@ -1,8 +1,6 @@
 package com.nobrain.bookmarking.global.redis;
 
-import org.springframework.boot.test.context.SpringBootTest;
-
-@SpringBootTest
+//@SpringBootTest
 class RedisUtilTest {
 
 //    @Autowired

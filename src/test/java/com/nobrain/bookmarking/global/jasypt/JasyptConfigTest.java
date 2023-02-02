@@ -3,7 +3,9 @@ package com.nobrain.bookmarking.global.jasypt;
 import org.assertj.core.api.Assertions;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
+@SpringBootTest
 class JasyptConfigTest {
 
     @Test

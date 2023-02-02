@@ -2,7 +2,7 @@ package com.nobrain.bookmarking;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
+//@SpringBootTest
 class BookmarkingApplicationTests {
 
 //    @Test
