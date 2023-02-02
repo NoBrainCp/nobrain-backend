@@ -1,12 +1,12 @@
 package com.nobrain.bookmarking;
 
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.Test;
 
 //@SpringBootTest
 class BookmarkingApplicationTests {
 
-//    @Test
-//    void test() {
-//
-//    }
+    @Test
+    void test() {
+
+    }
 }
