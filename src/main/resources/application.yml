@@ -1,12 +1,12 @@
 spring:
   datasource:
-    url: ENC(A4J78cxUO2pXvHCRkVTE1PMbLZCngWFK+ZdFc1FXK/bU+wDMy1smPmDhKXIt80bXhOwBbRf/PXIacEBs1GgvmdTfWyLwTBhuVQqRQicYspS60wEQlZSyNJFg44UDBdnCyEZTXpabMEE=)
-    username: ENC(F6sUQVM46mOJMG1Xak+eGA==)
-    password: ENC(UTfuPieJO4JYp19Asm6/kkVMBdHYs/Qw)
+    url: ENC(itu2+6u52iN9BbDTvugHyUYS9ZT9L7WE0Ikn5zBqDRveJpsA2b6SD/OuXGK273u0dVU86RTm6urfLusiIULErklql9YSiXAY8jSMflNOgywBMD9dGirryWkQFnsEUJFf9lx8QlAOAV4wdhjmypVwxsRZz1YH74JdUFDYekshyExxE31xM3TMCV/kZa7/7+zs73pDIwDnpmk=)
+    username: ENC(++igq5vlq69jELYCl5i/kg==)
+    password: ENC(PUWPyNf79K7oxgcTV2BDpcqvRpPU58ST)
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   redis:
-    host: localhost
+    host: ENC(tUJI6ptGZON23SQCV/ug7+Jc7K/IBc7+)
     port: 6379
 
   jpa:
@@ -21,7 +21,7 @@ spring:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
   jwt:
-    secret: ENC(nfJKxFk5kB/ZKYvLR+Q2vUAd+r4zIyiy/037dQBTQFx5tRbee0c+9WhcHBKuuLY3)
+    secret: ENC(zoV04jn/ttqdTIsRL/QTriKYAHCsjsoihsm5KjXfm2C+Z0TsX8ZHdWHmoizPf2rU)
 
   mvc:
     pathmatch:
@@ -30,8 +30,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ENC(cJSw+issxictv6LXetdxrRc2LPiWlRNNc3q6wlpLNTg=)
-    password: ENC(AXvykMWcrdysdNqPrzt06W80TUyG6Dtmd3FlrTBncn8=)
+    username: ENC8Ch6YMbst3xIvWjKBEz87+2wQGHqD4ZuevX0fZL31BE=)
+    password: ENC(sqA/vcW1F78l/2v5npMUUNQIApgwYMGbfApsJKuCuUo=)
     properties:
       mail:
         smtp:
