@@ -31,7 +31,7 @@ public class SwaggerConfig {
                 .produces(getProduceContentTypes())
                 .apiInfo(swaggerInfo()).select()
                 .apis(RequestHandlerSelectors.basePackage("com.nobrain.bookmarking"))
-                .paths(PathSelectors.ant("/api/**"))
+                .paths(PathSelectors.ant("/**"))
                 .build()
                 .useDefaultResponseMessages(false);
     }
