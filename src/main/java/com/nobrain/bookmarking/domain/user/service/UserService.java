@@ -31,11 +31,16 @@ public class UserService {
                 .build();
     }
 
-    public String findByForgotLoginId(UserRequest.FindLoginIdByPhoneNumber request){
+    public String findForgotLoginIdByPhoneNumber(UserRequest.FindLoginIdByPhoneNumber request){
         return userRepository.findByNameAndPhoneNumber(request.getName(), request.getPhoneNumber())
                 .orElseThrow(()->new UserNotFoundException(request.getName())).getLoginId();
     }
-
+  
+    public String findForgotLoginIdByEmail(UserRequest.FindLoginIdByEmail request){
+        return userRepository.findByNameAndEmail(request.getName(), request.getEmail())
+                .orElseThrow(()->new UserNotFoundException(request.getName())).getLoginId();
+    }
+  
     public boolean existsUsername(String username) {
         return userRepository.existsByName(username);
     }

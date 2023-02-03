@@ -52,4 +52,11 @@ public class UserRequest {
         private String name;
         private String email;
     }
+    @Getter
+    public static class FindLoginIdByEmail {
+        private String name;
+        private String email;
+
+    }
+
 }
