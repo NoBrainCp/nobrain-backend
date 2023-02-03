@@ -21,10 +21,10 @@ public class BookmarkController {
     private final TagService tagService;
     private final ResponseService responseService;
 
-    @GetMapping("/{username}/bookmarks")
-    public ListResult<BookmarkResponse.Info> getBookmarks(@PathVariable String username) {
-
-    }
+//    @GetMapping("/{username}/bookmarks")
+//    public ListResult<BookmarkResponse.Info> getBookmarks(@PathVariable String username) {
+//
+//    }
 
     @GetMapping("/{username}/{category}/bookmarks")
     public ListResult<BookmarkResponse.Info> getBookmarksInCategory(
