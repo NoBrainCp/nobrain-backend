@@ -29,11 +29,7 @@ public class Tag {
         this.bookmark = bookmark;
     }
 
-    /**
-     * 연관관계 편의 메서드
-     */
-    public void addBookmark(Bookmark bookmark) {
+    public void setBookmark(Bookmark bookmark) {
         this.bookmark = bookmark;
-        bookmark.getTags().add(this);
     }
 }

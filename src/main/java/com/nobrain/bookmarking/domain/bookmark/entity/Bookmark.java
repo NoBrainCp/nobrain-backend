@@ -10,7 +10,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,7 +35,7 @@ public class Bookmark extends BaseTimeEntity {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "bookmark")
+    @OneToMany(mappedBy = "bookmark", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Tag> tags = new ArrayList<>();
 
     @Builder
@@ -44,7 +46,7 @@ public class Bookmark extends BaseTimeEntity {
         this.isPublic = isPublic;
         this.isStar = isStar;
         addCategory(category);
-        this.tags = tags;
+        addTags(tags);
     }
 
     @Override
@@ -66,5 +68,10 @@ public class Bookmark extends BaseTimeEntity {
     public void addCategory(Category category) {
         this.category = category;
         category.getBookmarks().add(this);
+    }
+
+    public void addTags(List<Tag> tags) {
+        this.tags = tags;
+        tags.forEach(tag -> tag.setBookmark(this));
     }
 }
