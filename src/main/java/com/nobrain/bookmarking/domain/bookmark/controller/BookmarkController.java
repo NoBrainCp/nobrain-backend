@@ -21,16 +21,26 @@ public class BookmarkController {
     private final TagService tagService;
     private final ResponseService responseService;
 
-    @GetMapping("{username}/{category}/bookmarks")
-    public ListResult<BookmarkResponse.Info> getBookmarks(
+    @GetMapping("/{username}/bookmarks")
+    public ListResult<BookmarkResponse.Info> getBookmarks(@PathVariable String username) {
+
+    }
+
+    @GetMapping("/{username}/{category}/bookmarks")
+    public ListResult<BookmarkResponse.Info> getBookmarksInCategory(
             @PathVariable String username,
             @PathVariable String category) {
-        return responseService.getListResult(bookmarkService.getBookmarks(username, category));
+        return responseService.getListResult(bookmarkService.getBookmarksByCategory(username, category));
     }
 
     @PostMapping("/bookmark")
     public CommonResult addBookmark(@RequestBody BookmarkRequest.Create dto) {
         tagService.createTags(bookmarkService.createBookmark(dto));
+        return responseService.getSuccessResult();
+    }
+
+    @DeleteMapping("/bookmark/{bookmarkId}")
+    public CommonResult deleteBookmark(@PathVariable int bookmarkId) {
         return responseService.getSuccessResult();
     }
 }

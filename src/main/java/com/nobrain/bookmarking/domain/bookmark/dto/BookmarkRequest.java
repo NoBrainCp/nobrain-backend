@@ -30,6 +30,10 @@ public class BookmarkRequest {
         private String categoryName;
         private List<String> tags;
 
+        public void setUrl(String url) {
+            this.url = new StringBuilder(url).insert(0, "https://").toString();
+        }
+
         public Bookmark toEntity(Category category) {
             return Bookmark.builder()
                     .url(this.url)

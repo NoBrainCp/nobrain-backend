@@ -26,7 +26,12 @@ public class BookmarkService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
-    public List<BookmarkResponse.Info> getBookmarks(String username, String categoryName) {
+//    public List<BookmarkResponse.Info> getBookmarks(String username) {
+//        User user = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
+//    }
+
+
+    public List<BookmarkResponse.Info> getBookmarksByCategory(String username, String categoryName) {
         User user = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
         Category category = categoryRepository.findByUserAndName(user, categoryName).orElseThrow(() -> new CategoryNotFoundException(categoryName));
 
@@ -47,6 +52,11 @@ public class BookmarkService {
      */
     @Transactional
     public Bookmark createBookmark(BookmarkRequest.Create dto) {
+        String url = dto.getUrl();
+        if (!url.contains("https://")) {
+            dto.setUrl(url);
+        }
+
         Category category = categoryRepository.findByName(dto.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(dto.getCategoryName()));
         Bookmark bookmark = dto.toEntity(category);
         bookmarkRepository.save(bookmark);
