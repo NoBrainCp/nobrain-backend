@@ -3,7 +3,6 @@ package com.nobrain.bookmarking.domain.bookmark.controller;
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkRequest;
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkResponse;
 import com.nobrain.bookmarking.domain.bookmark.service.BookmarkService;
-import com.nobrain.bookmarking.domain.tag.service.TagService;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.model.ListResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
@@ -18,19 +17,35 @@ import org.springframework.web.bind.annotation.*;
 public class BookmarkController {
 
     private final BookmarkService bookmarkService;
-    private final TagService tagService;
     private final ResponseService responseService;
 
-    @GetMapping("{username}/{category}/bookmarks")
-    public ListResult<BookmarkResponse.Info> getBookmarks(
+    @GetMapping("/{username}/bookmarks")
+    public ListResult<BookmarkResponse.Info> getAllBookmarksByUsername(@PathVariable String username) {
+        return responseService.getListResult(bookmarkService.getAllBookmarksByUsername(username));
+    }
+
+    @GetMapping("/{username}/{category}/bookmarks")
+    public ListResult<BookmarkResponse.Info> getBookmarksInCategory(
             @PathVariable String username,
             @PathVariable String category) {
-        return responseService.getListResult(bookmarkService.getBookmarks(username, category));
+        return responseService.getListResult(bookmarkService.getBookmarksByCategory(username, category));
     }
 
     @PostMapping("/bookmark")
-    public CommonResult addBookmark(@RequestBody BookmarkRequest.Create dto) {
-        tagService.createTags(bookmarkService.createBookmark(dto));
+    public CommonResult addBookmark(@RequestBody BookmarkRequest.Info dto) {
+        bookmarkService.createBookmark(dto);
+        return responseService.getSuccessResult();
+    }
+
+    @PutMapping("/bookmark/{bookmarkId}")
+    public CommonResult updateBookmark(@PathVariable long bookmarkId, @RequestBody BookmarkRequest.Info dto) {
+        bookmarkService.updateBookmark(bookmarkId, dto);
+        return responseService.getSuccessResult();
+    }
+
+    @DeleteMapping("/bookmark/{bookmarkId}")
+    public CommonResult deleteBookmark(@PathVariable long bookmarkId) {
+        bookmarkService.deleteBookmark(bookmarkId);
         return responseService.getSuccessResult();
     }
 }

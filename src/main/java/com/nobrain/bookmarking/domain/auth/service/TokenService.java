@@ -96,8 +96,8 @@ public class TokenService {
     }
 
     public String getId(String token) {
-//        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getSubject();
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+//        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject(); // deprecation
+        return Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token).getBody().getSubject();
     }
 
     public Long getId() {
@@ -113,7 +113,8 @@ public class TokenService {
     // JWT Token 의 유효성 + 만료일자 확인
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+//            Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token); // deprecation
+            Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch (Exception e) {
             return false;

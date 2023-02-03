@@ -16,7 +16,7 @@ public class BookmarkRequest {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class Create {
+    public static class Info {
         private String url;
         private String title;
         private String description;
@@ -29,6 +29,10 @@ public class BookmarkRequest {
 
         private String categoryName;
         private List<String> tags;
+
+        public void setUrl(String url) {
+            this.url = new StringBuilder(url).insert(0, "https://").toString();
+        }
 
         public Bookmark toEntity(Category category) {
             return Bookmark.builder()
