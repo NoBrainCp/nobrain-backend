@@ -16,7 +16,7 @@ public class BookmarkRequest {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class Create {
+    public static class Info {
         private String url;
         private String title;
         private String description;
