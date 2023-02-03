@@ -3,10 +3,13 @@ package com.nobrain.bookmarking.domain.bookmark.service;
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkRequest;
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkResponse;
 import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
+import com.nobrain.bookmarking.domain.bookmark.exception.BookmarkNotFoundException;
+import com.nobrain.bookmarking.domain.bookmark.repository.BookmarkQueryRepository;
 import com.nobrain.bookmarking.domain.bookmark.repository.BookmarkRepository;
 import com.nobrain.bookmarking.domain.category.entity.Category;
 import com.nobrain.bookmarking.domain.category.exception.CategoryNotFoundException;
 import com.nobrain.bookmarking.domain.category.repository.CategoryRepository;
+import com.nobrain.bookmarking.domain.tag.repository.TagRepository;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
@@ -22,13 +25,25 @@ import java.util.stream.Collectors;
 @Service
 public class BookmarkService {
 
+    private final BookmarkQueryRepository bookmarkQueryRepository;
     private final BookmarkRepository bookmarkRepository;
     private final CategoryRepository categoryRepository;
+    private final TagRepository tagRepository;
     private final UserRepository userRepository;
 
-//    public List<BookmarkResponse.Info> getBookmarks(String username) {
-//        User user = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
-//    }
+    public List<BookmarkResponse.Info> getAllBookmarksByUsername(String username) {
+        Long userId = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username)).getId();
+        return bookmarkQueryRepository.findAllByUser(userId).stream()
+                .map(bookmark -> BookmarkResponse.Info.builder()
+                        .url(bookmark.getUrl())
+                        .title(bookmark.getTitle())
+                        .description(bookmark.getDescription())
+                        .isPublic(bookmark.isPublic())
+                        .isStar(bookmark.isStar())
+                        .createdAt(bookmark.getCreatedAt().toLocalDate())
+                        .build())
+                .collect(Collectors.toList());
+    }
 
 
     public List<BookmarkResponse.Info> getBookmarksByCategory(String username, String categoryName) {
@@ -51,7 +66,7 @@ public class BookmarkService {
      * https::// 없을시 추가 로직 구현 예정
      */
     @Transactional
-    public Bookmark createBookmark(BookmarkRequest.Create dto) {
+    public void createBookmark(BookmarkRequest.Info dto) {
         String url = dto.getUrl();
         if (!url.contains("https://")) {
             dto.setUrl(url);
@@ -60,6 +75,18 @@ public class BookmarkService {
         Category category = categoryRepository.findByName(dto.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(dto.getCategoryName()));
         Bookmark bookmark = dto.toEntity(category);
         bookmarkRepository.save(bookmark);
-        return bookmark;
+    }
+
+    @Transactional
+    public void updateBookmark(long bookmarkId, BookmarkRequest.Info dto) {
+        Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(() -> new BookmarkNotFoundException(String.valueOf(bookmarkId)));
+        Category category = categoryRepository.findByName(dto.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(dto.getCategoryName()));
+        tagRepository.deleteAllInBatch(bookmark.getTags());
+        bookmark.update(dto, category);
+    }
+
+    @Transactional
+    public void deleteBookmark(long bookmarkId) {
+        bookmarkRepository.deleteById(bookmarkId);
     }
 }
