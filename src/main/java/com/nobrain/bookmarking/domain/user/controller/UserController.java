@@ -36,9 +36,13 @@ public class UserController {
     public SingleResult<Boolean> existsEmail(@PathVariable String email) {
         return responseService.getSingleResult(userService.existsEmail(email));
     }
-    @PostMapping("/forget/loginId")
-    public SingleResult<String> findLoginIdByPhoneNumber(@RequestBody UserRequest.FindLoginIdBy request){
-        return responseService.getSingleResult(userService.findByForgotLoginId(request));
+    @PostMapping("/forget/loginId/phoneNumber")
+    public SingleResult<String> findLoginIdByPhoneNumber(@RequestBody UserRequest.FindLoginIdByPhoneNumber request){
+        return responseService.getSingleResult(userService.findForgotLoginIdByPhoneNumber(request));
+    }
+    @PostMapping("/forget/loginId/email")
+    public SingleResult<String> findLoginIdByPhoneEmail(@RequestBody UserRequest.FindLoginIdByEmail request){
+        return responseService.getSingleResult(userService.findForgotLoginIdByEmail(request));
     }
     @PutMapping("/user")
     public SingleResult<Long> update(

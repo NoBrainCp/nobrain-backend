@@ -42,9 +42,16 @@ public class UserRequest {
     }
 
     @Getter
-    public static class FindLoginIdBy {
+    public static class FindLoginIdByPhoneNumber {
         private String name;
         private String phoneNumber;
 
     }
+    @Getter
+    public static class FindLoginIdByEmail {
+        private String name;
+        private String email;
+
+    }
+
 }
