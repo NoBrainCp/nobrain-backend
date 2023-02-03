@@ -45,7 +45,12 @@ public class UserRequest {
     public static class FindLoginIdByPhoneNumber {
         private String name;
         private String phoneNumber;
+    }
 
+    @Getter
+    public static class FindLoginIdByEmail {
+        private String name;
+        private String email;
     }
     @Getter
     public static class FindLoginIdByEmail {

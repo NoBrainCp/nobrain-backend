@@ -1,12 +1,11 @@
 package com.nobrain.bookmarking.domain.user.service;
 
+import com.nobrain.bookmarking.domain.auth.service.TokenService;
 import com.nobrain.bookmarking.domain.user.dto.UserRequest;
 import com.nobrain.bookmarking.domain.user.dto.UserResponse;
 import com.nobrain.bookmarking.domain.user.entity.User;
-import com.nobrain.bookmarking.domain.user.exception.UserLoginIdNotFoundException;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
-import com.nobrain.bookmarking.domain.auth.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,14 +30,17 @@ public class UserService {
                 .roles(user.getRoles())
                 .build();
     }
+
     public String findForgotLoginIdByPhoneNumber(UserRequest.FindLoginIdByPhoneNumber request){
         return userRepository.findByNameAndPhoneNumber(request.getName(), request.getPhoneNumber())
                 .orElseThrow(()->new UserNotFoundException(request.getName())).getLoginId();
     }
+  
     public String findForgotLoginIdByEmail(UserRequest.FindLoginIdByEmail request){
         return userRepository.findByNameAndEmail(request.getName(), request.getEmail())
                 .orElseThrow(()->new UserNotFoundException(request.getName())).getLoginId();
     }
+  
     public boolean existsUsername(String username) {
         return userRepository.existsByName(username);
     }
@@ -65,17 +67,4 @@ public class UserService {
     private User findById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.valueOf(id)));
     }
-
-    private User findByEmail(String email) {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
-    }
-
-    private User findByName(String name) {
-        return userRepository.findByName(name).orElseThrow(() -> new UserNotFoundException(name));
-    }
-
-    private User findByLoginId(String loginId) {
-        return userRepository.findByLoginId(loginId).orElseThrow(() -> new UserLoginIdNotFoundException(loginId));
-    }
-
 }
