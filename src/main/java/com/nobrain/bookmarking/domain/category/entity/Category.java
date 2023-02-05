@@ -1,6 +1,7 @@
 package com.nobrain.bookmarking.domain.category.entity;
 
 import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
+import com.nobrain.bookmarking.domain.category.dto.CategoryRequest;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -43,6 +44,12 @@ public class Category {
         this.isPublic = isPublic;
         addUser(user);
         this.bookmarks = bookmarks;
+    }
+
+    public void update(CategoryRequest.Info dto) {
+        this.name = dto.getName();
+        this.description = dto.getDescription();
+        this.isPublic = dto.isPublic();
     }
 
     @Override
