@@ -58,9 +58,9 @@ public class MailService {
     }
 
     public void sendEmail(String toEmail) throws MessagingException {
-        if (redisUtil.existData(toEmail)) {
-            redisUtil.deleteData(toEmail);
-        }
+//        if (redisUtil.existData(toEmail)) {
+//            redisUtil.deleteData(toEmail);
+//        }
 
         MimeMessage emailForm = creatEmailForm(toEmail);
         mailSender.send(emailForm);
@@ -82,8 +82,9 @@ public class MailService {
         message.addRecipients(MimeMessage.RecipientType.TO, email);
         message.setSubject(AUTHENTICATION_MAIL_SUBJECT);
         message.setFrom(configEmail);
+        message.setText(setContext(authCode), "utf-8", "html");
 
-        redisUtil.setDataExpire(email, authCode, DURATION);
+//        redisUtil.setDataExpire(email, authCode, DURATION);
         return message;
     }
 
