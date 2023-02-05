@@ -14,4 +14,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     List<Category> findAllByUser(User user);
 
     boolean existsByName(String name);
+    boolean existsByUserAndName(User user, String categoryName);
+
+    void deleteByUserAndName(User user, String name);
 }

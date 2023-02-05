@@ -1,6 +1,7 @@
 package com.nobrain.bookmarking.domain.category.entity;
 
 import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
+import com.nobrain.bookmarking.domain.category.dto.CategoryRequest;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -10,12 +11,16 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.util.*;
 
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.FetchType.*;
+import static javax.persistence.GenerationType.*;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Category {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "category_id")
     private Long id;
 
@@ -25,11 +30,11 @@ public class Category {
     private String description;
     private boolean isPublic;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", cascade = ALL)
     private List<Bookmark> bookmarks = new ArrayList<>();
 
     @Builder
@@ -39,6 +44,12 @@ public class Category {
         this.isPublic = isPublic;
         addUser(user);
         this.bookmarks = bookmarks;
+    }
+
+    public void update(CategoryRequest.Info dto) {
+        this.name = dto.getName();
+        this.description = dto.getDescription();
+        this.isPublic = dto.isPublic();
     }
 
     @Override
