@@ -29,7 +29,7 @@ public class MailService {
     @Value("${spring.mail.username}")
     private String configEmail;
 
-    public void sendMailToUsers(List<String> emails, String subject, String text) {
+    public void sendEmailToUsers(List<String> emails, String subject, String text) {
         int size = emails.size();
 
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
@@ -40,27 +40,10 @@ public class MailService {
         mailSender.send(simpleMailMessage);
     }
 
-    public void sendMailForAuthentication(String email, int code) {
-        String text = "";
-        text+= "<div align='center' style='border:1px solid black; font-family:verdana';>";
-        text+= "<h3 style='color:blue;'>인증 코드입니다.</h3>";
-        text+= "<div style='font-size:130%'>";
-        text+= "CODE : <strong>";
-        text+= code+"</strong><div><br/> ";
-        text+= "</div>";
-
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(email);
-        simpleMailMessage.setSubject(AUTHENTICATION_MAIL_SUBJECT);
-        simpleMailMessage.setText(text);
-
-        mailSender.send(simpleMailMessage);
-    }
-
-    public void sendEmail(String toEmail) throws MessagingException {
-//        if (redisUtil.existData(toEmail)) {
-//            redisUtil.deleteData(toEmail);
-//        }
+    public void sendEmailForAuthentication(String toEmail) throws MessagingException {
+        if (redisUtil.existData(toEmail)) {
+            redisUtil.deleteData(toEmail);
+        }
 
         MimeMessage emailForm = creatEmailForm(toEmail);
         mailSender.send(emailForm);
@@ -84,7 +67,7 @@ public class MailService {
         message.setFrom(configEmail);
         message.setText(setContext(authCode), "utf-8", "html");
 
-//        redisUtil.setDataExpire(email, authCode, DURATION);
+        redisUtil.setDataExpire(email, authCode, DURATION);
         return message;
     }
 
