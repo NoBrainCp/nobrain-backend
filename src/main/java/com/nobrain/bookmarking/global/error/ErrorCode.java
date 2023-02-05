@@ -22,7 +22,9 @@ public enum ErrorCode {
 
     // Category
     CATEGORY_NAME_DUPLICATION(400, "C001", "Category name is Duplication"),
-    CATEGORY_NAME_NOT_FOUND(400, "C002", "Category name is not Found");
+    CATEGORY_NAME_NOT_FOUND(400, "C002", "Category name is not Found"),
+
+    INVALID_AUTH_CODE(401, "A001", "인증 코드가 올바르지 않습니다.");
 
     private int status;
     private final String code;

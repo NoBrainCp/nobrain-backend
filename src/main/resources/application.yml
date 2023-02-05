@@ -6,7 +6,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   redis:
-    host: ENC(tUJI6ptGZON23SQCV/ug7+Jc7K/IBc7+)
+    host: ENC(8x8LKSr+q33Dl2nmNTosfuUUrDpOhTI5)
     port: 6379
 
   jpa:
