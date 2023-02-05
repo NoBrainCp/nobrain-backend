@@ -8,13 +8,12 @@ import lombok.Getter;
 public class CategoryRequest {
 
     @Getter
-    public static class Create {
+    public static class Info {
         private String name;
         private String description;
 
         @JsonProperty("isPublic")
         private boolean isPublic;
-        private String username;
 
         public Category toEntity(User user) {
             return Category.builder()
