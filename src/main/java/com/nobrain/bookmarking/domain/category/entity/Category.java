@@ -70,6 +70,6 @@ public class Category {
      */
     public void addUser(User user) {
         this.user = user;
-        user.getCategory().add(this);
+        user.getCategories().add(this);
     }
 }
