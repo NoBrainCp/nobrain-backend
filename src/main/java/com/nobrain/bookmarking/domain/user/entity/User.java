@@ -35,20 +35,20 @@ public class User extends BaseTimeEntity implements UserDetails {
     private LocalDate birthDate;
 
     @OneToMany(mappedBy = "user")
-    private List<Category> category;
+    private List<Category> categories;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
     @Builder
-    public User(String loginId, String email, String password, String name, String phoneNumber, LocalDate birthDate, List<Category> category, List<String> roles) {
+    public User(String loginId, String email, String password, String name, String phoneNumber, LocalDate birthDate, List<Category> categories, List<String> roles) {
         this.loginId = loginId;
         this.email = email;
         this.password = password;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.birthDate = birthDate;
-        this.category = category;
+        this.categories = categories;
         this.roles = roles;
     }
 
