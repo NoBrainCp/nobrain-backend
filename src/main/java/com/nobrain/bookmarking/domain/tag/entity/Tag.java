@@ -1,35 +1,34 @@
 package com.nobrain.bookmarking.domain.tag.entity;
 
-import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
+import com.nobrain.bookmarking.domain.bookmark_tag.entity.BookmarkTag;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import static javax.persistence.CascadeType.*;
+import static javax.persistence.GenerationType.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Tag {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "tag_id")
     private Long id;
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bookmark_id")
-    private Bookmark bookmark;
+    @OneToMany(mappedBy = "tag", cascade = ALL)
+    List<BookmarkTag> bookmarks = new ArrayList<>();
 
     @Builder
-    public Tag(String name, Bookmark bookmark) {
+    public Tag(String name) {
         this.name = name;
-        this.bookmark = bookmark;
-    }
-
-    public void setBookmark(Bookmark bookmark) {
-        this.bookmark = bookmark;
     }
 }

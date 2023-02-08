@@ -3,19 +3,13 @@ package com.nobrain.bookmarking.domain.bookmark.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
 import com.nobrain.bookmarking.domain.category.entity.Category;
-import com.nobrain.bookmarking.domain.tag.entity.Tag;
-import lombok.*;
+import lombok.Getter;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class BookmarkRequest {
 
     @Getter
-    @Setter
-    @Builder
-    @NoArgsConstructor
-    @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public static class Info {
         private String url;
         private String title;
@@ -42,9 +36,6 @@ public class BookmarkRequest {
                     .isPublic(this.isPublic)
                     .isStar(this.isStar)
                     .category(category)
-                    .tags(this.tags.stream()
-                            .map((tagName) -> Tag.builder().name(tagName).build())
-                            .collect(Collectors.toList()))
                     .build();
         }
     }

@@ -1,8 +1,8 @@
 package com.nobrain.bookmarking.domain.bookmark.controller;
 
-import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkRequest;
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkResponse;
 import com.nobrain.bookmarking.domain.bookmark.service.BookmarkService;
+import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkRequest;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.model.ListResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
@@ -31,15 +31,15 @@ public class BookmarkController {
         return responseService.getListResult(bookmarkService.getBookmarksByCategory(username, category));
     }
 
-    @PostMapping("/bookmark")
-    public CommonResult addBookmark(@RequestBody BookmarkRequest.Info dto) {
-        bookmarkService.createBookmark(dto);
+    @PostMapping("/{username}/bookmark")
+    public CommonResult addBookmark(@PathVariable String username, @RequestBody BookmarkRequest.Info requestDto) {
+        bookmarkService.createBookmark(username, requestDto);
         return responseService.getSuccessResult();
     }
 
     @PutMapping("/bookmark/{bookmarkId}")
-    public CommonResult updateBookmark(@PathVariable long bookmarkId, @RequestBody BookmarkRequest.Info dto) {
-        bookmarkService.updateBookmark(bookmarkId, dto);
+    public CommonResult updateBookmark(@PathVariable long bookmarkId, @RequestBody BookmarkRequest.Info requestDto) {
+        bookmarkService.updateBookmark(bookmarkId, requestDto);
         return responseService.getSuccessResult();
     }
 

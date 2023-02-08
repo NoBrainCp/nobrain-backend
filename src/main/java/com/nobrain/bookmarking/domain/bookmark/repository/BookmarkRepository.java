@@ -9,4 +9,6 @@ import java.util.List;
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
     List<Bookmark> findAllByCategory(Category category);
+
+    boolean existsByUrlAndCategory(String url, Category category);
 }

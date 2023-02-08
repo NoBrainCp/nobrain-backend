@@ -1,15 +1,16 @@
 package com.nobrain.bookmarking.domain.bookmark.service;
 
-import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkRequest;
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkResponse;
 import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
+import com.nobrain.bookmarking.domain.bookmark.exception.BookmarkDuplicationException;
 import com.nobrain.bookmarking.domain.bookmark.exception.BookmarkNotFoundException;
 import com.nobrain.bookmarking.domain.bookmark.repository.BookmarkQueryRepository;
 import com.nobrain.bookmarking.domain.bookmark.repository.BookmarkRepository;
+import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkRequest;
+import com.nobrain.bookmarking.domain.bookmark_tag.service.BookmarkTagService;
 import com.nobrain.bookmarking.domain.category.entity.Category;
 import com.nobrain.bookmarking.domain.category.exception.CategoryNotFoundException;
 import com.nobrain.bookmarking.domain.category.repository.CategoryRepository;
-import com.nobrain.bookmarking.domain.tag.repository.TagRepository;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
@@ -28,8 +29,8 @@ public class BookmarkService {
     private final BookmarkQueryRepository bookmarkQueryRepository;
     private final BookmarkRepository bookmarkRepository;
     private final CategoryRepository categoryRepository;
-    private final TagRepository tagRepository;
     private final UserRepository userRepository;
+    private final BookmarkTagService bookmarkTagService;
 
     public List<BookmarkResponse.Info> getAllBookmarksByUsername(String username) {
         Long userId = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username)).getId();
@@ -62,31 +63,46 @@ public class BookmarkService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * https::// 없을시 추가 로직 구현 예정
-     */
     @Transactional
-    public void createBookmark(BookmarkRequest.Info dto) {
-        String url = dto.getUrl();
+    public void createBookmark(String username, BookmarkRequest.Info requestDto) {
+        String url = requestDto.getUrl();
         if (!url.contains("https://")) {
-            dto.setUrl(url);
+            requestDto.setUrl(url);
         }
 
-        Category category = categoryRepository.findByName(dto.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(dto.getCategoryName()));
-        Bookmark bookmark = dto.toEntity(category);
+        User user = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
+        Category category = categoryRepository.findByUserAndName(user, requestDto.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(requestDto.getCategoryName()));
+        Bookmark bookmark = requestDto.toEntity(category);
+
+        validateBookmark(requestDto, category);
         bookmarkRepository.save(bookmark);
+
+        bookmarkTagService.saveTags(bookmark, requestDto.getTags());
     }
 
     @Transactional
-    public void updateBookmark(long bookmarkId, BookmarkRequest.Info dto) {
-        Bookmark bookmark = bookmarkRepository.findById(bookmarkId).orElseThrow(() -> new BookmarkNotFoundException(String.valueOf(bookmarkId)));
-        Category category = categoryRepository.findByName(dto.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(dto.getCategoryName()));
-        tagRepository.deleteAllInBatch(bookmark.getTags());
-        bookmark.update(dto, category);
+    public void updateBookmark(long bookmarkId, BookmarkRequest.Info requestDto) {
+        Bookmark bookmark = findById(bookmarkId);
+        Category category = categoryRepository.findByName(requestDto.getCategoryName())
+                .orElseThrow(() -> new CategoryNotFoundException(requestDto.getCategoryName()));
+
+        bookmark.update(requestDto, category);
+
+        bookmarkTagService.update(bookmark, requestDto);
     }
 
     @Transactional
     public void deleteBookmark(long bookmarkId) {
         bookmarkRepository.deleteById(bookmarkId);
+    }
+
+    private Bookmark findById(long bookmarkId) {
+        return bookmarkRepository.findById(bookmarkId).orElseThrow(() -> new BookmarkNotFoundException(String.valueOf(bookmarkId)));
+    }
+
+    private void validateBookmark(BookmarkRequest.Info requestDto, Category category) {
+        if (!bookmarkRepository.existsByUrlAndCategory(requestDto.getUrl(), category)) {
+            throw new BookmarkDuplicationException(requestDto.getUrl());
+        }
     }
 }
