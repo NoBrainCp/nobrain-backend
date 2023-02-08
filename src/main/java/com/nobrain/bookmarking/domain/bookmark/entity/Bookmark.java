@@ -1,11 +1,9 @@
 package com.nobrain.bookmarking.domain.bookmark.entity;
 
+import com.nobrain.bookmarking.domain.bookmark_tag.entity.BookmarkTag;
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkRequest;
 import com.nobrain.bookmarking.domain.category.entity.Category;
-import com.nobrain.bookmarking.domain.tag.entity.Tag;
-import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.global.entity.BaseTimeEntity;
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,10 +12,11 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
+
+import static lombok.AccessLevel.PROTECTED;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 @Entity
 public class Bookmark extends BaseTimeEntity {
 
@@ -38,17 +37,16 @@ public class Bookmark extends BaseTimeEntity {
     private Category category;
 
     @OneToMany(mappedBy = "bookmark", cascade = CascadeType.ALL)
-    private List<Tag> tags = new ArrayList<>();
+    private List<BookmarkTag> tags = new ArrayList<>();
 
     @Builder
-    public Bookmark(String url, String title, String description, boolean isPublic, boolean isStar, User user, Category category, List<Tag> tags) {
+    public Bookmark(String url, String title, String description, boolean isPublic, boolean isStar, Category category) {
         this.url = url;
         this.title = title;
         this.description = description;
         this.isPublic = isPublic;
         this.isStar = isStar;
         addCategory(category);
-        addTags(tags);
     }
 
     public void update(BookmarkRequest.Info requestDto, Category category) {
@@ -58,9 +56,6 @@ public class Bookmark extends BaseTimeEntity {
         this.isPublic = requestDto.isPublic();
         this.isStar = requestDto.isStar();
         this.category = category;
-        this.tags = requestDto.getTags().stream()
-                .map(tag -> Tag.builder().name(tag).bookmark(this).build())
-                .collect(Collectors.toList());
     }
 
     @Override
@@ -82,10 +77,5 @@ public class Bookmark extends BaseTimeEntity {
     public void addCategory(Category category) {
         this.category = category;
         category.getBookmarks().add(this);
-    }
-
-    public void addTags(List<Tag> tags) {
-        this.tags = tags;
-        tags.forEach(tag -> tag.setBookmark(this));
     }
 }
