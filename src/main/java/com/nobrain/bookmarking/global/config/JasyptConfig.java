@@ -1,4 +1,4 @@
-package com.nobrain.bookmarking.global.jasypt;
+package com.nobrain.bookmarking.global.config;
 
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;

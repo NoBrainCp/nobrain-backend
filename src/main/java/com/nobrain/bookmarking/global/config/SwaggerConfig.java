@@ -1,4 +1,4 @@
-package com.nobrain.bookmarking.global.swagger;
+package com.nobrain.bookmarking.global.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
