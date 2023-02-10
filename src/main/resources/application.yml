@@ -1,43 +1,16 @@
+server:
+  port: 8080
+
 spring:
-  datasource:
-    url: ENC(itu2+6u52iN9BbDTvugHyUYS9ZT9L7WE0Ikn5zBqDRveJpsA2b6SD/OuXGK273u0dVU86RTm6urfLusiIULErklql9YSiXAY8jSMflNOgywBMD9dGirryWkQFnsEUJFf9lx8QlAOAV4wdhjmypVwxsRZz1YH74JdUFDYekshyExxE31xM3TMCV/kZa7/7+zs73pDIwDnpmk=)
-    username: ENC(++igq5vlq69jELYCl5i/kg==)
-    password: ENC(PUWPyNf79K7oxgcTV2BDpcqvRpPU58ST)
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
-  redis:
-    host: ENC(8x8LKSr+q33Dl2nmNTosfuUUrDpOhTI5)
-    port: 6379
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        format_sql: true
-    show-sql: true
-
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-
-  jwt:
-    secret: ENC(zoV04jn/ttqdTIsRL/QTriKYAHCsjsoihsm5KjXfm2C+Z0TsX8ZHdWHmoizPf2rU)
+  profiles:
+    default: prod
 
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
 
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ENC(y9kWKMRAy5c2RwJ68FrK4MBIP82AMK8RShFwxm5hp/Q=)
-    password: ENC(j0qRQzDRgoFJEzBz4bT8uXdIvLlmYK12TVEugCbmjrI=)
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 
 app:
   domain: /api
