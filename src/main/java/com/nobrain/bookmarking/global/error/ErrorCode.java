@@ -19,6 +19,7 @@ public enum ErrorCode {
     USERNAME_NOT_FOUND(400, "U005", "Username is not Found"),
     INVALID_PASSWORD(400, "U006", "Password is not Correct"),
     PHONE_NUMBER_DUPLICATION(400, "U006", "Phone number is Duplication"),
+    PASSWORD_CHECK(400, "U007", "비밀번호가 일치하지 않습니다."),
 
     // Category
     CATEGORY_NAME_DUPLICATION(400, "C001", "Category name is Duplication"),
