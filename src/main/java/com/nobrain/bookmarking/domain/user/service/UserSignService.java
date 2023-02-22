@@ -52,5 +52,13 @@ public class UserSignService {
         if (userRepository.existsByPhoneNumber(dto.getPhoneNumber())) {
             throw new UserPhoneNumberDuplicationException(dto.getPhoneNumber());
         }
+
+        if (!checkPassword(dto.getPassword(), dto.getPasswordCheck())) {
+            throw new UserPasswordCheckException(dto.getPassword());
+        }
+    }
+
+    private boolean checkPassword(String password, String passwordCheck) {
+        return password.equals(passwordCheck);
     }
 }

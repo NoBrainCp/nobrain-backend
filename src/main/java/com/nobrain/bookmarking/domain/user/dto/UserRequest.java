@@ -20,6 +20,7 @@ public class UserRequest {
         private String loginId;
         private String email;
         private String password;
+        private String passwordCheck;
         private String name;
         private String phoneNumber;
         private LocalDate birthDate;
