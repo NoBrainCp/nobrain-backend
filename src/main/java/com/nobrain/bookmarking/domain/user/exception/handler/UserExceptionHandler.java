@@ -1,6 +1,7 @@
 package com.nobrain.bookmarking.domain.user.exception.handler;
 
-import com.nobrain.bookmarking.domain.user.exception.UserPasswordCheckException;
+import com.nobrain.bookmarking.domain.user.exception.UserEmailDuplicationException;
+import com.nobrain.bookmarking.domain.user.exception.UserNotCorrectPasswordException;
 import com.nobrain.bookmarking.global.error.ErrorCode;
 import com.nobrain.bookmarking.global.error.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -13,10 +14,17 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class UserExceptionHandler {
 
-    @ExceptionHandler(UserPasswordCheckException.class)
-    protected ResponseEntity<ErrorResponse> handleUserPasswordCheckException(UserPasswordCheckException e) {
-        log.error("handleUserPasswordCheckException", e);
-        final ErrorResponse response = ErrorResponse.of(ErrorCode.PASSWORD_CHECK);
+    @ExceptionHandler(UserEmailDuplicationException.class)
+    protected ResponseEntity<ErrorResponse> handleUserEmailDuplicationException(UserEmailDuplicationException e) {
+        log.error("handleUserEmailDuplicationException", e);
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.EMAIL_DUPLICATION);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UserNotCorrectPasswordException.class)
+    protected ResponseEntity<ErrorResponse> handleUserPasswordCheckException(UserNotCorrectPasswordException e) {
+        log.error("handleUserNotCorrectPasswordException", e);
+        final ErrorResponse response = ErrorResponse.of(ErrorCode.INVALID_PASSWORD);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

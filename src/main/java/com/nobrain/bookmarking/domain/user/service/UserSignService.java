@@ -54,7 +54,7 @@ public class UserSignService {
         }
 
         if (checkPassword(dto.getPassword(), dto.getPasswordCheck())) {
-            throw new UserPasswordCheckException(dto.getPassword());
+            throw new UserNotCorrectPasswordException(dto.getPassword());
         }
     }
 
