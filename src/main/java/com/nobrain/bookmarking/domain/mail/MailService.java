@@ -1,5 +1,7 @@
 package com.nobrain.bookmarking.domain.mail;
 
+import com.nobrain.bookmarking.domain.user.exception.UserEmailNotFoundException;
+import com.nobrain.bookmarking.domain.user.repository.UserRepository;
 import com.nobrain.bookmarking.global.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +25,7 @@ public class MailService {
     private static final String AUTHENTICATION_MAIL_SUBJECT = "Nobrain 인증코드 메일입니다.";
     private static final long DURATION = 60 * 30L;
 
+    private final UserRepository userRepository;
     private final JavaMailSender mailSender;
     private final RedisUtil redisUtil;
 
@@ -90,5 +93,16 @@ public class MailService {
 
     private String generatedCode() {
         return String.valueOf(ThreadLocalRandom.current().nextInt(100000, 1000000));
+    }
+
+    public void sendUserLoginId(String mail) {
+        String loginId = userRepository.findByEmail(mail).orElseThrow(() -> new UserEmailNotFoundException(mail)).getLoginId();
+
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(mail);
+        simpleMailMessage.setSubject("NoBrain 아이디 찾기");
+        simpleMailMessage.setText("ID: " + loginId);
+
+        mailSender.send(simpleMailMessage);
     }
 }
