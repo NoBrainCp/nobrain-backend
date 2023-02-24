@@ -4,9 +4,11 @@ import com.nobrain.bookmarking.domain.auth.service.TokenService;
 import com.nobrain.bookmarking.domain.user.dto.UserRequest;
 import com.nobrain.bookmarking.domain.user.dto.UserResponse;
 import com.nobrain.bookmarking.domain.user.entity.User;
+import com.nobrain.bookmarking.domain.user.exception.UserNotCorrectPasswordException;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +19,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final TokenService tokenService;
+    private final PasswordEncoder passwordEncoder;
 
     public UserResponse.Profile getMyProfile() {
         User user = findById(tokenService.getId());
@@ -66,5 +69,15 @@ public class UserService {
 
     private User findById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.valueOf(id)));
+    }
+
+    @Transactional
+    public void changePassword(UserRequest.ChangePassword dto) {
+        User user = userRepository.findByLoginId(dto.getLoginId()).orElseThrow(
+                () -> new UserNotFoundException(dto.getLoginId()));
+        if (!dto.getPassword().equals(dto.getPasswordCheck())) {
+            throw new UserNotCorrectPasswordException(dto.getPassword());
+        }
+        user.changePassword(passwordEncoder.encode(dto.getPassword()));
     }
 }

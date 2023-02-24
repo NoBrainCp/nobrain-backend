@@ -54,6 +54,12 @@ public class UserController {
         return responseService.getSingleResult(userService.update(userId, username));
     }
 
+    @PutMapping("/user/password")
+    public CommonResult changePassword(@RequestBody UserRequest.ChangePassword dto) {
+        userService.changePassword(dto);
+        return responseService.getSuccessResult();
+    }
+
     @DeleteMapping("/user/{userId}")
     public CommonResult delete(@PathVariable Long userId) {
         userService.delete(userId);
