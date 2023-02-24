@@ -53,4 +53,11 @@ public class UserRequest {
         private String name;
         private String email;
     }
+
+    @Getter
+    public static class ChangePassword {
+        private String loginId;
+        private String password;
+        private String passwordCheck;
+    }
 }
