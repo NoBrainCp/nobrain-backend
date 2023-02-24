@@ -13,13 +13,14 @@ public enum ErrorCode {
 
     // User
     USER_NOT_FOUND(400, "U001", "존재하지 않는 유저입니다."),
-    EMAIL_DUPLICATION(400, "U002", "중복된 이메일입니다."),
-    LOGIN_ID_DUPLICATION(400, "U003", "중복된 아이디입니다."),
-    LOGIN_ID_NOT_FOUND(400, "U004", "아이디를 찾을 수 없습니다."),
-    USERNAME_NOT_FOUND(400, "U005", "닉네임을 찾을 수 없습니다."),
-    USERNAME_DUPLICATION(400, "U006", "중복된 닉네임 입니다."),
-    INVALID_PASSWORD(400, "U007", "비밀번호가 일치하지 않습니다."),
-    PHONE_NUMBER_DUPLICATION(400, "U008", "중복된 휴대폰 번호입니다."),
+    EMAIL_NOT_FOUND(400, "U002", "등록되지 않은 이메일입니다."),
+    EMAIL_DUPLICATION(400, "U003", "중복된 이메일입니다."),
+    LOGIN_ID_DUPLICATION(400, "U004", "중복된 아이디입니다."),
+    LOGIN_ID_NOT_FOUND(400, "U005", "아이디를 찾을 수 없습니다."),
+    USERNAME_NOT_FOUND(400, "U006", "닉네임을 찾을 수 없습니다."),
+    USERNAME_DUPLICATION(400, "U007", "중복된 닉네임 입니다."),
+    INVALID_PASSWORD(400, "U008", "비밀번호가 일치하지 않습니다."),
+    PHONE_NUMBER_DUPLICATION(400, "U009", "중복된 휴대폰 번호입니다."),
 
     // Category
     CATEGORY_NAME_DUPLICATION(400, "C001", "Category name is Duplication"),
