@@ -24,12 +24,12 @@ public class UserController {
         return responseService.getSingleResult(userService.getMyProfile());
     }
 
-    @GetMapping("/user/{username}/exists")
+    @GetMapping("/user/username/{username}/exists")
     public SingleResult<Boolean> existsUsername(@PathVariable String username) {
         return responseService.getSingleResult(userRepository.existsByName(username));
     }
 
-    @GetMapping("/user/{loginId}/exists")
+    @GetMapping("/user/loginid/{loginId}/exists")
     public SingleResult<Boolean> existsLoginId(@PathVariable String loginId) {
         return responseService.getSingleResult(userRepository.existsByLoginId(loginId));
     }
