@@ -28,9 +28,6 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 public class PhoneService {
 
-    private static final String AUTHENTICATION_MAIL_SUBJECT = "Nobrain 인증코드 입니다.";
-    private static final long DURATION = 60 * 30L;
-    private final RedisUtil redisUtil;
     @Value("${COOLSMS.API_KEY}")
     private String API_KEY;
 
@@ -39,6 +36,11 @@ public class PhoneService {
 
     @Value("${COOLSMS.PHONE_NUMBER}")
     private String FROM_PHONE_NUMBER;
+
+    private static final String AUTHENTICATION_MAIL_SUBJECT = "Nobrain 인증코드 입니다.";
+    private static final long DURATION = 60 * 30L;
+
+    private final RedisUtil redisUtil;
     private DefaultMessageService messageService;
 
     @PostConstruct
