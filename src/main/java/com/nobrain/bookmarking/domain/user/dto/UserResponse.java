@@ -12,6 +12,15 @@ public class UserResponse {
     @Getter
     @Builder
     @AllArgsConstructor
+    public static class SignIn {
+        private Long userId;
+        private String username;
+        private String token;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
     public static class Profile {
         private String loginId;
         private String email;
