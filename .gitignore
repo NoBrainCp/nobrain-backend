@@ -35,3 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### QueryDsl ###
+src/main/generated
+
+### API KEY ###
+resources/application-API-KEY.properties
