@@ -9,6 +9,8 @@ import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import org.springframework.web.bind.annotation.*;
 import retrofit2.http.Path;
 
+import java.io.IOException;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${app.domain}")
@@ -26,6 +28,12 @@ public class PhoneController {
     @PostMapping("/phone/messages")
     public SingleResult<MultipleDetailMessageSentResponse> sendMany(@RequestBody PhoneRequest.MultipleMessage dto) {
         MultipleDetailMessageSentResponse response = phoneService.sendManyMessage(dto);
+        return responseService.getSingleResult(response);
+    }
+
+    @PostMapping("/phone/{phoneNumber}/image")
+    public SingleResult<SingleMessageSentResponse> sendMMS(@PathVariable String phoneNumber, @RequestBody PhoneRequest.SingleText dto) throws IOException {
+        SingleMessageSentResponse response = phoneService.sendMmsByResourcePath(phoneNumber, dto.getText());
         return responseService.getSingleResult(response);
     }
 

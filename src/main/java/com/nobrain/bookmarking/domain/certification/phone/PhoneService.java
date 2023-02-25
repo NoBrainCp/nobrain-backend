@@ -79,17 +79,6 @@ public class PhoneService {
         return response;
     }
 
-    public SingleMessageSentResponse sendMmsByResourcePath(String phoneNumber, String text) throws IOException {
-        ClassPathResource resource = new ClassPathResource("static/sample.png");
-        File file = resource.getFile();
-        String imageId = this.messageService.uploadFile(file, StorageType.MMS, null);
-
-        Message message = createMessage(phoneNumber, text);
-        message.setImageId(imageId);
-
-        return this.messageService.sendOne(new SingleMessageSendingRequest(message));
-    }
-
     public MultipleDetailMessageSentResponse sendManyMessage(PhoneRequest.MultipleMessage dto) {
         ArrayList<Message> messageList = new ArrayList<>();
 
@@ -107,6 +96,17 @@ public class PhoneService {
         } catch (NurigoUnknownException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public SingleMessageSentResponse sendMmsByResourcePath(String phoneNumber, String text) throws IOException {
+        ClassPathResource resource = new ClassPathResource("static/sample.jpg");
+        File file = resource.getFile();
+        String imageId = this.messageService.uploadFile(file, StorageType.MMS, null);
+
+        Message message = createMessage(phoneNumber, text);
+        message.setImageId(imageId);
+
+        return this.messageService.sendOne(new SingleMessageSendingRequest(message));
     }
 
     public Balance getBalance() {
