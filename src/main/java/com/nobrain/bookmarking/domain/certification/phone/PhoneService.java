@@ -33,7 +33,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 public class PhoneService {
 
-    private static final String AUTHENTICATION_MAIL_SUBJECT = "Nobrain 인증코드 메일입니다.";
+    private static final String AUTHENTICATION_MAIL_SUBJECT = "Nobrain 인증코드 입니다.";
     private static final long DURATION = 60 * 30L;
     private final RedisUtil redisUtil;
     @Value("${COOLSMS.API_KEY}")
@@ -70,7 +70,7 @@ public class PhoneService {
 
     public SingleMessageSentResponse sendSingleMessage(String phoneNumber) {
         String authCode = generatedCode();
-        String text = AUTHENTICATION_MAIL_SUBJECT + "\n" + "CODE: " + authCode;
+        String text = AUTHENTICATION_MAIL_SUBJECT + "\n" + "CODE: [" + authCode + "]";
 
         Message message = createMessage(phoneNumber, text);
 
