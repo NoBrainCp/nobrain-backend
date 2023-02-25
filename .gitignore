@@ -40,4 +40,4 @@ out/
 src/main/generated
 
 ### API KEY ###
-resources/application-API-KEY.yml
+src/main/resources/application-API-KEY.yml
