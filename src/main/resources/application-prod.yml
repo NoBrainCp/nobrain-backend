@@ -19,22 +19,3 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-    properties:
-      hibernate:
-        format_sql: true
-    show-sql: true
-
-  jwt:
-    secret: ENC(zoV04jn/ttqdTIsRL/QTriKYAHCsjsoihsm5KjXfm2C+Z0TsX8ZHdWHmoizPf2rU)
-
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ENC(y9kWKMRAy5c2RwJ68FrK4MBIP82AMK8RShFwxm5hp/Q=)
-    password: ENC(j0qRQzDRgoFJEzBz4bT8uXdIvLlmYK12TVEugCbmjrI=)
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
