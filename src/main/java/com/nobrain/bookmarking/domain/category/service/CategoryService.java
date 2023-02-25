@@ -37,11 +37,11 @@ public class CategoryService {
 
     @Transactional
     public String create(String username, CategoryRequest.Info requestDto) {
-        if (categoryRepository.existsByName(requestDto.getName())) {
+        User user = findUserByUsername(username);
+        if (categoryRepository.existsByUserAndName(user, requestDto.getName())) {
             throw new CategoryNameDuplicationException(requestDto.getName());
         }
 
-        User user = findUserByUsername(username);
         return categoryRepository.save(requestDto.toEntity(user)).getName();
     }
 
