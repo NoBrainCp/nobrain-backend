@@ -24,19 +24,14 @@ public class UserController {
         return responseService.getSingleResult(userService.getMyProfile());
     }
 
-    @GetMapping("/username/{username}/exists")
+    @GetMapping("/user/{username}/exists")
     public SingleResult<Boolean> existsUsername(@PathVariable String username) {
         return responseService.getSingleResult(userRepository.existsByName(username));
     }
 
-    @GetMapping("/loginId/{loginId}/exists")
+    @GetMapping("/user/{loginId}/exists")
     public SingleResult<Boolean> existsLoginId(@PathVariable String loginId) {
         return responseService.getSingleResult(userRepository.existsByLoginId(loginId));
-    }
-
-    @GetMapping("/email/{email}/exists")
-    public SingleResult<Boolean> existsEmail(@PathVariable String email) {
-        return responseService.getSingleResult(userRepository.existsByEmail(email));
     }
 
     @PutMapping("/user/{userId}/username")
