@@ -36,7 +36,7 @@ public class UserSignService {
         String token = tokenService.createToken(String.valueOf(user.getId()), user.getRoles());
         return UserResponse.SignIn.builder()
                 .userId(user.getId())
-                .username(user.getUsername())
+                .username(user.getName())
                 .token(token)
                 .build();
     }
