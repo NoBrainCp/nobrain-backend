@@ -1,6 +1,7 @@
 package com.nobrain.bookmarking.domain.certification.mail;
 
 import com.nobrain.bookmarking.domain.certification.dto.CertificationRequest;
+import com.nobrain.bookmarking.domain.certification.mail.dto.MailRequest;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class MailController {
         return responseService.getSuccessResult();
     }
 
-    @PostMapping("/mail/{mail}/authcode")
+    @PostMapping("/mail/{mail}/authcode/password")
     public CommonResult sendEmailAndCode(@PathVariable String mail, @RequestBody CertificationRequest.Code requestDto) {
         if (mailService.verifyEmailCode(mail, requestDto.getCode())) {
             return responseService.getSuccessResult();
@@ -33,13 +34,19 @@ public class MailController {
         return responseService.getFailResult(INVALID_AUTH_CODE.getStatus(), INVALID_AUTH_CODE.getMessage());
     }
 
-    @PostMapping("/mail/{mail}/authcode/email")
+    @PostMapping("/mail/{mail}/authcode/login-id")
     public CommonResult sendEmailAndLoginId(@PathVariable String mail, @RequestBody CertificationRequest.Code requestDto) {
         if (mailService.verifyEmailCode(mail, requestDto.getCode())) {
-            mailService.sendUserLoginId(mail);
+            mailService.sendUserLoginIdAsEMail(mail);
             return responseService.getSuccessResult();
         }
 
         return responseService.getFailResult(INVALID_AUTH_CODE.getStatus(), INVALID_AUTH_CODE.getMessage());
+    }
+
+    @PostMapping("/mail/users")
+    public CommonResult sendMailToUsers(@RequestBody MailRequest.MultipleMail dto) {
+        mailService.sendEmailToUsers(dto.getMails(), dto.getSubject(), dto.getText());
+        return responseService.getSuccessResult();
     }
 }

@@ -23,6 +23,8 @@ import java.util.concurrent.ThreadLocalRandom;
 public class MailService {
     
     private static final String AUTHENTICATION_MAIL_SUBJECT = "Nobrain 인증코드 메일입니다.";
+    private static final String SEND_LOGIN_ID_MESSAGE_SUBJECT = "No Brain 아이디 찾기";
+    private static final String SEND_LOGIN_ID_MESSAGE_PREFIX = "ID: ";
     private static final long DURATION = 60 * 30L;
 
     private final UserRepository userRepository;
@@ -61,6 +63,22 @@ public class MailService {
         return findCodeByEmail.equals(code);
     }
 
+    public void sendUserLoginIdAsEMail(String mail) {
+        String loginId = userRepository.findByEmail(mail).orElseThrow(() -> new UserEmailNotFoundException(mail)).getLoginId();
+        String text = SEND_LOGIN_ID_MESSAGE_PREFIX + loginId;
+        SimpleMailMessage simpleMailMessage = createSimpleMailMessage(mail, SEND_LOGIN_ID_MESSAGE_SUBJECT, text);
+
+        mailSender.send(simpleMailMessage);
+    }
+
+    private SimpleMailMessage createSimpleMailMessage(String mail, String subject, String text) {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(mail);
+        simpleMailMessage.setSubject(subject);
+        simpleMailMessage.setText(text);
+        return simpleMailMessage;
+    }
+
     private MimeMessage creatEmailForm(String email) throws MessagingException {
         String authCode = generatedCode();
 
@@ -93,16 +111,5 @@ public class MailService {
 
     private String generatedCode() {
         return String.valueOf(ThreadLocalRandom.current().nextInt(100000, 1000000));
-    }
-
-    public void sendUserLoginId(String mail) {
-        String loginId = userRepository.findByEmail(mail).orElseThrow(() -> new UserEmailNotFoundException(mail)).getLoginId();
-
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(mail);
-        simpleMailMessage.setSubject("NoBrain 아이디 찾기");
-        simpleMailMessage.setText("ID: " + loginId);
-
-        mailSender.send(simpleMailMessage);
     }
 }
