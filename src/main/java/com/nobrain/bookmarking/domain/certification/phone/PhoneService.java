@@ -1,7 +1,6 @@
 package com.nobrain.bookmarking.domain.certification.phone;
 
 import com.nobrain.bookmarking.domain.certification.phone.dto.PhoneRequest;
-import com.nobrain.bookmarking.domain.user.repository.UserRepository;
 import com.nobrain.bookmarking.global.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.NurigoApp;
@@ -15,18 +14,14 @@ import net.nurigo.sdk.message.request.SingleMessageSendingRequest;
 import net.nurigo.sdk.message.response.MultipleDetailMessageSentResponse;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import net.nurigo.sdk.message.service.DefaultMessageService;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.context.Context;
 
 import javax.annotation.PostConstruct;
-import javax.mail.MessagingException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 @RequiredArgsConstructor
@@ -51,12 +46,12 @@ public class PhoneService {
         this.messageService = NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.coolsms.co.kr");
     }
 
-    public void sendPhoneForAuthentication(String toPhoneNumber) {
+    public SingleMessageSentResponse sendPhoneForAuthentication(String toPhoneNumber) {
         if (redisUtil.existData(toPhoneNumber)) {
             redisUtil.deleteData(toPhoneNumber);
         }
 
-        sendSingleMessage(toPhoneNumber);
+        return sendSingleMessage(toPhoneNumber);
     }
 
     public Boolean verifyPhoneNumberCode(String phoneNumber, String code) {
@@ -87,13 +82,8 @@ public class PhoneService {
         }
 
         try {
-            MultipleDetailMessageSentResponse response = this.messageService.send(messageList, false, true);
-            return response;
-        } catch (NurigoMessageNotReceivedException e) {
-            throw new RuntimeException(e);
-        } catch (NurigoEmptyResponseException e) {
-            throw new RuntimeException(e);
-        } catch (NurigoUnknownException e) {
+            return this.messageService.send(messageList, false, true);
+        } catch (NurigoMessageNotReceivedException | NurigoEmptyResponseException | NurigoUnknownException e) {
             throw new RuntimeException(e);
         }
     }
@@ -110,8 +100,7 @@ public class PhoneService {
     }
 
     public Balance getBalance() {
-        Balance balance = this.messageService.getBalance();
-        return balance;
+        return this.messageService.getBalance();
     }
 
     private Message createMessage(String phoneNumber, String text) {
@@ -127,7 +116,6 @@ public class PhoneService {
     private String generatedCode() {
         return String.valueOf(ThreadLocalRandom.current().nextInt(100000, 1000000));
     }
-
 }
 
 

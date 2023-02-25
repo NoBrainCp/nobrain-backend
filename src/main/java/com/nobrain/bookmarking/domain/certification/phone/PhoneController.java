@@ -10,7 +10,6 @@ import net.nurigo.sdk.message.model.Balance;
 import net.nurigo.sdk.message.response.MultipleDetailMessageSentResponse;
 import net.nurigo.sdk.message.response.SingleMessageSentResponse;
 import org.springframework.web.bind.annotation.*;
-import retrofit2.http.Path;
 
 import java.io.IOException;
 
@@ -31,9 +30,9 @@ public class PhoneController {
     }
 
     @GetMapping("/phone/{phoneNumber}/authcode")
-    public CommonResult sendAuthenticationPhoneNumber(@PathVariable String phoneNumber) {
-        phoneService.sendPhoneForAuthentication(phoneNumber);
-        return responseService.getSuccessResult();
+    public SingleResult<SingleMessageSentResponse> sendAuthenticationPhoneNumber(@PathVariable String phoneNumber) {
+        SingleMessageSentResponse response = phoneService.sendPhoneForAuthentication(phoneNumber);
+        return responseService.getSingleResult(response);
     }
 
     @PostMapping("/phone/{phoneNumber}/authcode")
