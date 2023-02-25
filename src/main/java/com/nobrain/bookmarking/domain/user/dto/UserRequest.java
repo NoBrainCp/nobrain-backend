@@ -35,7 +35,7 @@ public class UserRequest {
                     .email(this.email)
                     .password(this.password)
                     .name(this.name)
-                    .phoneNumber(this.phoneNumber)
+                    .phoneNumber(this.phoneNumber.replaceAll("[^0-9]", ""))
                     .birthDate(this.birthDate)
                     .roles(Collections.singletonList(RoleType.USER.getKey()))
                     .build();
