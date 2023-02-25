@@ -1,6 +1,6 @@
 package com.nobrain.bookmarking.domain.certification.mail;
 
-import com.nobrain.bookmarking.domain.certification.mail.dto.MailRequest;
+import com.nobrain.bookmarking.domain.certification.dto.CertificationRequest;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class MailController {
     }
 
     @PostMapping("/mail/{mail}/authcode")
-    public CommonResult sendEmailAndCode(@PathVariable String mail, @RequestBody MailRequest.Authentication requestDto) {
+    public CommonResult sendEmailAndCode(@PathVariable String mail, @RequestBody CertificationRequest.Code requestDto) {
         if (mailService.verifyEmailCode(mail, requestDto.getCode())) {
             return responseService.getSuccessResult();
         }
@@ -34,7 +34,7 @@ public class MailController {
     }
 
     @PostMapping("/mail/{mail}/authcode/email")
-    public CommonResult sendEmailAndLoginId(@PathVariable String mail, @RequestBody MailRequest.Authentication requestDto) {
+    public CommonResult sendEmailAndLoginId(@PathVariable String mail, @RequestBody CertificationRequest.Code requestDto) {
         if (mailService.verifyEmailCode(mail, requestDto.getCode())) {
             mailService.sendUserLoginId(mail);
             return responseService.getSuccessResult();
