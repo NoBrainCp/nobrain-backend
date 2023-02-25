@@ -19,7 +19,7 @@ public class UserController {
     private final UserService userService;
     private final ResponseService responseService;
 
-    @GetMapping("/profile/my")
+    @GetMapping("/user/{userId}/profile")
     public SingleResult<UserResponse.Profile> getMyProfile() {
         return responseService.getSingleResult(userService.getMyProfile());
     }
