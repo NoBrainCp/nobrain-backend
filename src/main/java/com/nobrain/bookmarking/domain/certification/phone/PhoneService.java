@@ -1,6 +1,8 @@
 package com.nobrain.bookmarking.domain.certification.phone;
 
 import com.nobrain.bookmarking.domain.certification.phone.dto.PhoneRequest;
+import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
+import com.nobrain.bookmarking.domain.user.repository.UserRepository;
 import com.nobrain.bookmarking.global.redis.RedisUtil;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.NurigoApp;
@@ -28,6 +30,14 @@ import java.util.concurrent.ThreadLocalRandom;
 @Service
 public class PhoneService {
 
+    private static final String AUTHENTICATION_MESSAGE_SUBJECT = "No Brain 인증코드 입니다.";
+    private static final String SEND_LOGIN_ID_MESSAGE_SUBJECT = "No Brain 아이디 찾기";
+    private static final long DURATION = 60 * 30L;
+
+    private final RedisUtil redisUtil;
+    private final UserRepository userRepository;
+    private DefaultMessageService messageService;
+
     @Value("${COOLSMS.API_KEY}")
     private String API_KEY;
 
@@ -35,48 +45,48 @@ public class PhoneService {
     private String API_SECRET_KEY;
 
     @Value("${COOLSMS.PHONE_NUMBER}")
-    private String FROM_PHONE_NUMBER;
-
-    private static final String AUTHENTICATION_MAIL_SUBJECT = "Nobrain 인증코드 입니다.";
-    private static final long DURATION = 60 * 30L;
-
-    private final RedisUtil redisUtil;
-    private DefaultMessageService messageService;
+    private String MANAGER_PHONE_NUMBER;
 
     @PostConstruct
     protected void init() {
-        this.messageService = NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.coolsms.co.kr");
+        messageService = NurigoApp.INSTANCE.initialize(API_KEY, API_SECRET_KEY, "https://api.coolsms.co.kr");
     }
 
-    public SingleMessageSentResponse sendPhoneForAuthentication(String toPhoneNumber) {
-        if (redisUtil.existData(toPhoneNumber)) {
-            redisUtil.deleteData(toPhoneNumber);
+    public SingleMessageSentResponse sendPhoneForAuthentication(String phoneNumber) {
+        if (redisUtil.existData(phoneNumber)) {
+            redisUtil.deleteData(phoneNumber);
         }
 
-        return sendSingleMessage(toPhoneNumber);
+        return sendAuthenticationMessage(phoneNumber);
     }
 
     public Boolean verifyPhoneNumberCode(String phoneNumber, String code) {
         String findCodeByPhoneNumber = redisUtil.getData(phoneNumber);
-        if(findCodeByPhoneNumber == null) {
+        if (findCodeByPhoneNumber == null) {
             return false;
         }
 
         return findCodeByPhoneNumber.equals(code);
     }
 
-    public SingleMessageSentResponse sendSingleMessage(String phoneNumber) {
+    public SingleMessageSentResponse sendAuthenticationMessage(String phoneNumber) {
         String authCode = generatedCode();
-        String text = AUTHENTICATION_MAIL_SUBJECT + "\n" + "CODE: [" + authCode + "]";
-
+        String text = AUTHENTICATION_MESSAGE_SUBJECT + "\n" + "CODE: [" + authCode + "]";
         Message message = createMessage(phoneNumber, text);
 
-        SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
         redisUtil.setDataExpire(phoneNumber, authCode, DURATION);
-        return response;
+        return messageService.sendOne(new SingleMessageSendingRequest(message));
     }
 
-    public MultipleDetailMessageSentResponse sendManyMessage(PhoneRequest.MultipleMessage dto) {
+    public void sendUserLoginIdAsMessage(String phoneNumber) {
+        String loginId = userRepository.findByPhoneNumber(phoneNumber).orElseThrow(() -> new UserNotFoundException(phoneNumber)).getLoginId();
+        String text = SEND_LOGIN_ID_MESSAGE_SUBJECT + "\n" + "LOGIN ID: [" + loginId + "]";
+        Message message = createMessage(phoneNumber, text);
+
+        messageService.sendOne(new SingleMessageSendingRequest(message));
+    }
+
+    public MultipleDetailMessageSentResponse sendMessageToUsers(PhoneRequest.MultipleMessage dto) {
         ArrayList<Message> messageList = new ArrayList<>();
 
         for (String phoneNumber : dto.getPhoneNumbers()) {
@@ -84,31 +94,29 @@ public class PhoneService {
         }
 
         try {
-            return this.messageService.send(messageList, false, true);
+            return messageService.send(messageList, false, true);
         } catch (NurigoMessageNotReceivedException | NurigoEmptyResponseException | NurigoUnknownException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public SingleMessageSentResponse sendMmsByResourcePath(String phoneNumber, String text) throws IOException {
-        ClassPathResource resource = new ClassPathResource("static/sample.jpg");
+    public SingleMessageSentResponse sendMmsByResourcePath(String phoneNumber, String text, String resourcePath) throws IOException {
+        ClassPathResource resource = new ClassPathResource(resourcePath);
         File file = resource.getFile();
-        String imageId = this.messageService.uploadFile(file, StorageType.MMS, null);
-
+        String imageId = messageService.uploadFile(file, StorageType.MMS, null);
         Message message = createMessage(phoneNumber, text);
         message.setImageId(imageId);
 
-        return this.messageService.sendOne(new SingleMessageSendingRequest(message));
+        return messageService.sendOne(new SingleMessageSendingRequest(message));
     }
 
     public Balance getBalance() {
-        return this.messageService.getBalance();
+        return messageService.getBalance();
     }
 
     private Message createMessage(String phoneNumber, String text) {
         Message message = new Message();
-
-        message.setFrom(FROM_PHONE_NUMBER);
+        message.setFrom(MANAGER_PHONE_NUMBER);
         message.setTo(phoneNumber);
         message.setText(text);
 

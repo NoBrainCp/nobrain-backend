@@ -16,4 +16,10 @@ public class PhoneRequest {
         private List<String> phoneNumbers;
         private String text;
     }
+
+    @Getter
+    public static class MmsMessage {
+        private String text;
+        private String resourcePath;
+    }
 }
