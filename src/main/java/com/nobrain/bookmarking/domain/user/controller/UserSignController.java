@@ -2,7 +2,9 @@ package com.nobrain.bookmarking.domain.user.controller;
 
 import com.nobrain.bookmarking.domain.user.annotation.LoginUserId;
 import com.nobrain.bookmarking.domain.user.dto.UserRequest;
+import com.nobrain.bookmarking.domain.user.dto.UserResponse;
 import com.nobrain.bookmarking.domain.user.service.UserSignService;
+import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.model.SingleResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
 import lombok.RequiredArgsConstructor;
@@ -19,15 +21,16 @@ public class UserSignController {
     private final ResponseService responseService;
 
     @PostMapping("/signup")
-    public SingleResult<Long> signUp(@Valid @RequestBody UserRequest.SignUp dto) {
-        return responseService.getSingleResult(userService.signUp(dto));
+    public CommonResult signUp(@Valid @RequestBody UserRequest.SignUp dto) {
+        userService.signUp(dto);
+        return responseService.getSuccessResult();
     }
 
     /**
-     * @return accessToken
+     * @return userId, accessToken
      */
     @PostMapping("/signin")
-    public SingleResult<String> signIn(@LoginUserId @Valid @RequestBody UserRequest.SignIn dto) {
+    public SingleResult<UserResponse.SignIn> signIn(@LoginUserId @Valid @RequestBody UserRequest.SignIn dto) {
         return responseService.getSingleResult(userService.signIn(dto));
     }
 }

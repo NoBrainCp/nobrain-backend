@@ -1,6 +1,7 @@
 package com.nobrain.bookmarking.domain.user.service;
 
 import com.nobrain.bookmarking.domain.user.dto.UserRequest;
+import com.nobrain.bookmarking.domain.user.dto.UserResponse;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.*;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
@@ -20,23 +21,27 @@ public class UserSignService {
     private final TokenService tokenService;
 
     @Transactional
-    public Long signUp(UserRequest.SignUp dto) {
-        validateUserDuplication(dto);
+    public void signUp(UserRequest.SignUp dto) {
+        validateUser(dto);
         dto.encodePassword(passwordEncoder.encode(dto.getPassword()));
-        return userRepository.save(dto.toEntity()).getId();
+        userRepository.save(dto.toEntity());
     }
 
-    public String signIn(UserRequest.SignIn dto) {
-        User user = userRepository.findByLoginId(dto.getLoginId())
-                .orElseThrow(() -> new UserLoginIdNotFoundException(dto.getLoginId()));
+    public UserResponse.SignIn signIn(UserRequest.SignIn dto) {
+        User user = userRepository.findByLoginId(dto.getLoginId()).orElseThrow(() -> new UserLoginIdNotFoundException(dto.getLoginId()));
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new UserNotCorrectPasswordException(dto.getPassword());
         }
 
-        return tokenService.createToken(user.getUsername(), user.getRoles());
+        String token = tokenService.createToken(String.valueOf(user.getId()), user.getRoles());
+        return UserResponse.SignIn.builder()
+                .userId(user.getId())
+                .username(user.getUsername())
+                .token(token)
+                .build();
     }
 
-    private void validateUserDuplication(UserRequest.SignUp dto) {
+    private void validateUser(UserRequest.SignUp dto) {
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new UserEmailDuplicationException(dto.getEmail());
         }
@@ -53,12 +58,8 @@ public class UserSignService {
             throw new UserPhoneNumberDuplicationException(dto.getPhoneNumber());
         }
 
-        if (checkPassword(dto.getPassword(), dto.getPasswordCheck())) {
+        if (!dto.getPassword().equals(dto.getPasswordCheck())) {
             throw new UserNotCorrectPasswordException(dto.getPassword());
         }
-    }
-
-    private boolean checkPassword(String password, String passwordCheck) {
-        return !password.equals(passwordCheck);
     }
 }
