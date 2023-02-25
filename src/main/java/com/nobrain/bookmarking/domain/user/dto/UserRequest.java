@@ -55,6 +55,11 @@ public class UserRequest {
     }
 
     @Getter
+    public static class ChangeUserName {
+        private String username;
+    }
+
+    @Getter
     public static class ChangePassword {
         private String loginId;
         private String password;

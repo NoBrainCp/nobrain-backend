@@ -34,32 +34,20 @@ public class UserService {
                 .build();
     }
 
-    public String findForgotLoginIdByPhoneNumber(UserRequest.FindLoginIdByPhoneNumber request){
-        return userRepository.findByNameAndPhoneNumber(request.getName(), request.getPhoneNumber())
-                .orElseThrow(()->new UserNotFoundException(request.getName())).getLoginId();
-    }
-  
-    public String findForgotLoginIdByEmail(UserRequest.FindLoginIdByEmail request){
-        return userRepository.findByNameAndEmail(request.getName(), request.getEmail())
-                .orElseThrow(()->new UserNotFoundException(request.getName())).getLoginId();
-    }
-  
-    public boolean existsUsername(String username) {
-        return userRepository.existsByName(username);
-    }
-
-    public boolean existsLoginId(String loginId) {
-        return userRepository.existsByLoginId(loginId);
-    }
-
-    public boolean existsEmail(String email) {
-        return userRepository.existsByEmail(email);
+    @Transactional
+    public Long changeName(Long id, UserRequest.ChangeUserName dto) {
+        findById(id).changeName(dto.getUsername());
+        return id;
     }
 
     @Transactional
-    public Long update(Long id, String username) {
-        findById(id).updateName(username);
-        return id;
+    public void changePassword(UserRequest.ChangePassword dto) {
+        if (!dto.getPassword().equals(dto.getPasswordCheck())) {
+            throw new UserNotCorrectPasswordException(dto.getPassword());
+        }
+
+        User user = findByLoginId(dto.getLoginId());
+        user.changePassword(passwordEncoder.encode(dto.getPassword()));
     }
 
     @Transactional
@@ -71,13 +59,7 @@ public class UserService {
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.valueOf(id)));
     }
 
-    @Transactional
-    public void changePassword(UserRequest.ChangePassword dto) {
-        User user = userRepository.findByLoginId(dto.getLoginId()).orElseThrow(
-                () -> new UserNotFoundException(dto.getLoginId()));
-        if (!dto.getPassword().equals(dto.getPasswordCheck())) {
-            throw new UserNotCorrectPasswordException(dto.getPassword());
-        }
-        user.changePassword(passwordEncoder.encode(dto.getPassword()));
+    private User findByLoginId(String loginId) {
+        return userRepository.findByLoginId(loginId).orElseThrow(() -> new UserNotFoundException(loginId));
     }
 }
