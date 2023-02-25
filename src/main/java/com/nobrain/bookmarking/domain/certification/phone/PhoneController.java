@@ -30,10 +30,15 @@ public class PhoneController {
         return responseService.getSingleResult(balance);
     }
 
+    @GetMapping("/phone/{phoneNumber}/authcode")
+    public CommonResult sendAuthenticationPhoneNumber(@PathVariable String phoneNumber) {
+        phoneService.sendPhoneForAuthentication(phoneNumber);
+        return responseService.getSuccessResult();
+    }
+
     @PostMapping("/phone/{phoneNumber}/authcode")
     public CommonResult sendCodeAndLoginId(@PathVariable String phoneNumber, @RequestBody CertificationRequest.Code requestDto) {
        if(phoneService.verifyPhoneNumberCode(phoneNumber, requestDto.getCode())){
-           phoneService.sendSingleMessage(phoneNumber);
            return responseService.getSuccessResult();
        }
 
@@ -41,13 +46,13 @@ public class PhoneController {
     }
 
     @PostMapping("/phone/messages")
-    public SingleResult<MultipleDetailMessageSentResponse> sendMany(@RequestBody PhoneRequest.MultipleMessage dto) {
+    public SingleResult<MultipleDetailMessageSentResponse> sendMessages(@RequestBody PhoneRequest.MultipleMessage dto) {
         MultipleDetailMessageSentResponse response = phoneService.sendManyMessage(dto);
         return responseService.getSingleResult(response);
     }
 
     @PostMapping("/phone/{phoneNumber}/image")
-    public SingleResult<SingleMessageSentResponse> sendMMS(@PathVariable String phoneNumber, @RequestBody PhoneRequest.SingleText dto) throws IOException {
+    public SingleResult<SingleMessageSentResponse> sendMessageWithImage(@PathVariable String phoneNumber, @RequestBody PhoneRequest.SingleText dto) throws IOException {
         SingleMessageSentResponse response = phoneService.sendMmsByResourcePath(phoneNumber, dto.getText());
         return responseService.getSingleResult(response);
     }
