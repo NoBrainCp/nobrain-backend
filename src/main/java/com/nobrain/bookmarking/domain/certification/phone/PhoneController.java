@@ -29,13 +29,13 @@ public class PhoneController {
         return responseService.getSingleResult(balance);
     }
 
-    @GetMapping("/phone/{phoneNumber}/authcode")
+    @GetMapping("/phone/{phoneNumber}/auth-code")
     public SingleResult<SingleMessageSentResponse> sendAuthenticationPhoneNumber(@PathVariable String phoneNumber) {
         SingleMessageSentResponse response = phoneService.sendPhoneForAuthentication(phoneNumber);
         return responseService.getSingleResult(response);
     }
 
-    @PostMapping("/phone/{phoneNumber}/authcode/password")
+    @PostMapping("/phone/{phoneNumber}/auth-code/password")
     public CommonResult sendMessageAndCode(@PathVariable String phoneNumber, @RequestBody CertificationRequest.Code dto) {
        if (phoneService.verifyPhoneNumberCode(phoneNumber, dto.getCode())){
            return responseService.getSuccessResult();
@@ -44,7 +44,7 @@ public class PhoneController {
        return responseService.getFailResult(INVALID_AUTH_CODE.getStatus(), INVALID_AUTH_CODE.getMessage());
     }
 
-    @PostMapping("/phone/{phoneNumber}/authcode/login-id")
+    @PostMapping("/phone/{phoneNumber}/auth-code/login-id")
     public CommonResult sendMessageAndLoginId(@PathVariable String phoneNumber, @RequestBody CertificationRequest.Code dto) {
         if (phoneService.verifyPhoneNumberCode(phoneNumber, dto.getCode())) {
             phoneService.sendUserLoginIdAsMessage(phoneNumber);
