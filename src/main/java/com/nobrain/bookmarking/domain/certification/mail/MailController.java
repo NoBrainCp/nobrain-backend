@@ -19,13 +19,13 @@ public class MailController {
     private final MailService mailService;
     private final ResponseService responseService;
 
-    @GetMapping("/mail/{mail}/authcode")
+    @GetMapping("/mail/{mail}/auth-code")
     public CommonResult sendAuthenticationMail(@PathVariable String mail) throws MessagingException {
         mailService.sendEmailForAuthentication(mail);
         return responseService.getSuccessResult();
     }
 
-    @PostMapping("/mail/{mail}/authcode/password")
+    @PostMapping("/mail/{mail}/auth-code/password")
     public CommonResult sendEmailAndCode(@PathVariable String mail, @RequestBody CertificationRequest.Code requestDto) {
         if (mailService.verifyEmailCode(mail, requestDto.getCode())) {
             return responseService.getSuccessResult();
@@ -34,7 +34,7 @@ public class MailController {
         return responseService.getFailResult(INVALID_AUTH_CODE.getStatus(), INVALID_AUTH_CODE.getMessage());
     }
 
-    @PostMapping("/mail/{mail}/authcode/login-id")
+    @PostMapping("/mail/{mail}/auth-code/login-id")
     public CommonResult sendEmailAndLoginId(@PathVariable String mail, @RequestBody CertificationRequest.Code requestDto) {
         if (mailService.verifyEmailCode(mail, requestDto.getCode())) {
             mailService.sendUserLoginIdAsEMail(mail);

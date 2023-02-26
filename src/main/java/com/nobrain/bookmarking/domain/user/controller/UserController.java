@@ -29,7 +29,7 @@ public class UserController {
         return responseService.getSingleResult(userRepository.existsByName(username));
     }
 
-    @GetMapping("/user/loginid/{loginId}/exists")
+    @GetMapping("/user/login-id/{loginId}/exists")
     public SingleResult<Boolean> existsLoginId(@PathVariable String loginId) {
         return responseService.getSingleResult(userRepository.existsByLoginId(loginId));
     }

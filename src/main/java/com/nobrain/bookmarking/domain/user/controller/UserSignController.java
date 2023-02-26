@@ -20,7 +20,7 @@ public class UserSignController {
     private final UserSignService userService;
     private final ResponseService responseService;
 
-    @PostMapping("/signup")
+    @PostMapping("/sign-up")
     public CommonResult signUp(@Valid @RequestBody UserRequest.SignUp dto) {
         userService.signUp(dto);
         return responseService.getSuccessResult();
@@ -29,7 +29,7 @@ public class UserSignController {
     /**
      * @return userId, accessToken
      */
-    @PostMapping("/signin")
+    @PostMapping("/sign-in")
     public SingleResult<UserResponse.SignIn> signIn(@LoginUserId @Valid @RequestBody UserRequest.SignIn dto) {
         return responseService.getSingleResult(userService.signIn(dto));
     }
