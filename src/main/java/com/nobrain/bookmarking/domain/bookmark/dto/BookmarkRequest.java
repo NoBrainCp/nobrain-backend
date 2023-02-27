@@ -5,13 +5,21 @@ import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
 import com.nobrain.bookmarking.domain.category.entity.Category;
 import lombok.Getter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 public class BookmarkRequest {
 
     @Getter
     public static class Info {
+        
+        @NotEmpty(message = "url-empty")
+        @NotBlank(message = "url-blank")
         private String url;
+
+        @NotEmpty(message = "title-empty")
+        @NotBlank(message = "title-blank")
         private String title;
         private String description;
 
@@ -24,7 +32,7 @@ public class BookmarkRequest {
         private String categoryName;
         private List<String> tags;
 
-        public void setUrl(String url) {
+        public void addHttpsToUrl(String url) {
             this.url = new StringBuilder(url).insert(0, "https://").toString();
         }
 
