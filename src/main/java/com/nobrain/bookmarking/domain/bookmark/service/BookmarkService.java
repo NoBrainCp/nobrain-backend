@@ -67,7 +67,7 @@ public class BookmarkService {
     public void createBookmark(String username, BookmarkRequest.Info requestDto) {
         String url = requestDto.getUrl();
         if (!url.contains("https://")) {
-            requestDto.setUrl(url);
+            requestDto.addHttpsToUrl(url);
         }
 
         User user = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
@@ -81,7 +81,7 @@ public class BookmarkService {
     }
 
     @Transactional
-    public void updateBookmark(long bookmarkId, BookmarkRequest.Info requestDto) {
+    public void updateBookmark(Long bookmarkId, BookmarkRequest.Info requestDto) {
         Bookmark bookmark = findById(bookmarkId);
         Category category = categoryRepository.findByName(requestDto.getCategoryName())
                 .orElseThrow(() -> new CategoryNotFoundException(requestDto.getCategoryName()));
@@ -92,11 +92,11 @@ public class BookmarkService {
     }
 
     @Transactional
-    public void deleteBookmark(long bookmarkId) {
+    public void deleteBookmark(Long bookmarkId) {
         bookmarkRepository.deleteById(bookmarkId);
     }
 
-    private Bookmark findById(long bookmarkId) {
+    private Bookmark findById(Long bookmarkId) {
         return bookmarkRepository.findById(bookmarkId).orElseThrow(() -> new BookmarkNotFoundException(String.valueOf(bookmarkId)));
     }
 
