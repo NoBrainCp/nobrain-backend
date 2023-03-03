@@ -31,6 +31,7 @@ public class Bookmark extends BaseTimeEntity {
     private String description;
     private boolean isPublic;
     private boolean isStar;
+    private String metaImage;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -40,22 +41,24 @@ public class Bookmark extends BaseTimeEntity {
     private List<BookmarkTag> tags = new ArrayList<>();
 
     @Builder
-    public Bookmark(String url, String title, String description, boolean isPublic, boolean isStar, Category category) {
+    public Bookmark(String url, String title, String description, boolean isPublic, boolean isStar, String metaImage, Category category) {
         this.url = url;
         this.title = title;
         this.description = description;
         this.isPublic = isPublic;
         this.isStar = isStar;
+        this.metaImage = metaImage;
         addCategory(category);
     }
 
-    public void update(BookmarkRequest.Info requestDto, Category category) {
+    public void update(BookmarkRequest.Info requestDto, String metaImage, Category category) {
         this.url = requestDto.getUrl();
         this.title = requestDto.getTitle();
         this.description = requestDto.getDescription();
         this.isPublic = requestDto.isPublic();
         this.isStar = requestDto.isStar();
         this.category = category;
+        this.metaImage = metaImage;
     }
 
     @Override
