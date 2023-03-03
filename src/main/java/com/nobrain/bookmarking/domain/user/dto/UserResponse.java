@@ -22,6 +22,7 @@ public class UserResponse {
     @Builder
     @AllArgsConstructor
     public static class Profile {
+        private Long userId;
         private String loginId;
         private String email;
         private String username;
