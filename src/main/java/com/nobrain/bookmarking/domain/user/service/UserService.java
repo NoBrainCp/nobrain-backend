@@ -1,5 +1,6 @@
 package com.nobrain.bookmarking.domain.user.service;
 
+import com.nobrain.bookmarking.domain.auth.service.TokenService;
 import com.nobrain.bookmarking.domain.user.dto.UserRequest;
 import com.nobrain.bookmarking.domain.user.dto.UserResponse;
 import com.nobrain.bookmarking.domain.user.entity.User;
@@ -17,13 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
 
-    public UserResponse.Profile getMyProfile(Long userId) {
-        User user = findById(userId);
+    public UserResponse.Profile getMyProfile() {
+        Long id = tokenService.getId();
+        User user = findById(id);
 
         return UserResponse.Profile.builder()
-                .userId(userId)
+                .userId(id)
                 .loginId(user.getLoginId())
                 .email(user.getEmail())
                 .username(user.getName())

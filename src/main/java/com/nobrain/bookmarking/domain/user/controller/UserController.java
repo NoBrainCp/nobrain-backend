@@ -19,9 +19,9 @@ public class UserController {
     private final UserService userService;
     private final ResponseService responseService;
 
-    @GetMapping("/user/{userId}/profile")
-    public SingleResult<UserResponse.Profile> getUserProfile(@PathVariable Long userId) {
-        return responseService.getSingleResult(userService.getMyProfile(userId));
+    @GetMapping("/user/my-profile")
+    public SingleResult<UserResponse.Profile> getMyProfile() {
+        return responseService.getSingleResult(userService.getMyProfile());
     }
 
     @GetMapping("/user/username/{username}/exists")

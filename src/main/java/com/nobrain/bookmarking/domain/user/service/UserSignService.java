@@ -33,11 +33,11 @@ public class UserSignService {
             throw new UserNotCorrectPasswordException(dto.getPassword());
         }
 
-        String token = tokenService.createToken(String.valueOf(user.getId()), user.getRoles());
+        String accessToken = tokenService.createToken(String.valueOf(user.getId()), user.getRoles());
         return UserResponse.SignIn.builder()
                 .userId(user.getId())
                 .username(user.getName())
-                .token(token)
+                .accessToken(accessToken)
                 .build();
     }
 
