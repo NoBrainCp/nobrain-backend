@@ -16,6 +16,7 @@ public class BookmarkResponse {
         private String description;
         private boolean isPublic;
         private boolean isStar;
+        private String image;
         private LocalDate createdAt;
     }
 }

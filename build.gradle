@@ -62,6 +62,9 @@ dependencies {
 
     implementation 'net.nurigo:sdk:4.2.7'
 
+    // Jsoup
+    implementation 'org.jsoup:jsoup:1.15.3'
+
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
