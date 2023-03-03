@@ -2,6 +2,8 @@ package com.nobrain.bookmarking.global.error;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import static org.springframework.http.HttpStatus.NOT_FOUND;
+
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ErrorCode {
 
@@ -10,6 +12,7 @@ public enum ErrorCode {
     METHOD_NOT_ALLOWED(405, "G002", "Not Allowed HTTP Method"),
     INTERNAL_SERVER_ERROR(500, "G003", "Server Error"),
     HANDLE_ACCESS_DENIED(403, "G004", "Access is Denied"),
+    URL_NOT_FOUND(NOT_FOUND.value(), "G005", "등록하신 URL은 존재하지 않는 URL입니다."),
 
     // User
     USER_NOT_FOUND(400, "U001", "존재하지 않는 유저입니다."),
