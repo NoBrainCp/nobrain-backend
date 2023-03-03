@@ -7,6 +7,7 @@ import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserNotCorrectPasswordException;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
+import com.nobrain.bookmarking.domain.user.repository.mapping.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,21 +17,32 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class UserService {
-
     private final UserRepository userRepository;
     private final TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
 
     public UserResponse.Profile getMyProfile() {
-        User user = findById(tokenService.getId());
+        Long userId = tokenService.getId();
+        User user = findById(userId);
 
         return UserResponse.Profile.builder()
+                .userId(userId)
                 .loginId(user.getLoginId())
                 .email(user.getEmail())
                 .username(user.getName())
                 .phoneNumber(user.getPhoneNumber())
                 .birthDate(user.getBirthDate())
                 .roles(user.getRoles())
+                .build();
+    }
+
+    public UserResponse.Info getUserInfo(Long userId) {
+        UserInfo userInfo = userRepository.findUserInfoById(userId).orElseThrow(() -> new UserNotFoundException(String.valueOf(userId)));
+
+        return UserResponse.Info.builder()
+                .userId(userId)
+                .username(userInfo.getName())
+                .email(userInfo.getEmail())
                 .build();
     }
 

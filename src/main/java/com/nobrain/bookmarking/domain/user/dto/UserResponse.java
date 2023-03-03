@@ -15,13 +15,23 @@ public class UserResponse {
     public static class SignIn {
         private Long userId;
         private String username;
-        private String token;
+        private String accessToken;
+    }
+
+    @Getter
+    @Builder
+    @AllArgsConstructor
+    public static class Info {
+        private Long userId;
+        private String username;
+        private String email;
     }
 
     @Getter
     @Builder
     @AllArgsConstructor
     public static class Profile {
+        private Long userId;
         private String loginId;
         private String email;
         private String username;
