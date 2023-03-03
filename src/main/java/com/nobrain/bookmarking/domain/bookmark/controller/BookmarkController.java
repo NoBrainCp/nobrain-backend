@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -34,7 +35,7 @@ public class BookmarkController {
     }
 
     @PostMapping("/{username}/bookmark")
-    public CommonResult addBookmark(@PathVariable String username, @RequestBody @Valid BookmarkRequest.Info requestDto) {
+    public CommonResult addBookmark(@PathVariable String username, @RequestBody @Valid BookmarkRequest.Info requestDto) throws IOException {
         bookmarkService.createBookmark(username, requestDto);
         return responseService.getSuccessResult();
     }

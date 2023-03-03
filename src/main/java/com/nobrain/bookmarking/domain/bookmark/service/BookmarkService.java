@@ -14,6 +14,7 @@ import com.nobrain.bookmarking.domain.category.repository.CategoryRepository;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
+import com.nobrain.bookmarking.domain.util.MetaImageCrawler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +32,7 @@ public class BookmarkService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
     private final BookmarkTagService bookmarkTagService;
+    private final MetaImageCrawler metaImageCrawler;
 
     public List<BookmarkResponse.Info> getAllBookmarksByUsername(String username) {
         Long userId = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username)).getId();
@@ -41,6 +43,7 @@ public class BookmarkService {
                         .description(bookmark.getDescription())
                         .isPublic(bookmark.isPublic())
                         .isStar(bookmark.isStar())
+                        .image(bookmark.getMetaImage())
                         .createdAt(bookmark.getCreatedAt().toLocalDate())
                         .build())
                 .collect(Collectors.toList());
@@ -58,6 +61,7 @@ public class BookmarkService {
                         .description(bookmark.getDescription())
                         .isPublic(bookmark.isPublic())
                         .isStar(bookmark.isStar())
+                        .image(bookmark.getMetaImage())
                         .createdAt(bookmark.getCreatedAt().toLocalDate())
                         .build())
                 .collect(Collectors.toList());
@@ -72,7 +76,8 @@ public class BookmarkService {
 
         User user = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
         Category category = categoryRepository.findByUserAndName(user, requestDto.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(requestDto.getCategoryName()));
-        Bookmark bookmark = requestDto.toEntity(category);
+        String metaImage = metaImageCrawler.getMetaImageFromUrl(requestDto.getUrl());
+        Bookmark bookmark = requestDto.toEntity(metaImage, category);
 
         validateBookmark(requestDto, category);
         bookmarkRepository.save(bookmark);
@@ -83,10 +88,10 @@ public class BookmarkService {
     @Transactional
     public void updateBookmark(Long bookmarkId, BookmarkRequest.Info requestDto) {
         Bookmark bookmark = findById(bookmarkId);
-        Category category = categoryRepository.findByName(requestDto.getCategoryName())
-                .orElseThrow(() -> new CategoryNotFoundException(requestDto.getCategoryName()));
+        Category category = categoryRepository.findByName(requestDto.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(requestDto.getCategoryName()));
+        String metaImage = metaImageCrawler.getMetaImageFromUrl(requestDto.getUrl());
 
-        bookmark.update(requestDto, category);
+        bookmark.update(requestDto, metaImage, category);
 
         bookmarkTagService.update(bookmark, requestDto);
     }

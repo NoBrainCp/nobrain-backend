@@ -30,19 +30,21 @@ public class BookmarkRequest {
         private boolean isStar;
 
         private String categoryName;
+        private String metaImage;
         private List<String> tags;
 
         public void addHttpsToUrl(String url) {
             this.url = new StringBuilder(url).insert(0, "https://").toString();
         }
 
-        public Bookmark toEntity(Category category) {
+        public Bookmark toEntity(String metaImage, Category category) {
             return Bookmark.builder()
                     .url(this.url)
                     .title(this.title)
                     .description(this.description)
                     .isPublic(this.isPublic)
                     .isStar(this.isStar)
+                    .metaImage(metaImage)
                     .category(category)
                     .build();
         }
