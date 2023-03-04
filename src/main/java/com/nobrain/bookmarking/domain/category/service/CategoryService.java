@@ -28,11 +28,12 @@ public class CategoryService {
         User user = findUserByUsername(username);
         return categoryRepository.findAllByUser(user).stream()
                 .map(category -> CategoryResponse.Info.builder()
-                .name(category.getName())
-                .description(category.getDescription())
-                .isPublic(category.isPublic())
-                .build())
-                .collect(Collectors.toList());
+                    .id(category.getId())
+                    .name(category.getName())
+                    .description(category.getDescription())
+                    .isPublic(category.isPublic())
+                    .build())
+                    .collect(Collectors.toList());
     }
 
     @Transactional
