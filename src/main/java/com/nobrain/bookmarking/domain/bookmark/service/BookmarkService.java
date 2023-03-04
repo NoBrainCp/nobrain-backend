@@ -38,6 +38,7 @@ public class BookmarkService {
         Long userId = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username)).getId();
         return bookmarkQueryRepository.findAllByUser(userId).stream()
                 .map(bookmark -> BookmarkResponse.Info.builder()
+                        .id(bookmark.getId())
                         .url(bookmark.getUrl())
                         .title(bookmark.getTitle())
                         .description(bookmark.getDescription())
@@ -56,6 +57,7 @@ public class BookmarkService {
 
         return bookmarkRepository.findAllByCategory(category).stream()
                 .map(bookmark -> BookmarkResponse.Info.builder()
+                        .id(bookmark.getId())
                         .url(bookmark.getUrl())
                         .title(bookmark.getTitle())
                         .description(bookmark.getDescription())

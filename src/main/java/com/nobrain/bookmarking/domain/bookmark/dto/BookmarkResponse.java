@@ -11,6 +11,7 @@ public class BookmarkResponse {
     @NoArgsConstructor
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public static class Info {
+        private Long id;
         private String url;
         private String title;
         private String description;
