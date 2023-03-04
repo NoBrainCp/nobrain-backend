@@ -10,6 +10,7 @@ public class CategoryResponse {
     @Builder
     @AllArgsConstructor
     public static class Info {
+        private Long id;
         private String name;
         private String description;
         private boolean isPublic;
