@@ -35,7 +35,7 @@ public class BookmarkController {
     }
 
     @PostMapping("/{username}/bookmark")
-    public CommonResult addBookmark(@PathVariable String username, @RequestBody @Valid BookmarkRequest.Info requestDto) throws IOException {
+    public CommonResult addBookmark(@PathVariable String username, @RequestBody @Valid BookmarkRequest.Info requestDto) {
         bookmarkService.createBookmark(username, requestDto);
         return responseService.getSuccessResult();
     }
