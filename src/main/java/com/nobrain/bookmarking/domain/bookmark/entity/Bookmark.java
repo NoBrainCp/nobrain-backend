@@ -32,7 +32,7 @@ public class Bookmark extends BaseTimeEntity {
     @Lob
     private String description;
     private boolean isPublic;
-    private boolean isStar;
+    private boolean isStarred;
     private String metaImage;
 
     @JsonBackReference
@@ -45,12 +45,12 @@ public class Bookmark extends BaseTimeEntity {
     private List<BookmarkTag> tags = new ArrayList<>();
 
     @Builder
-    public Bookmark(String url, String title, String description, boolean isPublic, boolean isStar, String metaImage, Category category) {
+    public Bookmark(String url, String title, String description, boolean isPublic, boolean isStarred, String metaImage, Category category) {
         this.url = url;
         this.title = title;
         this.description = description;
         this.isPublic = isPublic;
-        this.isStar = isStar;
+        this.isStarred = isStarred;
         this.metaImage = metaImage;
         addCategory(category);
     }
@@ -60,9 +60,17 @@ public class Bookmark extends BaseTimeEntity {
         this.title = requestDto.getTitle();
         this.description = requestDto.getDescription();
         this.isPublic = requestDto.isPublic();
-        this.isStar = requestDto.isStar();
+        this.isStarred = requestDto.isStarred();
         this.category = category;
         this.metaImage = metaImage;
+    }
+
+    public void changeStarred(boolean isStarred) {
+        this.isStarred = isStarred;
+    }
+
+    public void changePublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
     @Override

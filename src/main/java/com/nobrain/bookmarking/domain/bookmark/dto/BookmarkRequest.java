@@ -26,8 +26,8 @@ public class BookmarkRequest {
         @JsonProperty("isPublic")
         private boolean isPublic;
 
-        @JsonProperty("isStar")
-        private boolean isStar;
+        @JsonProperty("isStarred")
+        private boolean isStarred;
 
         private String categoryName;
         private String metaImage;
@@ -43,7 +43,7 @@ public class BookmarkRequest {
                     .title(this.title)
                     .description(this.description)
                     .isPublic(this.isPublic)
-                    .isStar(this.isStar)
+                    .isStarred(this.isStarred)
                     .metaImage(metaImage)
                     .category(category)
                     .build();

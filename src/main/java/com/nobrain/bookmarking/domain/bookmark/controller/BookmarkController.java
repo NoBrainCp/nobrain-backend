@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -43,6 +42,19 @@ public class BookmarkController {
     @PutMapping("/bookmark/{bookmarkId}")
     public CommonResult updateBookmark(@PathVariable Long bookmarkId, @RequestBody @Valid BookmarkRequest.Info requestDto) {
         bookmarkService.updateBookmark(bookmarkId, requestDto);
+        return responseService.getSuccessResult();
+    }
+
+    @PutMapping("/bookmark/{bookmarkId}/starred")
+    public CommonResult updateStarred(@PathVariable Long bookmarkId, @RequestParam Boolean isStarred) {
+        bookmarkService.updateStarred(bookmarkId, isStarred);
+        return responseService.getSuccessResult();
+    }
+
+
+    @PutMapping("/bookmark/{bookmarkId}/public")
+    public CommonResult updatePublic(@PathVariable Long bookmarkId, @RequestParam Boolean isPublic) {
+        bookmarkService.updatePublic(bookmarkId, isPublic);
         return responseService.getSuccessResult();
     }
 
