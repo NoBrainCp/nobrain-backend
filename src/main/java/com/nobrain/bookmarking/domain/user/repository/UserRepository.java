@@ -1,7 +1,7 @@
 package com.nobrain.bookmarking.domain.user.repository;
 
 import com.nobrain.bookmarking.domain.user.entity.User;
-import com.nobrain.bookmarking.domain.user.repository.projection.UserInfo;
+import com.nobrain.bookmarking.domain.user.dto.projection.UserInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
