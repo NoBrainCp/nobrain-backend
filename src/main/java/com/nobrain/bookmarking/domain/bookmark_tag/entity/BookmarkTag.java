@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import static javax.persistence.CascadeType.*;
+import static javax.persistence.CascadeType.PERSIST;
+import static javax.persistence.CascadeType.REMOVE;
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
 
@@ -20,11 +21,11 @@ public class BookmarkTag {
     @Column(name = "bookmark_tag_id")
     private Long id;
 
-    @ManyToOne(cascade = PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = PERSIST)
     @JoinColumn(name = "bookmark_id")
     private Bookmark bookmark;
 
-    @ManyToOne(cascade = {PERSIST, REMOVE})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {PERSIST, REMOVE})
     @JoinColumn(name = "tag_id")
     private Tag tag;
 

@@ -1,4 +1,4 @@
-package com.nobrain.bookmarking.domain.user.repository.mapping;
+package com.nobrain.bookmarking.domain.user.dto.projection;
 
 public interface UserInfo {
     String getName();

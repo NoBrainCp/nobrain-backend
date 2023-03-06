@@ -9,11 +9,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
-import static javax.persistence.CascadeType.*;
-import static javax.persistence.FetchType.*;
-import static javax.persistence.GenerationType.*;
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
