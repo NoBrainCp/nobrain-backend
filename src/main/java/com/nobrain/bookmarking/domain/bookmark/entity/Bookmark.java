@@ -69,6 +69,10 @@ public class Bookmark extends BaseTimeEntity {
         this.isStarred = isStarred;
     }
 
+    public void changePublic(boolean isPublic) {
+        this.isPublic = isPublic;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

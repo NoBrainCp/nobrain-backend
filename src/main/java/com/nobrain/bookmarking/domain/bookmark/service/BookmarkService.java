@@ -102,7 +102,19 @@ public class BookmarkService {
     @Transactional
     public void updateStarred(Long bookmarkId, Boolean isStarred) {
         Bookmark bookmark = findById(bookmarkId);
-        bookmark.changeStarred(isStarred);
+
+        if (bookmark.isStarred() != isStarred) {
+            bookmark.changeStarred(isStarred);
+        }
+    }
+
+    @Transactional
+    public void updatePublic(Long bookmarkId, Boolean isPublic) {
+        Bookmark bookmark = findById(bookmarkId);
+
+        if (bookmark.isPublic() != isPublic) {
+            bookmark.changePublic(isPublic);
+        }
     }
 
     @Transactional

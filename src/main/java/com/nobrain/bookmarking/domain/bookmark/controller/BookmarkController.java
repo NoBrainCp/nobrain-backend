@@ -51,6 +51,13 @@ public class BookmarkController {
         return responseService.getSuccessResult();
     }
 
+
+    @PutMapping("/bookmark/{bookmarkId}/public")
+    public CommonResult updatePublic(@PathVariable Long bookmarkId, @RequestParam Boolean isPublic) {
+        bookmarkService.updatePublic(bookmarkId, isPublic);
+        return responseService.getSuccessResult();
+    }
+
     @DeleteMapping("/bookmark/{bookmarkId}")
     public CommonResult deleteBookmark(@PathVariable Long bookmarkId) {
         bookmarkService.deleteBookmark(bookmarkId);
