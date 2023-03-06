@@ -1,7 +1,9 @@
 package com.nobrain.bookmarking.domain.bookmark.entity;
 
-import com.nobrain.bookmarking.domain.bookmark_tag.entity.BookmarkTag;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkRequest;
+import com.nobrain.bookmarking.domain.bookmark_tag.entity.BookmarkTag;
 import com.nobrain.bookmarking.domain.category.entity.Category;
 import com.nobrain.bookmarking.global.entity.BaseTimeEntity;
 import lombok.Builder;
@@ -33,10 +35,12 @@ public class Bookmark extends BaseTimeEntity {
     private boolean isStar;
     private String metaImage;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "bookmark", cascade = CascadeType.ALL)
     private List<BookmarkTag> tags = new ArrayList<>();
 
