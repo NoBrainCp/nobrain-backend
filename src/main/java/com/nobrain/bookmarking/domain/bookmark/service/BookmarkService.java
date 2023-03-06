@@ -1,12 +1,12 @@
 package com.nobrain.bookmarking.domain.bookmark.service;
 
+import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkRequest;
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkResponse;
 import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
 import com.nobrain.bookmarking.domain.bookmark.exception.BookmarkDuplicationException;
 import com.nobrain.bookmarking.domain.bookmark.exception.BookmarkNotFoundException;
 import com.nobrain.bookmarking.domain.bookmark.repository.BookmarkQueryRepository;
 import com.nobrain.bookmarking.domain.bookmark.repository.BookmarkRepository;
-import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkRequest;
 import com.nobrain.bookmarking.domain.bookmark_tag.service.BookmarkTagService;
 import com.nobrain.bookmarking.domain.category.entity.Category;
 import com.nobrain.bookmarking.domain.category.exception.CategoryNotFoundException;
@@ -31,6 +31,7 @@ public class BookmarkService {
     private final BookmarkRepository bookmarkRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+
     private final BookmarkTagService bookmarkTagService;
     private final MetaImageCrawler metaImageCrawler;
 
@@ -43,7 +44,7 @@ public class BookmarkService {
                         .title(bookmark.getTitle())
                         .description(bookmark.getDescription())
                         .isPublic(bookmark.isPublic())
-                        .isStar(bookmark.isStar())
+                        .isStarred(bookmark.isStarred())
                         .image(bookmark.getMetaImage())
                         .createdAt(bookmark.getCreatedAt().toLocalDate())
                         .build())
@@ -62,7 +63,7 @@ public class BookmarkService {
                         .title(bookmark.getTitle())
                         .description(bookmark.getDescription())
                         .isPublic(bookmark.isPublic())
-                        .isStar(bookmark.isStar())
+                        .isStarred(bookmark.isStarred())
                         .image(bookmark.getMetaImage())
                         .createdAt(bookmark.getCreatedAt().toLocalDate())
                         .build())
@@ -96,6 +97,12 @@ public class BookmarkService {
         bookmark.update(requestDto, metaImage, category);
 
         bookmarkTagService.update(bookmark, requestDto);
+    }
+
+    @Transactional
+    public void updateStarred(Long bookmarkId, Boolean isStarred) {
+        Bookmark bookmark = findById(bookmarkId);
+        bookmark.changeStarred(isStarred);
     }
 
     @Transactional
