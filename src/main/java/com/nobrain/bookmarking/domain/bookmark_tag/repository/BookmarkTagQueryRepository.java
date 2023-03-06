@@ -8,5 +8,6 @@ import java.util.List;
 @Repository
 public interface BookmarkTagQueryRepository {
 
-    List<BookmarkTagProjection.BookmarkAndTag> findAllBookmarksAndTagsByUserId(Long userId);
+    List<BookmarkTagProjection.BookmarkAndTag> findAllBookmarkTagsByUserId(Long userId);
+    List<BookmarkTagProjection.BookmarkAndTag> findBookmarkTagsByUserIdAndTagList(Long userId, List<Long> tagIds);
 }

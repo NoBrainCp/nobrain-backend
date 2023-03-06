@@ -2,8 +2,8 @@ package com.nobrain.bookmarking.domain.bookmark_tag.service;
 
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkRequest;
 import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
-import com.nobrain.bookmarking.domain.bookmark_tag.dto.projection.BookmarkTagProjection;
 import com.nobrain.bookmarking.domain.bookmark_tag.dto.BookmarkTagResponse;
+import com.nobrain.bookmarking.domain.bookmark_tag.dto.projection.BookmarkTagProjection;
 import com.nobrain.bookmarking.domain.bookmark_tag.entity.BookmarkTag;
 import com.nobrain.bookmarking.domain.bookmark_tag.repository.BookmarkTagQueryRepository;
 import com.nobrain.bookmarking.domain.bookmark_tag.repository.BookmarkTagRepository;
@@ -44,21 +44,13 @@ public class BookmarkTagService {
     }
 
     public List<BookmarkTagResponse.Info> getAllBookmarkTags(Long userId) {
-        Map<Tag, List<Bookmark>> bookmarkTagMap = new HashMap<>();
+        List<BookmarkTagProjection.BookmarkAndTag> bookmarkTagsByUserId = bookmarkTagQueryRepository.findAllBookmarkTagsByUserId(userId);
+        return mapToBookmarkTagResponse(bookmarkTagsByUserId);
+    }
 
-        List<BookmarkTagProjection.BookmarkAndTag> bookmarkByUserIdAndTags = bookmarkTagQueryRepository.findAllBookmarksAndTagsByUserId(userId);
-
-        for (BookmarkTagProjection.BookmarkAndTag bookmarkByUserIdAndTag : bookmarkByUserIdAndTags) {
-            bookmarkTagMap.put(bookmarkByUserIdAndTag.getTag(), bookmarkTagMap.getOrDefault(bookmarkByUserIdAndTag.getTag(), new ArrayList<>()));
-            bookmarkTagMap.get(bookmarkByUserIdAndTag.getTag()).add(bookmarkByUserIdAndTag.getBookmark());
-        }
-
-        List<BookmarkTagResponse.Info> bookmarkTagResponses = new ArrayList<>();
-        for (Tag key : bookmarkTagMap.keySet()) {
-            bookmarkTagResponses.add(new BookmarkTagResponse.Info(key, bookmarkTagMap.get(key)));
-        }
-
-        return bookmarkTagResponses;
+    public List<BookmarkTagResponse.Info> getBookmarkTagsByTagList(Long userId, List<Long> tagIds) {
+        List<BookmarkTagProjection.BookmarkAndTag> bookmarkTagsByUserIdAndTagList = bookmarkTagQueryRepository.findBookmarkTagsByUserIdAndTagList(userId, tagIds);
+        return mapToBookmarkTagResponse(bookmarkTagsByUserIdAndTagList);
     }
 
     private List<BookmarkTag> mapToBookmarkTags(Bookmark bookmark, List<String> tags) {
@@ -68,5 +60,19 @@ public class BookmarkTagService {
                     return new BookmarkTag(bookmark, tag);
                 })
                 .collect(Collectors.toList());
+    }
+
+    private static List<BookmarkTagResponse.Info> mapToBookmarkTagResponse(List<BookmarkTagProjection.BookmarkAndTag> bookmarkByUserIdAndTags) {
+        Map<Tag, List<Bookmark>> bookmarkTagMap = new HashMap<>();
+        for (BookmarkTagProjection.BookmarkAndTag bookmarkByUserIdAndTag : bookmarkByUserIdAndTags) {
+            bookmarkTagMap.put(bookmarkByUserIdAndTag.getTag(), bookmarkTagMap.getOrDefault(bookmarkByUserIdAndTag.getTag(), new ArrayList<>()));
+            bookmarkTagMap.get(bookmarkByUserIdAndTag.getTag()).add(bookmarkByUserIdAndTag.getBookmark());
+        }
+
+        List<BookmarkTagResponse.Info> bookmarkTagResponses = new ArrayList<>();
+        for (Tag key : bookmarkTagMap.keySet()) {
+            bookmarkTagResponses.add(new BookmarkTagResponse.Info(key, bookmarkTagMap.get(key)));
+        }
+        return bookmarkTagResponses;
     }
 }
