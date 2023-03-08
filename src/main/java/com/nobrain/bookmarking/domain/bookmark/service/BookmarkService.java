@@ -37,17 +37,9 @@ public class BookmarkService {
 
     public List<BookmarkResponse.Info> getAllBookmarksByUsername(String username) {
         Long userId = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username)).getId();
+        
         return bookmarkQueryRepository.findAllByUser(userId).stream()
-                .map(bookmark -> BookmarkResponse.Info.builder()
-                        .id(bookmark.getId())
-                        .url(bookmark.getUrl())
-                        .title(bookmark.getTitle())
-                        .description(bookmark.getDescription())
-                        .isPublic(bookmark.isPublic())
-                        .isStarred(bookmark.isStarred())
-                        .image(bookmark.getMetaImage())
-                        .createdAt(bookmark.getCreatedAt().toLocalDate())
-                        .build())
+                .map(Bookmark::toInfoDto)
                 .collect(Collectors.toList());
     }
 
@@ -57,16 +49,13 @@ public class BookmarkService {
         Category category = categoryRepository.findByUserAndName(user, categoryName).orElseThrow(() -> new CategoryNotFoundException(categoryName));
 
         return bookmarkRepository.findAllByCategory(category).stream()
-                .map(bookmark -> BookmarkResponse.Info.builder()
-                        .id(bookmark.getId())
-                        .url(bookmark.getUrl())
-                        .title(bookmark.getTitle())
-                        .description(bookmark.getDescription())
-                        .isPublic(bookmark.isPublic())
-                        .isStarred(bookmark.isStarred())
-                        .image(bookmark.getMetaImage())
-                        .createdAt(bookmark.getCreatedAt().toLocalDate())
-                        .build())
+                .map(Bookmark::toInfoDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<BookmarkResponse.Info> searchBookmark(String keyword, String condition) {
+        return bookmarkRepository.findAllByTitleContaining(keyword).stream()
+                .map(Bookmark::toInfoDto)
                 .collect(Collectors.toList());
     }
 
