@@ -37,6 +37,7 @@ public class UserSignService {
         return UserResponse.SignIn.builder()
                 .userId(user.getId())
                 .username(user.getName())
+                .email(user.getEmail())
                 .accessToken(accessToken)
                 .build();
     }

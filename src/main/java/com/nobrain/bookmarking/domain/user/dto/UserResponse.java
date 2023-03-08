@@ -14,6 +14,7 @@ public class UserResponse {
     @AllArgsConstructor
     public static class SignIn {
         private Long userId;
+        private String email;
         private String username;
         private String accessToken;
     }
