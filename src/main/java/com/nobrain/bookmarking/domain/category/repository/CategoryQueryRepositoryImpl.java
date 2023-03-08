@@ -26,9 +26,10 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
                         category.isPublic,
                         category.count()))
                 .from(category)
-                .join(bookmark).on(bookmark.category.id.eq(category.id)
+                .leftJoin(bookmark).on(bookmark.category.id.eq(category.id)
                         .and(category.user.id.eq(userId)))
                 .groupBy(category.name)
+                .orderBy(category.count().desc())
                 .fetch();
     }
 }

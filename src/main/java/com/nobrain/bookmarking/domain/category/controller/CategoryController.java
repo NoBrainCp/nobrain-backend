@@ -20,7 +20,7 @@ public class CategoryController {
     private final CategoryService categoryService;
     private final ResponseService responseService;
 
-    @GetMapping("user/{userId}/categories")
+    @GetMapping("/user/{userId}/categories")
     public ListResult<CategoryResponse.Info> getCategories(@PathVariable Long userId) {
         return responseService.getListResult(categoryService.getCategories(userId));
     }
