@@ -33,6 +33,11 @@ public class BookmarkController {
         return responseService.getListResult(bookmarkService.getBookmarksByCategory(username, category));
     }
 
+    @GetMapping("/bookmark/search")
+    public ListResult<BookmarkResponse.Info> searchBookmark(@RequestParam String keyword, @RequestParam String condition) {
+        return responseService.getListResult(bookmarkService.searchBookmark(keyword, condition.toLowerCase()));
+    }
+
     @PostMapping("/{username}/bookmark")
     public CommonResult addBookmark(@PathVariable String username, @RequestBody @Valid BookmarkRequest.Info requestDto) {
         bookmarkService.createBookmark(username, requestDto);
@@ -50,7 +55,6 @@ public class BookmarkController {
         bookmarkService.updateStarred(bookmarkId, isStarred);
         return responseService.getSuccessResult();
     }
-
 
     @PutMapping("/bookmark/{bookmarkId}/public")
     public CommonResult updatePublic(@PathVariable Long bookmarkId, @RequestParam Boolean isPublic) {
