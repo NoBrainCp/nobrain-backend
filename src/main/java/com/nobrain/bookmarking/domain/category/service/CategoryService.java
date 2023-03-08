@@ -5,6 +5,7 @@ import com.nobrain.bookmarking.domain.category.dto.CategoryResponse;
 import com.nobrain.bookmarking.domain.category.entity.Category;
 import com.nobrain.bookmarking.domain.category.exception.CategoryNameDuplicationException;
 import com.nobrain.bookmarking.domain.category.exception.CategoryNotFoundException;
+import com.nobrain.bookmarking.domain.category.repository.CategoryQueryRepository;
 import com.nobrain.bookmarking.domain.category.repository.CategoryRepository;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
@@ -21,19 +22,20 @@ import java.util.stream.Collectors;
 @Service
 public class CategoryService {
 
+    private final CategoryQueryRepository categoryQueryRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
-    public List<CategoryResponse.Info> getCategories(String username) {
-        User user = findUserByUsername(username);
-        return categoryRepository.findAllByUser(user).stream()
+    public List<CategoryResponse.Info> getCategories(Long userId) {
+        return categoryQueryRepository.findAllCategoryInfoWithCount(userId).stream()
                 .map(category -> CategoryResponse.Info.builder()
                     .id(category.getId())
                     .name(category.getName())
                     .description(category.getDescription())
                     .isPublic(category.isPublic())
+                    .count(category.getCount())
                     .build())
-                    .collect(Collectors.toList());
+                .collect(Collectors.toList());
     }
 
     @Transactional
