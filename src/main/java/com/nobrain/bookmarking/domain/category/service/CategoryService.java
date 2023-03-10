@@ -53,8 +53,8 @@ public class CategoryService {
         User user = findUserByUsername(username);
         Category category = categoryRepository.findByUserAndName(user, categoryName).orElseThrow(() -> new CategoryNotFoundException(categoryName));
 
-        if (categoryRepository.existsByUserAndName(user, requestDto.getName())) {
-            throw  new CategoryNameDuplicationException(requestDto.getName());
+        if (!categoryName.equals(requestDto.getName()) && categoryRepository.existsByUserAndName(user, requestDto.getName())) {
+            throw new CategoryNameDuplicationException(requestDto.getName());
         }
 
         category.update(requestDto);

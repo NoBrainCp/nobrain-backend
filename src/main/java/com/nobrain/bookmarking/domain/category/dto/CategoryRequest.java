@@ -12,7 +12,7 @@ public class CategoryRequest {
         private String name;
         private String description;
 
-        @JsonProperty("isPublic")
+        @JsonProperty("public")
         private boolean isPublic;
 
         public Category toEntity(User user) {
