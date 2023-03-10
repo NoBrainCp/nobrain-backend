@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 public interface BookmarkQueryRepository {
 
-    List<Bookmark> findAllByUser(long userId);
+    List<Bookmark> findAllByUser(Long userId);
 }
