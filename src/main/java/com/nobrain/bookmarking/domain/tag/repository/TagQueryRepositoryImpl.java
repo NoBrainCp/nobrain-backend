@@ -11,8 +11,6 @@ import static com.nobrain.bookmarking.domain.bookmark.entity.QBookmark.bookmark;
 import static com.nobrain.bookmarking.domain.bookmark_tag.entity.QBookmarkTag.bookmarkTag;
 import static com.nobrain.bookmarking.domain.category.entity.QCategory.category;
 import static com.nobrain.bookmarking.domain.tag.entity.QTag.tag;
-import static com.querydsl.jpa.JPAExpressions.select;
-import static com.querydsl.jpa.JPAExpressions.selectDistinct;
 
 @RequiredArgsConstructor
 @Repository
@@ -21,22 +19,14 @@ public class TagQueryRepositoryImpl implements TagQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Tag> findAllByUser(Long userId) {
+    public List<Tag> findAllByUser(String username) {
         return queryFactory
-                .selectFrom(tag)
-                .where(tag.id.in(
-                        selectDistinct(bookmarkTag.tag.id)
-                        .from(bookmarkTag)
-                        .where(bookmarkTag.bookmark.id.in(
-                                select(bookmark.id)
-                                .from(bookmark)
-                                .where(bookmark.category.id.in(
-                                        select(category.id)
-                                        .from(category)
-                                        .where(category.user.id.eq(userId))
-                                ))
-                        ))
-                ))
+                .selectDistinct(tag)
+                .from(tag)
+                .join(bookmarkTag).on(tag.id.eq(bookmarkTag.tag.id))
+                .join(bookmark).on(bookmarkTag.bookmark.id.eq(bookmark.id))
+                .join(category).on(bookmark.category.id.eq(category.id))
+                .where(category.user.name.eq(username))
                 .fetch();
     }
 }
