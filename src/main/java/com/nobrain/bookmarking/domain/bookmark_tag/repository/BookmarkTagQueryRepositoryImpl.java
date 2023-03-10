@@ -11,7 +11,6 @@ import java.util.List;
 import static com.nobrain.bookmarking.domain.bookmark.entity.QBookmark.bookmark;
 import static com.nobrain.bookmarking.domain.bookmark_tag.entity.QBookmarkTag.bookmarkTag;
 import static com.nobrain.bookmarking.domain.category.entity.QCategory.category;
-import static com.querydsl.jpa.JPAExpressions.select;
 
 @RequiredArgsConstructor
 @Repository
@@ -27,15 +26,8 @@ public class BookmarkTagQueryRepositoryImpl implements BookmarkTagQueryRepositor
                         bookmarkTag.bookmark))
                 .from(bookmarkTag)
                 .join(bookmark).on(bookmark.id.eq(bookmarkTag.bookmark.id))
-                .where(bookmarkTag.bookmark.id.in(
-                        select(bookmark.id)
-                        .from(bookmark)
-                        .where(bookmark.category.id.in(
-                                select(category.id)
-                                .from(category)
-                                .where(category.user.id.eq(userId))
-                        ))
-                ))
+                .join(category).on(bookmark.category.id.eq(category.id))
+                .where(category.user.id.eq(userId))
                 .fetch();
     }
 
@@ -47,17 +39,8 @@ public class BookmarkTagQueryRepositoryImpl implements BookmarkTagQueryRepositor
                         bookmarkTag.bookmark))
                 .from(bookmarkTag)
                 .join(bookmark).on(bookmark.id.eq(bookmarkTag.bookmark.id))
-                .where(bookmarkTag.tag.id.in(tagIds)
-                        .and(bookmarkTag.bookmark.id.in(
-                                select(bookmark.id)
-                                .from(bookmark)
-                                .where(bookmark.category.id.in(
-                                        select(category.id)
-                                        .from(category)
-                                        .where(category.user.id.eq(userId))
-                                ))
-                        )
-                ))
+                .join(category).on(bookmark.category.id.eq(category.id))
+                .where(category.user.id.eq(userId).and(bookmarkTag.tag.id.in(tagIds)))
                 .fetch();
     }
 }
