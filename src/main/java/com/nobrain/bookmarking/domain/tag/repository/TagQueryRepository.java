@@ -8,5 +8,5 @@ import java.util.List;
 @Repository
 public interface TagQueryRepository {
 
-    List<Tag> findAllByUser(Long userId);
+    List<Tag> findAllByUser(String username);
 }

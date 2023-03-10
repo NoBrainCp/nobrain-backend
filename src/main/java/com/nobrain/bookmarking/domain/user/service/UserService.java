@@ -36,11 +36,11 @@ public class UserService {
                 .build();
     }
 
-    public UserResponse.Info getUserInfo(Long userId) {
-        UserInfo userInfo = userRepository.findUserInfoById(userId).orElseThrow(() -> new UserNotFoundException(String.valueOf(userId)));
+    public UserResponse.Info getUserInfo(String username) {
+        UserInfo userInfo = userRepository.findUserInfoByName(username).orElseThrow(() -> new UserNotFoundException(username));
 
         return UserResponse.Info.builder()
-                .userId(userId)
+                .userId(userInfo.getId())
                 .username(userInfo.getName())
                 .email(userInfo.getEmail())
                 .build();

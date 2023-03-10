@@ -18,8 +18,8 @@ public class TagController {
     private final TagService tagService;
     private final ResponseService responseService;
 
-    @GetMapping("/user/{userId}/tags")
-    public ListResult<TagResponse.Info> getAllTagsOfUser(@PathVariable Long userId) {
-        return responseService.getListResult(tagService.getAllTagsOfUser(userId));
+    @GetMapping("/user/{username}/tags")
+    public ListResult<TagResponse.Info> getAllTagsOfUser(@PathVariable String username) {
+        return responseService.getListResult(tagService.getAllTagsOfUser(username));
     }
 }

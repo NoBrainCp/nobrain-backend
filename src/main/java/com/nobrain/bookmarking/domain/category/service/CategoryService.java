@@ -26,8 +26,8 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
-    public List<CategoryResponse.Info> getCategories(Long userId) {
-        return categoryQueryRepository.findAllCategoryInfoWithCount(userId).stream()
+    public List<CategoryResponse.Info> getCategories(String username) {
+        return categoryQueryRepository.findAllCategoryInfoWithCount(username).stream()
                 .map(category -> CategoryResponse.Info.builder()
                     .id(category.getId())
                     .name(category.getName())
@@ -53,8 +53,8 @@ public class CategoryService {
         User user = findUserByUsername(username);
         Category category = categoryRepository.findByUserAndName(user, categoryName).orElseThrow(() -> new CategoryNotFoundException(categoryName));
 
-        if (categoryRepository.existsByUserAndName(user, requestDto.getName())) {
-            throw  new CategoryNameDuplicationException(requestDto.getName());
+        if (!categoryName.equals(requestDto.getName()) && categoryRepository.existsByUserAndName(user, requestDto.getName())) {
+            throw new CategoryNameDuplicationException(requestDto.getName());
         }
 
         category.update(requestDto);

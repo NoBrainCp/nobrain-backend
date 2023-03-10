@@ -36,8 +36,8 @@ public class TagService {
         tagRepository.deleteAll(removedTags);
     }
 
-    public List<TagResponse.Info> getAllTagsOfUser(Long userId) {
-        return tagQueryRepository.findAllByUser(userId).stream()
+    public List<TagResponse.Info> getAllTagsOfUser(String username) {
+        return tagQueryRepository.findAllByUser(username).stream()
                 .map(tag -> TagResponse.Info.builder()
                         .tagId(tag.getId())
                         .tagName(tag.getName())

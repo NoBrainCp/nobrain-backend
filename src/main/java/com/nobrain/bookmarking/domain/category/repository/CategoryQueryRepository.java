@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface CategoryQueryRepository {
 
-    List<CategoryResponse.Info> findAllCategoryInfoWithCount(Long userId);
+    List<CategoryResponse.Info> findAllCategoryInfoWithCount(String username);
 }

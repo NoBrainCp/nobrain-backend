@@ -18,18 +18,18 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<CategoryResponse.Info> findAllCategoryInfoWithCount(Long userId) {
+    public List<CategoryResponse.Info> findAllCategoryInfoWithCount(String username) {
         return queryFactory.select(Projections.constructor(CategoryResponse.Info.class,
                         category.id,
                         category.name,
                         category.description,
                         category.isPublic,
-                        category.count()))
+                        bookmark.id.count()))
                 .from(category)
-                .leftJoin(bookmark).on(bookmark.category.id.eq(category.id)
-                        .and(category.user.id.eq(userId)))
+                .leftJoin(bookmark).on(bookmark.category.id.eq(category.id))
+                .where(category.user.name.eq(username))
                 .groupBy(category.name)
-                .orderBy(category.count().desc())
+                .orderBy(bookmark.id.count().desc())
                 .fetch();
     }
 }

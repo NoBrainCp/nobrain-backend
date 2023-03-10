@@ -20,9 +20,9 @@ public class CategoryController {
     private final CategoryService categoryService;
     private final ResponseService responseService;
 
-    @GetMapping("/user/{userId}/categories")
-    public ListResult<CategoryResponse.Info> getCategories(@PathVariable Long userId) {
-        return responseService.getListResult(categoryService.getCategories(userId));
+    @GetMapping("/user/{username}/categories")
+    public ListResult<CategoryResponse.Info> getCategories(@PathVariable String username) {
+        return responseService.getListResult(categoryService.getCategories(username));
     }
 
     @PostMapping("/{username}/category")
@@ -32,7 +32,7 @@ public class CategoryController {
         return responseService.getSingleResult(categoryService.create(username, requestDto));
     }
 
-    @PutMapping("{username}/category/{categoryName}")
+    @PutMapping("/{username}/category/{categoryName}")
     public CommonResult updateCategory(@PathVariable String username,
                                        @PathVariable String categoryName,
                                        @RequestBody CategoryRequest.Info requestDto) {
@@ -40,7 +40,7 @@ public class CategoryController {
         return responseService.getSuccessResult();
     }
 
-    @DeleteMapping("{username}/category/{categoryName}")
+    @DeleteMapping("/{username}/category/{categoryName}")
     public CommonResult deleteCategory(@PathVariable String username, @PathVariable String categoryName) {
         categoryService.deleteCategory(username, categoryName);
         return responseService.getSuccessResult();
