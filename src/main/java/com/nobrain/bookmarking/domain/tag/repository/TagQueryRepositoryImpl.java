@@ -29,4 +29,14 @@ public class TagQueryRepositoryImpl implements TagQueryRepository {
                 .where(category.user.name.eq(username))
                 .fetch();
     }
+
+    @Override
+    public List<Tag> findTagsByBookmarkId(String username, Long bookmarkId) {
+        return queryFactory
+                .select(tag)
+                .from(tag)
+                .join(bookmarkTag).on(tag.id.eq(bookmarkTag.tag.id))
+                .where(bookmarkTag.bookmark.id.eq(bookmarkId))
+                .fetch();
+    }
 }

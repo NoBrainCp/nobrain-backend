@@ -22,4 +22,9 @@ public class TagController {
     public ListResult<TagResponse.Info> getAllTagsOfUser(@PathVariable String username) {
         return responseService.getListResult(tagService.getAllTagsOfUser(username));
     }
+
+    @GetMapping("/user/{username}/{bookmarkId}/tags")
+    public ListResult<TagResponse.Info> getTagsOfUserByBookmarkId(@PathVariable String username, @PathVariable Long bookmarkId) {
+        return responseService.getListResult(tagService.getTagsOfUserByBookmarkId(username, bookmarkId));
+    }
 }

@@ -9,4 +9,6 @@ import java.util.List;
 public interface TagQueryRepository {
 
     List<Tag> findAllByUser(String username);
+
+    List<Tag> findTagsByBookmarkId(String username, Long bookmarkId);
 }
