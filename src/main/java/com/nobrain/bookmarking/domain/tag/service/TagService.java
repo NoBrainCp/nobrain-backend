@@ -45,6 +45,15 @@ public class TagService {
                 ).collect(Collectors.toList());
     }
 
+    public List<TagResponse.Info> getTagsOfUserByBookmarkId(String username, Long bookmarkId) {
+        return tagQueryRepository.findTagsByBookmarkId(username, bookmarkId).stream()
+                .map(tag -> TagResponse.Info.builder()
+                        .tagId(tag.getId())
+                        .tagName(tag.getName())
+                        .build()
+                ).collect(Collectors.toList());
+    }
+
     private List<Tag> mapToTags(List<BookmarkTag> bookmarkTags) {
         return bookmarkTags.stream()
                 .map(BookmarkTag::getTag)
