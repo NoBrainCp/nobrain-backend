@@ -32,7 +32,7 @@ public class FollowController {
         return responseService.getListResult(followService.getFollowingList(username));
     }
 
-    @PostMapping("/user/{toUserId}")
+    @PostMapping("/user/{toUserId}/follow")
     public CommonResult follow(@PathVariable Long toUserId) {
         followService.follow(toUserId);
         return responseService.getSuccessResult();
