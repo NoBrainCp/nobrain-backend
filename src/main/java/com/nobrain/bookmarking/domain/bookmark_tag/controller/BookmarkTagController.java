@@ -1,5 +1,6 @@
 package com.nobrain.bookmarking.domain.bookmark_tag.controller;
 
+import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkResponse;
 import com.nobrain.bookmarking.domain.bookmark_tag.dto.BookmarkTagResponse;
 import com.nobrain.bookmarking.domain.bookmark_tag.service.BookmarkTagService;
 import com.nobrain.bookmarking.global.response.model.ListResult;
@@ -23,7 +24,7 @@ public class BookmarkTagController {
     }
 
     @GetMapping("/user/{username}/bookmark-tags/tags")
-    public ListResult<BookmarkTagResponse.Info> getBookmarkTagsByTagList(@PathVariable String username, @RequestParam List<Long> tagIds) {
+    public ListResult<BookmarkResponse.Info> getBookmarkTagsByTagList(@PathVariable String username, @RequestParam List<Long> tagIds) {
         return responseService.getListResult(bookmarkTagService.getBookmarkTagsByTagList(username, tagIds));
     }
 }

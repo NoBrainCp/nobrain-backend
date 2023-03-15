@@ -78,12 +78,12 @@ public class Bookmark extends BaseTimeEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Bookmark bookmark = (Bookmark) o;
-        return Objects.equals(getUrl(), bookmark.getUrl()) && Objects.equals(getCategory(), bookmark.getCategory());
+        return Objects.equals(getId(), bookmark.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUrl(), getCategory());
+        return Objects.hash(getId());
     }
 
     /**
