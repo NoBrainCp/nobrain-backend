@@ -9,6 +9,8 @@ import com.nobrain.bookmarking.global.response.service.ResponseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("${app.domain}")
@@ -33,8 +35,8 @@ public class FollowController {
     }
 
     @PostMapping("/user/{toUserId}/follow")
-    public CommonResult follow(@PathVariable Long toUserId) {
-        followService.follow(toUserId);
+    public CommonResult follow(@PathVariable Long toUserId, HttpServletRequest request) {
+        followService.follow(toUserId, request);
         return responseService.getSuccessResult();
     }
 }

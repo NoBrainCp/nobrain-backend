@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,8 +47,9 @@ public class FollowService {
     }
 
     @Transactional
-    public void follow(Long toUserId) {
-        Long fromUserId = tokenService.getId();
+    public void follow(Long toUserId, HttpServletRequest request) {
+        String token = tokenService.resolveToken(request);
+        Long fromUserId = Long.parseLong(tokenService.getId(token));
         Follow follow = followRepository.findByFromUserAndToUser(fromUserId, toUserId)
                 .orElse(null);
 
