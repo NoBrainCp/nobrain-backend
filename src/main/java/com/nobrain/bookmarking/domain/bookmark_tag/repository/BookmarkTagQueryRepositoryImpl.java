@@ -32,7 +32,7 @@ public class BookmarkTagQueryRepositoryImpl implements BookmarkTagQueryRepositor
     }
 
     @Override
-    public List<BookmarkTagProjection.BookmarkAndTag> findBookmarkTagsByUserIdAndTagList(Long userId, List<Long> tagIds) {
+    public List<BookmarkTagProjection.BookmarkAndTag> findBookmarkTagsByUserIdAndTagList(String username, List<Long> tagIds) {
         return queryFactory
                 .select(Projections.constructor(BookmarkTagProjection.BookmarkAndTag.class,
                         bookmarkTag.tag,
@@ -40,7 +40,7 @@ public class BookmarkTagQueryRepositoryImpl implements BookmarkTagQueryRepositor
                 .from(bookmarkTag)
                 .join(bookmark).on(bookmark.id.eq(bookmarkTag.bookmark.id))
                 .join(category).on(bookmark.category.id.eq(category.id))
-                .where(category.user.id.eq(userId).and(bookmarkTag.tag.id.in(tagIds)))
+                .where(category.user.name.eq(username).and(bookmarkTag.tag.id.in(tagIds)))
                 .fetch();
     }
 }

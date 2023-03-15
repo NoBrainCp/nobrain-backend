@@ -48,8 +48,8 @@ public class BookmarkTagService {
         return mapToBookmarkTagResponse(bookmarkTagsByUserId);
     }
 
-    public List<BookmarkTagResponse.Info> getBookmarkTagsByTagList(Long userId, List<Long> tagIds) {
-        List<BookmarkTagProjection.BookmarkAndTag> bookmarkTagsByUserIdAndTagList = bookmarkTagQueryRepository.findBookmarkTagsByUserIdAndTagList(userId, tagIds);
+    public List<BookmarkTagResponse.Info> getBookmarkTagsByTagList(String username, List<Long> tagIds) {
+        List<BookmarkTagProjection.BookmarkAndTag> bookmarkTagsByUserIdAndTagList = bookmarkTagQueryRepository.findBookmarkTagsByUserIdAndTagList(username, tagIds);
         return mapToBookmarkTagResponse(bookmarkTagsByUserIdAndTagList);
     }
 
