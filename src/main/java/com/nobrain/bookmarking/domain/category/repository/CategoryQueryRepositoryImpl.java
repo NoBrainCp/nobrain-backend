@@ -40,7 +40,6 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
                 .from(category)
                 .join(bookmark).on(category.id.eq(bookmark.category.id))
                 .where(bookmark.id.eq(bookmarkId))
-                .fetch().toString();
+                .fetchOne();
     }
-
 }
