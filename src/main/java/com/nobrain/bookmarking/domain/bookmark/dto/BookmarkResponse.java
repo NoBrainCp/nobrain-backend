@@ -19,5 +19,6 @@ public class BookmarkResponse {
         private boolean isStarred;
         private String image;
         private LocalDate createdAt;
+        private LocalDate modifiedAt;
     }
 }

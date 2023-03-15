@@ -3,7 +3,6 @@ package com.nobrain.bookmarking.domain.bookmark.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkRequest;
-import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkResponse;
 import com.nobrain.bookmarking.domain.bookmark_tag.entity.BookmarkTag;
 import com.nobrain.bookmarking.domain.category.entity.Category;
 import com.nobrain.bookmarking.global.entity.BaseTimeEntity;
@@ -85,19 +84,6 @@ public class Bookmark extends BaseTimeEntity {
     @Override
     public int hashCode() {
         return Objects.hash(getUrl(), getCategory());
-    }
-
-    public BookmarkResponse.Info toInfoDto() {
-        return BookmarkResponse.Info.builder()
-                .id(this.getId())
-                .url(this.getUrl())
-                .title(this.getTitle())
-                .description(this.getDescription())
-                .isPublic(this.isPublic())
-                .isStarred(this.isStarred())
-                .image(this.getMetaImage())
-                .createdAt(this.getCreatedAt().toLocalDate())
-                .build();
     }
 
     /**

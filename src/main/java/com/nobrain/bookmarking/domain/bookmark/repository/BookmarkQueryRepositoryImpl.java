@@ -17,7 +17,7 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Bookmark> findAllByUser(Long userId) {
+    public List<Bookmark> findAllByUserId(Long userId) {
         return queryFactory
                 .selectFrom(bookmark)
                 .join(category).on(bookmark.category.id.eq(category.id))

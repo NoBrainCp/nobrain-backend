@@ -37,25 +37,24 @@ public class BookmarkService {
 
     public List<BookmarkResponse.Info> getAllBookmarksByUsername(String username) {
         Long userId = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username)).getId();
-        
-        return bookmarkQueryRepository.findAllByUser(userId).stream()
-                .map(Bookmark::toInfoDto)
+
+        return bookmarkQueryRepository.findAllByUserId(userId).stream()
+                .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }
-
 
     public List<BookmarkResponse.Info> getBookmarksByCategory(String username, String categoryName) {
         User user = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
         Category category = categoryRepository.findByUserAndName(user, categoryName).orElseThrow(() -> new CategoryNotFoundException(categoryName));
 
         return bookmarkRepository.findAllByCategory(category).stream()
-                .map(Bookmark::toInfoDto)
+                .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }
 
     public List<BookmarkResponse.Info> searchBookmark(String keyword, String condition) {
         return bookmarkRepository.findAllByTitleContaining(keyword).stream()
-                .map(Bookmark::toInfoDto)
+                .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }
 
@@ -74,7 +73,9 @@ public class BookmarkService {
         validateBookmark(requestDto, category);
         bookmarkRepository.save(bookmark);
 
-        bookmarkTagService.saveTags(bookmark, requestDto.getTags());
+        if (requestDto.getTags() != null) {
+            bookmarkTagService.saveTags(bookmark, requestDto.getTags());
+        }
     }
 
     @Transactional
@@ -119,5 +120,19 @@ public class BookmarkService {
         if (!bookmarkRepository.existsByUrlAndCategory(requestDto.getUrl(), category)) {
             throw new BookmarkDuplicationException(requestDto.getUrl());
         }
+    }
+
+    private BookmarkResponse.Info toBookmarkInfoDto(Bookmark bookmark) {
+        return BookmarkResponse.Info.builder()
+                .id(bookmark.getId())
+                .url(bookmark.getUrl())
+                .title(bookmark.getTitle())
+                .description(bookmark.getDescription())
+                .isPublic(bookmark.isPublic())
+                .isStarred(bookmark.isStarred())
+                .image(bookmark.getMetaImage())
+                .createdAt(bookmark.getCreatedAt().toLocalDate())
+                .modifiedAt(bookmark.getModifiedAt().toLocalDate())
+                .build();
     }
 }

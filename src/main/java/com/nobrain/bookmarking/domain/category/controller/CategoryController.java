@@ -25,6 +25,11 @@ public class CategoryController {
         return responseService.getListResult(categoryService.getCategories(username));
     }
 
+    @GetMapping("/bookmark/{bookmarkId}/categoryName")
+    public SingleResult<String> getCategoryNameByBookmark(@PathVariable Long bookmarkId) {
+        return responseService.getSingleResult(categoryService.getCategoryNameByBookmarkId(bookmarkId));
+    }
+
     @PostMapping("/{username}/category")
     public SingleResult<String> addCategory(
             @PathVariable String username,
