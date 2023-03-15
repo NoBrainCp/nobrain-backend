@@ -54,7 +54,7 @@ public class SecurityConfig {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 생성 안함.
             .and()
                 .authorizeHttpRequests()
-                .antMatchers("/*/signin", "/*/signin/**/" , "/*/signup", "/*/signup/**" , "/social/**").permitAll()
+                .antMatchers("/*/sign-in", "/*/sign-in/**/" , "/*/sign-up", "/*/sign-up/**" , "/social/**", "/**").permitAll()
 //                .anyRequest().hasRole("USER")
             .and()
             .addFilterBefore(new JwtAuthenticationFilter(tokenService),
