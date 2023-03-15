@@ -35,8 +35,8 @@ public class FollowController {
     }
 
     @PostMapping("/user/{toUserId}/follow")
-    public CommonResult follow(@PathVariable Long toUserId, HttpServletRequest request) {
-        followService.follow(toUserId, request);
+    public CommonResult follow(@PathVariable Long toUserId) {
+        followService.follow(toUserId);
         return responseService.getSuccessResult();
     }
 }

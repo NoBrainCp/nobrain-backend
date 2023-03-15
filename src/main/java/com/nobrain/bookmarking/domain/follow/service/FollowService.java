@@ -1,17 +1,16 @@
 package com.nobrain.bookmarking.domain.follow.service;
 
+import com.nobrain.bookmarking.domain.auth.service.TokenService;
 import com.nobrain.bookmarking.domain.follow.dto.FollowResponse;
 import com.nobrain.bookmarking.domain.follow.entity.Follow;
 import com.nobrain.bookmarking.domain.follow.repository.FollowRepository;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
-import com.nobrain.bookmarking.domain.auth.service.TokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,9 +46,8 @@ public class FollowService {
     }
 
     @Transactional
-    public void follow(Long toUserId, HttpServletRequest request) {
-        String token = tokenService.resolveToken(request);
-        Long fromUserId = Long.parseLong(tokenService.getId(token));
+    public void follow(Long toUserId) {
+        Long fromUserId = tokenService.getId();
         Follow follow = followRepository.findByFromUserAndToUser(fromUserId, toUserId)
                 .orElse(null);
 
