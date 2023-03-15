@@ -17,9 +17,9 @@ public class BookmarkTagController {
     private final BookmarkTagService bookmarkTagService;
     private final ResponseService responseService;
 
-    @GetMapping("/user/{userId}/bookmark-tags")
-    public ListResult<BookmarkTagResponse.Info> getAllBookmarkTags(@PathVariable Long userId) {
-        return responseService.getListResult(bookmarkTagService.getAllBookmarkTags(userId));
+    @GetMapping("/user/{username}/bookmark-tags")
+    public ListResult<BookmarkTagResponse.Info> getAllBookmarkTags(@PathVariable String username) {
+        return responseService.getListResult(bookmarkTagService.getAllBookmarkTags(username));
     }
 
     @GetMapping("/user/{userId}/bookmark-tags/tags")

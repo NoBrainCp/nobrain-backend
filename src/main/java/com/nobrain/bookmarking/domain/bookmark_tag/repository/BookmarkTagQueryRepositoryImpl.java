@@ -19,7 +19,7 @@ public class BookmarkTagQueryRepositoryImpl implements BookmarkTagQueryRepositor
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<BookmarkTagProjection.BookmarkAndTag> findAllBookmarkTagsByUserId(Long userId) {
+    public List<BookmarkTagProjection.BookmarkAndTag> findAllBookmarkTagsByUserId(String username) {
         return queryFactory
                 .select(Projections.constructor(BookmarkTagProjection.BookmarkAndTag.class,
                         bookmarkTag.tag,
@@ -27,7 +27,7 @@ public class BookmarkTagQueryRepositoryImpl implements BookmarkTagQueryRepositor
                 .from(bookmarkTag)
                 .join(bookmark).on(bookmark.id.eq(bookmarkTag.bookmark.id))
                 .join(category).on(bookmark.category.id.eq(category.id))
-                .where(category.user.id.eq(userId))
+                .where(category.user.name.eq(username))
                 .fetch();
     }
 
