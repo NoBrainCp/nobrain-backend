@@ -24,7 +24,7 @@ public class BookmarkTag {
     @JoinColumn(name = "bookmark_id")
     private Bookmark bookmark;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {PERSIST, MERGE})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {PERSIST, REMOVE})
     @JoinColumn(name = "tag_id")
     private Tag tag;
 
