@@ -38,6 +38,10 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
+    public String getCategoryNameByBookmarkId(Long bookmarkId) {
+        return categoryQueryRepository.findCategoryNameByBookmarkId(bookmarkId);
+    }
+
     @Transactional
     public String create(String username, CategoryRequest.Info requestDto) {
         User user = findUserByUsername(username);

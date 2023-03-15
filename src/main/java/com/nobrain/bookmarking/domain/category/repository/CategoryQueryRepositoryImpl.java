@@ -32,4 +32,15 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
                 .orderBy(bookmark.id.count().desc())
                 .fetch();
     }
+
+    @Override
+    public String findCategoryNameByBookmarkId(Long bookmarkId) {
+        return queryFactory
+                .select(category.name)
+                .from(category)
+                .join(bookmark).on(category.id.eq(bookmark.category.id))
+                .where(bookmark.id.eq(bookmarkId))
+                .fetch().toString();
+    }
+
 }
