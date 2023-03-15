@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.CascadeType.*;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
@@ -27,7 +27,7 @@ public class Tag {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "tag", cascade = ALL)
+    @OneToMany(mappedBy = "tag", cascade = {PERSIST, MERGE})
     List<BookmarkTag> bookmarks = new ArrayList<>();
 
     @Builder
