@@ -45,6 +45,11 @@ public class FollowService {
                 .collect(Collectors.toList());
     }
 
+    public Boolean isFollow(Long toUserId) {
+        Long fromUserId = tokenService.getId();
+        return followRepository.existsFollowByToUserIdAndFromUserId(toUserId, fromUserId);
+    }
+
     @Transactional
     public void follow(Long toUserId) {
         Long fromUserId = tokenService.getId();
