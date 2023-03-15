@@ -33,7 +33,7 @@ public class TagQueryRepositoryImpl implements TagQueryRepository {
     @Override
     public List<Tag> findTagsByBookmarkId(String username, Long bookmarkId) {
         return queryFactory
-                .select(tag)
+                .selectDistinct(tag)
                 .from(tag)
                 .join(bookmarkTag).on(tag.id.eq(bookmarkTag.tag.id))
                 .where(bookmarkTag.bookmark.id.eq(bookmarkId))
