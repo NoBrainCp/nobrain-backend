@@ -39,9 +39,9 @@ public class UserController {
         return responseService.getSingleResult(userRepository.existsByLoginId(loginId));
     }
 
-    @PutMapping("/user/{userId}/username")
-    public SingleResult<Long> changeName(@PathVariable Long userId, @RequestBody UserRequest.ChangeUserName dto) {
-        return responseService.getSingleResult(userService.changeName(userId, dto));
+    @PutMapping("/user/{userId}/username/{username}")
+    public SingleResult<String> changeName(@PathVariable Long userId, @PathVariable String username) {
+        return responseService.getSingleResult(userService.changeName(userId, username));
     }
 
     @PutMapping("/user/password")

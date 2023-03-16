@@ -6,6 +6,7 @@ import com.nobrain.bookmarking.domain.user.dto.UserResponse;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserNotCorrectPasswordException;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
+import com.nobrain.bookmarking.domain.user.exception.UsernameDuplicationException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
 import com.nobrain.bookmarking.domain.user.dto.projection.UserInfo;
 import lombok.RequiredArgsConstructor;
@@ -47,9 +48,13 @@ public class UserService {
     }
 
     @Transactional
-    public Long changeName(Long id, UserRequest.ChangeUserName dto) {
-        findById(id).changeName(dto.getUsername());
-        return id;
+    public String changeName(Long id, String username) {
+        if (userRepository.existsByName(username)) {
+            throw new UsernameDuplicationException(username);
+        }
+
+        findById(id).changeName(username);
+        return username;
     }
 
     @Transactional
