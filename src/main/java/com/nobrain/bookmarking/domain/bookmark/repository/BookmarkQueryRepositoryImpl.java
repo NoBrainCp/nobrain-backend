@@ -24,4 +24,12 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
                 .where(category.user.id.eq(userId))
                 .fetch();
     }
+
+    @Override
+    public List<Bookmark> searchAll(String keyword) {
+        return queryFactory
+                .selectFrom(bookmark)
+                .where(bookmark.title.contains(keyword).or(bookmark.description.contains(keyword)))
+                .fetch();
+    }
 }

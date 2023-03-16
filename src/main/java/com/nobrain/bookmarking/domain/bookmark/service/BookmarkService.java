@@ -53,7 +53,7 @@ public class BookmarkService {
     }
 
     public List<BookmarkResponse.Info> searchBookmark(String keyword, String condition) {
-        return bookmarkRepository.findAllByTitleContaining(keyword).stream()
+        return bookmarkQueryRepository.searchAll(keyword).stream()
                 .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }
