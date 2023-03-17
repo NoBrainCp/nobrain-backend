@@ -70,6 +70,12 @@ public class UserService {
     }
 
     @Transactional
+    public void changeProfileImage(UserRequest.ChangeProfileImage dto) {
+        Long userId = tokenService.getId();
+        findById(userId).changeProfileImage(dto.getProfileImage());
+    }
+
+    @Transactional
     public void delete(Long id) {
         userRepository.deleteById(id);
     }

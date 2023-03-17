@@ -60,4 +60,9 @@ public class UserRequest {
         private String password;
         private String passwordCheck;
     }
+
+    @Getter
+    public static class ChangeProfileImage {
+        String profileImage;
+    }
 }
