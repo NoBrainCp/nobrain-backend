@@ -26,6 +26,7 @@ public class UserResponse {
         private Long userId;
         private String username;
         private String email;
+        private String profileImage;
     }
 
     @Getter
@@ -38,6 +39,7 @@ public class UserResponse {
         private String username;
         private String phoneNumber;
         private LocalDate birthDate;
+        private String profileImage;
         private List<String> roles;
     }
 }

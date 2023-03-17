@@ -33,6 +33,7 @@ public class UserService {
                 .username(user.getName())
                 .phoneNumber(user.getPhoneNumber())
                 .birthDate(user.getBirthDate())
+                .profileImage(user.getProfileImage())
                 .roles(user.getRoles())
                 .build();
     }
@@ -44,6 +45,7 @@ public class UserService {
                 .userId(userInfo.getId())
                 .username(userInfo.getName())
                 .email(userInfo.getEmail())
+                .profileImage(userInfo.getProfileImage())
                 .build();
     }
 

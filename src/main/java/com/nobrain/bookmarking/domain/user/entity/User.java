@@ -33,6 +33,7 @@ public class User extends BaseTimeEntity implements UserDetails {
     private String name;
     private String phoneNumber;
     private LocalDate birthDate;
+    private String profileImage;
 
     @OneToMany(mappedBy = "user")
     private List<Category> categories;
@@ -41,13 +42,14 @@ public class User extends BaseTimeEntity implements UserDetails {
     private List<String> roles = new ArrayList<>();
 
     @Builder
-    public User(String loginId, String email, String password, String name, String phoneNumber, LocalDate birthDate, List<Category> categories, List<String> roles) {
+    public User(String loginId, String email, String password, String name, String phoneNumber, LocalDate birthDate, String profileImage, List<Category> categories, List<String> roles) {
         this.loginId = loginId;
         this.email = email;
         this.password = password;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.birthDate = birthDate;
+        this.profileImage = profileImage;
         this.categories = categories;
         this.roles = roles;
     }
@@ -58,6 +60,10 @@ public class User extends BaseTimeEntity implements UserDetails {
 
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public void changeProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 
     @Override
