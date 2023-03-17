@@ -80,6 +80,12 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    @Transactional
+    public void deleteProfileImage() {
+        Long userId = tokenService.getId();
+        findById(userId).changeProfileImage(null);
+    }
+
     private User findById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.valueOf(id)));
     }

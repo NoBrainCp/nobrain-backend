@@ -61,4 +61,10 @@ public class UserController {
         userService.delete(userId);
         return responseService.getSuccessResult();
     }
+
+    @DeleteMapping("/user/profile-image")
+    public CommonResult deleteProfileImage() {
+        userService.deleteProfileImage();
+        return responseService.getSuccessResult();
+    }
 }
