@@ -54,6 +54,10 @@ public class User extends BaseTimeEntity implements UserDetails {
         this.roles = roles;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     public void changeName(String name) {
         this.name = name;
     }

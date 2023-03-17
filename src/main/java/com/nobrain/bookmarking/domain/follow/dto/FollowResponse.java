@@ -19,10 +19,12 @@ public class FollowResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Info {
+        private Long userId;
         private String username;
+        private String profileImage;
 
         public static Info toResponse(User user) {
-            return new Info(user.getUsername());
+            return new Info(user.getId(), user.getName(), user.getProfileImage());
         }
     }
 }
