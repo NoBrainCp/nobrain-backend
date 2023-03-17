@@ -9,4 +9,5 @@ import java.util.List;
 public interface BookmarkQueryRepository {
 
     List<Bookmark> findAllByUserId(Long userId);
+    List<Bookmark> searchAll(String keyword, String condition, Long userId);
 }

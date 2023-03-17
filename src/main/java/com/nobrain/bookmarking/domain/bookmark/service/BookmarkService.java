@@ -1,5 +1,6 @@
 package com.nobrain.bookmarking.domain.bookmark.service;
 
+import com.nobrain.bookmarking.domain.auth.service.TokenService;
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkRequest;
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkResponse;
 import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
@@ -33,6 +34,7 @@ public class BookmarkService {
     private final UserRepository userRepository;
 
     private final BookmarkTagService bookmarkTagService;
+    private final TokenService tokenService;
     private final MetaImageCrawler metaImageCrawler;
 
     public List<BookmarkResponse.Info> getAllBookmarksByUsername(String username) {
@@ -52,8 +54,10 @@ public class BookmarkService {
                 .collect(Collectors.toList());
     }
 
-    public List<BookmarkResponse.Info> searchBookmark(String keyword, String condition) {
-        return bookmarkRepository.findAllByTitleContaining(keyword).stream()
+    public List<BookmarkResponse.Info> searchBookmarks(String keyword, String condition) {
+        Long userId = tokenService.getId();
+
+        return bookmarkQueryRepository.searchAll(keyword, condition, userId).stream()
                 .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }
