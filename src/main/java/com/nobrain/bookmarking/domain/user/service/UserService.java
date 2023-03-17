@@ -33,6 +33,7 @@ public class UserService {
                 .username(user.getName())
                 .phoneNumber(user.getPhoneNumber())
                 .birthDate(user.getBirthDate())
+                .profileImage(user.getProfileImage())
                 .roles(user.getRoles())
                 .build();
     }
@@ -44,6 +45,7 @@ public class UserService {
                 .userId(userInfo.getId())
                 .username(userInfo.getName())
                 .email(userInfo.getEmail())
+                .profileImage(userInfo.getProfileImage())
                 .build();
     }
 
@@ -68,8 +70,20 @@ public class UserService {
     }
 
     @Transactional
+    public void changeProfileImage(UserRequest.ChangeProfileImage dto) {
+        Long userId = tokenService.getId();
+        findById(userId).changeProfileImage(dto.getProfileImage());
+    }
+
+    @Transactional
     public void delete(Long id) {
         userRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void deleteProfileImage() {
+        Long userId = tokenService.getId();
+        findById(userId).changeProfileImage(null);
     }
 
     private User findById(Long id) {

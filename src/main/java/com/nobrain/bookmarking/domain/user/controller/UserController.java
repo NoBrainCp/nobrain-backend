@@ -50,9 +50,21 @@ public class UserController {
         return responseService.getSuccessResult();
     }
 
+    @PutMapping("/user/profile-image")
+    public CommonResult changeProfileImage(@RequestBody UserRequest.ChangeProfileImage dto) {
+        userService.changeProfileImage(dto);
+        return responseService.getSuccessResult();
+    }
+
     @DeleteMapping("/user/{userId}")
     public CommonResult delete(@PathVariable Long userId) {
         userService.delete(userId);
+        return responseService.getSuccessResult();
+    }
+
+    @DeleteMapping("/user/profile-image")
+    public CommonResult deleteProfileImage() {
+        userService.deleteProfileImage();
         return responseService.getSuccessResult();
     }
 }
