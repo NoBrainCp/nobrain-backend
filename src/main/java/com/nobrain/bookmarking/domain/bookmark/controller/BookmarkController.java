@@ -34,8 +34,8 @@ public class BookmarkController {
     }
 
     @GetMapping("/bookmark/search")
-    public ListResult<BookmarkResponse.Info> searchBookmark(@RequestParam String keyword, @RequestParam String condition) {
-        return responseService.getListResult(bookmarkService.searchBookmark(keyword, condition.toLowerCase()));
+    public ListResult<BookmarkResponse.Info> searchBookmarks(@RequestParam String keyword, @RequestParam String condition) {
+        return responseService.getListResult(bookmarkService.searchBookmarks(keyword, condition.toLowerCase()));
     }
 
     @PostMapping("/{username}/bookmark")
