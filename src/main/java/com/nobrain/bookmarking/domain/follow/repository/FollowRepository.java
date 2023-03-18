@@ -1,6 +1,7 @@
 package com.nobrain.bookmarking.domain.follow.repository;
 
 import com.nobrain.bookmarking.domain.follow.entity.Follow;
+import com.nobrain.bookmarking.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,6 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FollowRepository extends JpaRepository<Follow, Long> {
+
+    List<Follow> findAllByToUserOrFromUser(User toUser, User fromUser);
 
     @Query("select f from Follow f " +
             "where f.fromUser.id = :fromUserId " +

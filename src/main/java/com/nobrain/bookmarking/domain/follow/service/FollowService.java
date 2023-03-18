@@ -50,6 +50,11 @@ public class FollowService {
         return followRepository.existsFollowByToUserIdAndFromUserId(toUserId, fromUserId);
     }
 
+    public void deleteAllFollows(User user) {
+        List<Follow> allFollows = followRepository.findAllByToUserOrFromUser(user, user);
+        followRepository.deleteAllInBatch(allFollows);
+    }
+
     @Transactional
     public void follow(Long toUserId) {
         Long fromUserId = tokenService.getId();
