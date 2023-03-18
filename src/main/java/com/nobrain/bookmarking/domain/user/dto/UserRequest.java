@@ -55,9 +55,16 @@ public class UserRequest {
     }
 
     @Getter
-    public static class ChangePassword {
+    public static class ChangeForgotPassword {
         private String loginId;
         private String password;
+        private String passwordCheck;
+    }
+
+    @Getter
+    public static class ChangePassword {
+        private String prePassword;
+        private String newPassword;
         private String passwordCheck;
     }
 
