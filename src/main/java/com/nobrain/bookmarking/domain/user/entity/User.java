@@ -17,6 +17,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static javax.persistence.CascadeType.REMOVE;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
@@ -35,7 +37,7 @@ public class User extends BaseTimeEntity implements UserDetails {
     private LocalDate birthDate;
     private String profileImage;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = REMOVE)
     private List<Category> categories;
 
     @ElementCollection(fetch = FetchType.EAGER)

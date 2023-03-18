@@ -44,6 +44,12 @@ public class UserController {
         return responseService.getSingleResult(userService.changeName(userId, username));
     }
 
+    @PutMapping("/user/forgot-password")
+    public CommonResult changeForgotPassword(@RequestBody UserRequest.ChangeForgotPassword dto) {
+        userService.changeForgotPassword(dto);
+        return responseService.getSuccessResult();
+    }
+
     @PutMapping("/user/password")
     public CommonResult changePassword(@RequestBody UserRequest.ChangePassword dto) {
         userService.changePassword(dto);
