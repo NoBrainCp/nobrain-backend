@@ -1,6 +1,7 @@
 package com.nobrain.bookmarking.domain.user.service;
 
 import com.nobrain.bookmarking.domain.auth.service.TokenService;
+import com.nobrain.bookmarking.domain.follow.service.FollowService;
 import com.nobrain.bookmarking.domain.user.dto.UserRequest;
 import com.nobrain.bookmarking.domain.user.dto.UserResponse;
 import com.nobrain.bookmarking.domain.user.entity.User;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final FollowService followService;
     private final TokenService tokenService;
     private final PasswordEncoder passwordEncoder;
 
@@ -60,13 +62,25 @@ public class UserService {
     }
 
     @Transactional
-    public void changePassword(UserRequest.ChangePassword dto) {
+    public void changeForgotPassword(UserRequest.ChangeForgotPassword dto) {
         if (!dto.getPassword().equals(dto.getPasswordCheck())) {
             throw new UserNotCorrectPasswordException(dto.getPassword());
         }
 
         User user = findByLoginId(dto.getLoginId());
         user.changePassword(passwordEncoder.encode(dto.getPassword()));
+    }
+
+    @Transactional
+    public void changePassword(UserRequest.ChangePassword dto) {
+        Long userId = tokenService.getId();
+        User user = findById(userId);
+        if (!dto.getNewPassword().equals(dto.getPasswordCheck())
+                || !passwordEncoder.matches(dto.getPrePassword(), user.getPassword())) {
+            throw new UserNotCorrectPasswordException(dto.getPrePassword());
+        }
+
+        user.changePassword(passwordEncoder.encode(dto.getNewPassword()));
     }
 
     @Transactional
@@ -77,7 +91,9 @@ public class UserService {
 
     @Transactional
     public void delete(Long id) {
-        userRepository.deleteById(id);
+        User user = findById(id);
+        followService.deleteAllFollows(user);
+        userRepository.delete(user);
     }
 
     @Transactional
@@ -93,4 +109,5 @@ public class UserService {
     private User findByLoginId(String loginId) {
         return userRepository.findByLoginId(loginId).orElseThrow(() -> new UserNotFoundException(loginId));
     }
+
 }
