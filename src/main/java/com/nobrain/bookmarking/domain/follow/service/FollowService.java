@@ -49,7 +49,12 @@ public class FollowService {
 
     public List<FollowResponse.FollowCard> getFollowerCardList(String username) {
         Long userId = getUserIdByName(username);
-        return followQueryRepository.findAllFollowerCardsByUsername(userId);
+        return followQueryRepository.findAllFollowerCardsByUserId(userId);
+    }
+
+    public List<FollowResponse.FollowCard> getFollowingCardList(String username) {
+        Long userId = getUserIdByName(username);
+        return followQueryRepository.findAllFollowingCardsByUserId(userId);
     }
 
     public Boolean isFollow(Long toUserId) {

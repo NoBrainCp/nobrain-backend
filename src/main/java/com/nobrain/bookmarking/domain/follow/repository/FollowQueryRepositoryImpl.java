@@ -20,7 +20,7 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<FollowResponse.FollowCard> findAllFollowerCardsByUsername(Long userId) {
+    public List<FollowResponse.FollowCard> findAllFollowerCardsByUserId(Long userId) {
         return queryFactory
                 .select(Projections.constructor(FollowResponse.FollowCard.class,
                         user.id,
@@ -31,6 +31,26 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
                 .from(follow)
                 .join(user).on(follow.fromUser.id.eq(user.id))
                 .leftJoin(category).on(follow.fromUser.id.eq(category.user.id))
+                .leftJoin(bookmark).on(category.id.eq(bookmark.category.id))
+                .leftJoin(follow).on(user.id.eq(follow.toUser.id))
+                .leftJoin(follow).on(user.id.eq(follow.fromUser.id))
+                .where(follow.toUser.id.eq(userId))
+                .groupBy(user.id)
+                .fetch();
+    }
+
+    @Override
+    public List<FollowResponse.FollowCard> findAllFollowingCardsByUserId(Long userId) {
+        return queryFactory
+                .select(Projections.constructor(FollowResponse.FollowCard.class,
+                        user.id,
+                        user.name,
+                        bookmark.id.countDistinct(),
+                        follow.fromUser.id.countDistinct(),
+                        follow.toUser.id.countDistinct()))
+                .from(follow)
+                .join(user).on(follow.toUser.id.eq(user.id))
+                .leftJoin(category).on(follow.toUser.id.eq(category.user.id))
                 .leftJoin(bookmark).on(category.id.eq(bookmark.category.id))
                 .leftJoin(follow).on(user.id.eq(follow.toUser.id))
                 .leftJoin(follow).on(user.id.eq(follow.fromUser.id))
