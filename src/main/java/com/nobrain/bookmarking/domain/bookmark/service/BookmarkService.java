@@ -84,6 +84,11 @@ public class BookmarkService {
 
     @Transactional
     public void updateBookmark(Long bookmarkId, BookmarkRequest.Info requestDto) {
+        String url = requestDto.getUrl();
+        if (!url.contains("https://")) {
+            requestDto.addHttpsToUrl(url);
+        }
+
         Bookmark bookmark = findById(bookmarkId);
         Category category = categoryRepository.findByName(requestDto.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(requestDto.getCategoryName()));
         String metaImage = metaImageCrawler.getMetaImageFromUrl(requestDto.getUrl());
