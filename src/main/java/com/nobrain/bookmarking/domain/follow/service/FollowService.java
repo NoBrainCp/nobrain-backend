@@ -3,6 +3,7 @@ package com.nobrain.bookmarking.domain.follow.service;
 import com.nobrain.bookmarking.domain.auth.service.TokenService;
 import com.nobrain.bookmarking.domain.follow.dto.FollowResponse;
 import com.nobrain.bookmarking.domain.follow.entity.Follow;
+import com.nobrain.bookmarking.domain.follow.repository.FollowQueryRepository;
 import com.nobrain.bookmarking.domain.follow.repository.FollowRepository;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class FollowService {
 
     private final FollowRepository followRepository;
+    private final FollowQueryRepository followQueryRepository;
     private final UserRepository userRepository;
     private final TokenService tokenService;
 
@@ -43,6 +45,11 @@ public class FollowService {
         return followRepository.findFollowingList(userId).stream()
                 .map(f -> FollowResponse.Info.toResponse(f.getToUser()))
                 .collect(Collectors.toList());
+    }
+
+    public List<FollowResponse.FollowCard> getFollowerCardList(String username) {
+        Long userId = getUserIdByName(username);
+        return followQueryRepository.findAllFollowerCardsByUsername(userId);
     }
 
     public Boolean isFollow(Long toUserId) {

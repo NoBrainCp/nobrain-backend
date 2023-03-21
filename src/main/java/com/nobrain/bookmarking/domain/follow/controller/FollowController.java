@@ -32,6 +32,11 @@ public class FollowController {
         return responseService.getListResult(followService.getFollowingList(username));
     }
 
+    @GetMapping("/user/{username}/follower-cards")
+    public ListResult<FollowResponse.FollowCard> getFollowerCardList(@PathVariable String username) {
+        return responseService.getListResult(followService.getFollowerCardList(username));
+    }
+
     @GetMapping("/user/{toUserId}/is-follow")
     public SingleResult<Boolean> isFollow(@PathVariable Long toUserId) {
         return responseService.getSingleResult(followService.isFollow(toUserId));
