@@ -35,6 +35,7 @@ public class FollowResponse {
     public static class FollowCard {
         Long userId;
         String username;
+        String profileImage;
         Long bookmarkCount;
         Long followerCount;
         Long followingCount;

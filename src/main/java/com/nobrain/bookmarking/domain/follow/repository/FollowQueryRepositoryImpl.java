@@ -25,6 +25,7 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
                 .select(Projections.constructor(FollowResponse.FollowCard.class,
                         user.id,
                         user.name,
+                        user.profileImage,
                         bookmark.id.countDistinct(),
                         follow.fromUser.id.countDistinct(),
                         follow.toUser.id.countDistinct()))
@@ -45,6 +46,7 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
                 .select(Projections.constructor(FollowResponse.FollowCard.class,
                         user.id,
                         user.name,
+                        user.profileImage,
                         bookmark.id.countDistinct(),
                         follow.fromUser.id.countDistinct(),
                         follow.toUser.id.countDistinct()))
@@ -54,7 +56,7 @@ public class FollowQueryRepositoryImpl implements FollowQueryRepository {
                 .leftJoin(bookmark).on(category.id.eq(bookmark.category.id))
                 .leftJoin(follow).on(user.id.eq(follow.toUser.id))
                 .leftJoin(follow).on(user.id.eq(follow.fromUser.id))
-                .where(follow.toUser.id.eq(userId))
+                .where(follow.fromUser.id.eq(userId))
                 .groupBy(user.id)
                 .fetch();
     }
