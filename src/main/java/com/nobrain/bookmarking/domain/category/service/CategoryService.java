@@ -26,9 +26,8 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
-    public CategoryResponse.Info getCategory(String username, String categoryName) {
-        User user = findUserByUsername(username);
-        Category category = categoryRepository.findByUserAndName(user, categoryName).orElseThrow(() -> new CategoryNotFoundException(categoryName));
+    public CategoryResponse.Info getCategory(Long categoryId) {
+        Category category = categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException(String.valueOf(categoryId)));
         return CategoryResponse.Info.builder()
                         .id(category.getId())
                         .name(category.getName())
