@@ -32,6 +32,20 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
     }
 
     @Override
+    public List<Bookmark> findAllStarredBookmarksByUserId(Long userId, Boolean isMe) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        if (!isMe) {
+            booleanBuilder.and(bookmark.isPublic.eq(true));
+        }
+
+        return queryFactory.selectFrom(bookmark)
+                .join(category).on(bookmark.category.id.eq(category.id))
+                .join(user).on(category.user.id.eq(user.id))
+                .where(bookmark.isStarred.eq(true).and(user.id.eq(userId)).and(booleanBuilder))
+                .fetch();
+    }
+
+    @Override
     public List<Bookmark> searchBookmarksByCondition(String keyword, String condition, Long userId) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         booleanBuilder.and(bookmark.title.containsIgnoreCase(keyword).or(bookmark.description.containsIgnoreCase(keyword)));

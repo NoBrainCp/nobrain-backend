@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
@@ -38,7 +39,7 @@ public class BookmarkService {
     private final MetaImageCrawler metaImageCrawler;
 
     public List<BookmarkResponse.Info> getAllBookmarksByUsername(String username) {
-        Long userId = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username)).getId();
+        Long userId = findUserByUsername(username).getId();
 
         return bookmarkQueryRepository.findAllByUserId(userId).stream()
                 .map(this::toBookmarkInfoDto)
@@ -46,10 +47,19 @@ public class BookmarkService {
     }
 
     public List<BookmarkResponse.Info> getBookmarksByCategory(String username, String categoryName) {
-        User user = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
+        User user = findUserByUsername(username);
         Category category = categoryRepository.findByUserAndName(user, categoryName).orElseThrow(() -> new CategoryNotFoundException(categoryName));
 
         return bookmarkRepository.findAllByCategory(category).stream()
+                .map(this::toBookmarkInfoDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<BookmarkResponse.Info> getStarredBookmarks(String username) {
+        Long userId = findUserByUsername(username).getId();
+        Long myId = tokenService.getId();
+
+        return bookmarkQueryRepository.findAllStarredBookmarksByUserId(userId, Objects.equals(userId, myId)).stream()
                 .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }
@@ -69,7 +79,7 @@ public class BookmarkService {
             requestDto.addHttpsToUrl(url);
         }
 
-        User user = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
+        User user = findUserByUsername(username);
         Category category = categoryRepository.findByUserAndName(user, requestDto.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(requestDto.getCategoryName()));
         String metaImage = metaImageCrawler.getMetaImageFromUrl(requestDto.getUrl());
         Bookmark bookmark = requestDto.toEntity(metaImage, category);
@@ -123,6 +133,10 @@ public class BookmarkService {
 
     private Bookmark findById(Long bookmarkId) {
         return bookmarkRepository.findById(bookmarkId).orElseThrow(() -> new BookmarkNotFoundException(String.valueOf(bookmarkId)));
+    }
+
+    private User findUserByUsername(String username) {
+        return userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
     }
 
     private void validateBookmark(BookmarkRequest.Info requestDto, Category category) {
