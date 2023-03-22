@@ -27,4 +27,17 @@ public class FollowResponse {
             return new Info(user.getId(), user.getName(), user.getProfileImage());
         }
     }
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FollowCard {
+        Long userId;
+        String username;
+        String profileImage;
+        Long bookmarkCount;
+        Long followerCount;
+        Long followingCount;
+        Boolean isFollow;
+    }
 }
