@@ -29,7 +29,6 @@ public class FollowResponse {
     }
 
     @Data
-    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class FollowCard {
@@ -39,5 +38,6 @@ public class FollowResponse {
         Long bookmarkCount;
         Long followerCount;
         Long followingCount;
+        Boolean isFollow;
     }
 }

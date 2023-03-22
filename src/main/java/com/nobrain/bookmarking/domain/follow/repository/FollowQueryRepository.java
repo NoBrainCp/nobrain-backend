@@ -7,6 +7,6 @@ import java.util.List;
 
 @Repository
 public interface FollowQueryRepository {
-    List<FollowResponse.FollowCard> findAllFollowerCardsByUserId(Long userId);
-    List<FollowResponse.FollowCard> findAllFollowingCardsByUserId(Long userId);
+    List<FollowResponse.FollowCard> findAllFollowerCardsByUserId(Long userId, Long myId);
+    List<FollowResponse.FollowCard> findAllFollowingCardsByUserId(Long userId, Long myId);
 }
