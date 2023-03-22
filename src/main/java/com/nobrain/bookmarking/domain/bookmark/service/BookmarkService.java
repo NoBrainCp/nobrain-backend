@@ -57,11 +57,18 @@ public class BookmarkService {
 
     public List<BookmarkResponse.Info> getStarredBookmarks(String username) {
         Long userId = findUserByUsername(username).getId();
-        Long myId = tokenService.getId();
+        boolean isMe = isMe(userId);
 
-        return bookmarkQueryRepository.findAllStarredBookmarksByUserId(userId, Objects.equals(userId, myId)).stream()
+        return bookmarkQueryRepository.findAllStarredBookmarksByUserId(userId, isMe).stream()
                 .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
+    }
+
+    public Long getStarredBookmarksCount(String username) {
+        Long userId = findUserByUsername(username).getId();
+        boolean isMe = isMe(userId);
+
+        return bookmarkQueryRepository.findStarredBookmarksCountByUserId(userId, isMe);
     }
 
     public List<BookmarkResponse.Info> searchBookmarks(String keyword, String condition) {
@@ -137,6 +144,11 @@ public class BookmarkService {
 
     private User findUserByUsername(String username) {
         return userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
+    }
+
+    private boolean isMe(Long userId) {
+        Long myId = tokenService.getId();
+        return Objects.equals(userId, myId);
     }
 
     private void validateBookmark(BookmarkRequest.Info requestDto, Category category) {

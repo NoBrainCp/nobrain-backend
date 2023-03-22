@@ -5,6 +5,7 @@ import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkResponse;
 import com.nobrain.bookmarking.domain.bookmark.service.BookmarkService;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.model.ListResult;
+import com.nobrain.bookmarking.global.response.model.SingleResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,6 +37,11 @@ public class BookmarkController {
     @GetMapping("/user/{username}/starred-bookmarks")
     public ListResult<BookmarkResponse.Info> getStarredBookmarks(@PathVariable String username) {
         return responseService.getListResult(bookmarkService.getStarredBookmarks(username));
+    }
+
+    @GetMapping("/user/{username}/starred-bookmarks/count")
+    public SingleResult<Long> getStarredBookmarksCount(@PathVariable String username) {
+        return responseService.getSingleResult(bookmarkService.getStarredBookmarksCount(username));
     }
 
     @GetMapping("/bookmark/search")
