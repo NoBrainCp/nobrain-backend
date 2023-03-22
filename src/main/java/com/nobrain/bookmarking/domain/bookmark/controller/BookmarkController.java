@@ -21,16 +21,21 @@ public class BookmarkController {
     private final BookmarkService bookmarkService;
     private final ResponseService responseService;
 
-    @GetMapping("/{username}/bookmarks")
+    @GetMapping("/user/{username}/bookmarks")
     public ListResult<BookmarkResponse.Info> getAllBookmarksByUsername(@PathVariable String username) {
         return responseService.getListResult(bookmarkService.getAllBookmarksByUsername(username));
     }
 
-    @GetMapping("/{username}/{category}/bookmarks")
+    @GetMapping("/user/{username}/{category}/bookmarks")
     public ListResult<BookmarkResponse.Info> getBookmarksInCategory(
             @PathVariable String username,
             @PathVariable String category) {
         return responseService.getListResult(bookmarkService.getBookmarksByCategory(username, category));
+    }
+
+    @GetMapping("/user/{username}/starred-bookmarks")
+    public ListResult<BookmarkResponse.Info> getStarredBookmarks(@PathVariable String username) {
+        return responseService.getListResult(bookmarkService.getStarredBookmarks(username));
     }
 
     @GetMapping("/bookmark/search")
@@ -38,7 +43,7 @@ public class BookmarkController {
         return responseService.getListResult(bookmarkService.searchBookmarks(keyword, condition.toLowerCase()));
     }
 
-    @PostMapping("/{username}/bookmark")
+    @PostMapping("/user/{username}/bookmark")
     public CommonResult addBookmark(@PathVariable String username, @RequestBody @Valid BookmarkRequest.Info requestDto) {
         bookmarkService.createBookmark(username, requestDto);
         return responseService.getSuccessResult();
