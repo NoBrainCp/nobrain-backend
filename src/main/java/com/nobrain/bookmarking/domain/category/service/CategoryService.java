@@ -26,6 +26,16 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
+    public CategoryResponse.Info getCategory(Long categoryId) {
+        Category category = findCategoryByCategoryId(categoryId);
+        return CategoryResponse.Info.builder()
+                        .id(category.getId())
+                        .name(category.getName())
+                        .description(category.getDescription())
+                        .isPublic(category.isPublic())
+                        .build();
+    }
+
     public List<CategoryResponse.Info> getCategories(String username) {
         return categoryQueryRepository.findAllCategoryInfoWithCount(username).stream()
                 .map(category -> CategoryResponse.Info.builder()
@@ -68,6 +78,10 @@ public class CategoryService {
     public void deleteCategory(String username, String categoryName) {
         User user = findUserByUsername(username);
         categoryRepository.deleteByUserAndName(user, categoryName);
+    }
+
+    private Category findCategoryByCategoryId(Long categoryId) {
+        return categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException(String.valueOf(categoryId)));
     }
 
     private User findUserByUsername(String username) {
