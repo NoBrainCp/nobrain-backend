@@ -52,6 +52,10 @@ public class CategoryService {
         return categoryQueryRepository.findCategoryNameByBookmarkId(bookmarkId);
     }
 
+    public Boolean getCategoryIdPublic(Long userId, String categoryName) {
+        return categoryQueryRepository.findCategoryIsPublic(userId, categoryName);
+    }
+
     @Transactional
     public String create(String username, CategoryRequest.Info requestDto) {
         User user = findUserByUsername(username);
