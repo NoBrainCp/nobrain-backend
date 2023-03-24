@@ -73,6 +73,12 @@ public class BookmarkController {
         return responseService.getSuccessResult();
     }
 
+    @PutMapping("/user/{userId}/category/{categoryName}/private")
+    public CommonResult updateAllBookmarksToPrivate(@PathVariable Long userId, @PathVariable String categoryName) {
+        bookmarkService.updateAllBookmarksToPrivate(userId, categoryName);
+        return responseService.getSuccessResult();
+    }
+
     @DeleteMapping("/bookmark/{bookmarkId}")
     public CommonResult deleteBookmark(@PathVariable Long bookmarkId) {
         bookmarkService.deleteBookmark(bookmarkId);

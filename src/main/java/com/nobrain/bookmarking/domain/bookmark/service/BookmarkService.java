@@ -134,6 +134,16 @@ public class BookmarkService {
     }
 
     @Transactional
+    public void updateAllBookmarksToPrivate(Long userId, String categoryName) {
+        List<Bookmark> bookmarks = bookmarkQueryRepository.findBookmarksByUserIdAndCategoryName(userId, categoryName);
+        bookmarks.forEach(bookmark -> {
+            if (bookmark.isPublic()) {
+                bookmark.changePublic(false);
+            }
+        });
+    }
+
+    @Transactional
     public void deleteBookmark(Long bookmarkId) {
         bookmarkRepository.deleteById(bookmarkId);
     }

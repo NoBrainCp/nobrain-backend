@@ -12,4 +12,5 @@ public interface BookmarkQueryRepository {
     List<Bookmark> findAllStarredBookmarksByUserId(Long userId, Boolean isMe);
     Long findStarredBookmarksCountByUserId(Long userId, Boolean isMe);
     List<Bookmark> searchBookmarksByCondition(String keyword, String condition, Long userId);
+    List<Bookmark> findBookmarksByUserIdAndCategoryName(Long userId, String categoryName);
 }
