@@ -81,4 +81,12 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
                 .where(booleanBuilder)
                 .fetch();
     }
+
+    @Override
+    public List<Bookmark> findBookmarksByUserIdAndCategoryName(Long userId, String categoryName) {
+        return queryFactory.selectFrom(bookmark)
+                .join(category).on(bookmark.category.id.eq(category.id))
+                .where(category.user.id.eq(userId).and(category.name.eq(categoryName)))
+                .fetch();
+    }
 }
