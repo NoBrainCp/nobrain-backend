@@ -1,7 +1,7 @@
-package com.nobrain.bookmarking.domain.certification.mail;
+package com.nobrain.bookmarking.infra.certification.mail;
 
-import com.nobrain.bookmarking.domain.certification.dto.CertificationRequest;
-import com.nobrain.bookmarking.domain.certification.mail.dto.MailRequest;
+import com.nobrain.bookmarking.infra.certification.dto.CertificationRequest;
+import com.nobrain.bookmarking.infra.certification.mail.dto.MailRequest;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
 import lombok.RequiredArgsConstructor;

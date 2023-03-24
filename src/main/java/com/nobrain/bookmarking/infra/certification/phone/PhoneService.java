@@ -1,6 +1,6 @@
-package com.nobrain.bookmarking.domain.certification.phone;
+package com.nobrain.bookmarking.infra.certification.phone;
 
-import com.nobrain.bookmarking.domain.certification.phone.dto.PhoneRequest;
+import com.nobrain.bookmarking.infra.certification.phone.dto.PhoneRequest;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
 import com.nobrain.bookmarking.global.redis.RedisUtil;

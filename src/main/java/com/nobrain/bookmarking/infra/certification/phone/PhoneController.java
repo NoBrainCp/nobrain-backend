@@ -1,7 +1,7 @@
-package com.nobrain.bookmarking.domain.certification.phone;
+package com.nobrain.bookmarking.infra.certification.phone;
 
-import com.nobrain.bookmarking.domain.certification.dto.CertificationRequest;
-import com.nobrain.bookmarking.domain.certification.phone.dto.PhoneRequest;
+import com.nobrain.bookmarking.infra.certification.dto.CertificationRequest;
+import com.nobrain.bookmarking.infra.certification.phone.dto.PhoneRequest;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.model.SingleResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
