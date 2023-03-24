@@ -20,9 +20,9 @@ public class CategoryController {
     private final CategoryService categoryService;
     private final ResponseService responseService;
 
-    @GetMapping("/category/{categoryId}")
-    public SingleResult<CategoryResponse.Info> getCategory(@PathVariable Long categoryId) {
-        return responseService.getSingleResult(categoryService.getCategory(categoryId));
+    @GetMapping("/user/{username}/category/{categoryName}")
+    public SingleResult<CategoryResponse.Info> getCategory(@PathVariable String username, @PathVariable String categoryName) {
+        return responseService.getSingleResult(categoryService.getCategory(username, categoryName));
     }
 
     @GetMapping("/user/{username}/categories")
