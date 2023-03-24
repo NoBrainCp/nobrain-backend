@@ -1,9 +1,10 @@
-package com.nobrain.bookmarking.infra.certification.mail;
+package com.nobrain.bookmarking.infra.certification.mail.controller;
 
 import com.nobrain.bookmarking.infra.certification.dto.CertificationRequest;
 import com.nobrain.bookmarking.infra.certification.mail.dto.MailRequest;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
+import com.nobrain.bookmarking.infra.certification.mail.service.MailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

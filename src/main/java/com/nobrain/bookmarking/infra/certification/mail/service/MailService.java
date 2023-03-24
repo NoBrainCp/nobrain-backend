@@ -1,4 +1,4 @@
-package com.nobrain.bookmarking.infra.certification.mail;
+package com.nobrain.bookmarking.infra.certification.mail.service;
 
 import com.nobrain.bookmarking.domain.user.exception.UserEmailNotFoundException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
