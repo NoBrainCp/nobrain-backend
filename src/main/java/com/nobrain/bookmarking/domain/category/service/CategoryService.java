@@ -49,8 +49,8 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public String getCategoryNameByBookmarkId(Long bookmarkId) {
-        return categoryQueryRepository.findCategoryNameByBookmarkId(bookmarkId);
+    public CategoryResponse.Info getCategoryByBookmarkId(Long bookmarkId) {
+        return categoryQueryRepository.findCategoryByBookmarkId(bookmarkId);
     }
 
     public Boolean getCategoryIdPublic(Long userId, String categoryName) {
