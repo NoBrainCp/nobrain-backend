@@ -1,10 +1,10 @@
-package com.nobrain.bookmarking.infra.certification.phone.dto;
+package com.nobrain.bookmarking.infra.certification.sms.dto;
 
 import lombok.Getter;
 
 import java.util.List;
 
-public class PhoneRequest {
+public class SmsRequest {
 
     @Getter
     public static class SingleText {
