@@ -44,6 +44,16 @@ public class BookmarkController {
         return responseService.getSingleResult(bookmarkService.getStarredBookmarksCount(username));
     }
 
+    @GetMapping("/user/{username}/private-bookmarks")
+    public ListResult<BookmarkResponse.Info> getPrivateBookmarks(@PathVariable String username) {
+        return responseService.getListResult(bookmarkService.getPrivateBookmarks(username));
+    }
+
+    @GetMapping("/user/{username}/private-bookmarks/count")
+    public SingleResult<Long> getPrivateBookmarksCount(@PathVariable String username) {
+        return responseService.getSingleResult(bookmarkService.getPrivateBookmarksCount(username));
+    }
+
     @GetMapping("/bookmark/search")
     public ListResult<BookmarkResponse.Info> searchBookmarks(@RequestParam String keyword, @RequestParam String condition) {
         return responseService.getListResult(bookmarkService.searchBookmarks(keyword, condition.toLowerCase()));
