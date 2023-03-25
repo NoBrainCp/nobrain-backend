@@ -6,6 +6,7 @@ spring:
     include:
       - prod
       - API-KEY
+      - aws
 
   jwt:
     secret: ENC(zoV04jn/ttqdTIsRL/QTriKYAHCsjsoihsm5KjXfm2C+Z0TsX8ZHdWHmoizPf2rU)in
