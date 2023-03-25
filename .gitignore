@@ -41,3 +41,4 @@ src/main/generated
 
 ### API KEY ###
 src/main/resources/application-API-KEY.yml
+src/main/resources/application-aws.yml

@@ -1,6 +1,6 @@
-package com.nobrain.bookmarking.domain.certification.phone;
+package com.nobrain.bookmarking.infra.certification.sms.service;
 
-import com.nobrain.bookmarking.domain.certification.phone.dto.PhoneRequest;
+import com.nobrain.bookmarking.infra.certification.sms.dto.SmsRequest;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
 import com.nobrain.bookmarking.global.redis.RedisUtil;
@@ -28,7 +28,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @RequiredArgsConstructor
 @Service
-public class PhoneService {
+public class SmsService {
 
     private static final String AUTHENTICATION_MESSAGE_SUBJECT = "No Brain 인증코드 입니다.";
     private static final String SEND_LOGIN_ID_MESSAGE_SUBJECT = "No Brain 아이디 찾기";
@@ -86,7 +86,7 @@ public class PhoneService {
         messageService.sendOne(new SingleMessageSendingRequest(message));
     }
 
-    public MultipleDetailMessageSentResponse sendMessageToUsers(PhoneRequest.MultipleMessage dto) {
+    public MultipleDetailMessageSentResponse sendMessageToUsers(SmsRequest.MultipleMessage dto) {
         ArrayList<Message> messageList = new ArrayList<>();
 
         for (String phoneNumber : dto.getPhoneNumbers()) {

@@ -1,4 +1,4 @@
-package com.nobrain.bookmarking.domain.certification.dto;
+package com.nobrain.bookmarking.infra.certification.dto;
 
 import lombok.Getter;
 

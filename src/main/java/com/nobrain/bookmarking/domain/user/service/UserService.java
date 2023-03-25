@@ -10,10 +10,14 @@ import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.domain.user.exception.UsernameDuplicationException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
 import com.nobrain.bookmarking.domain.user.dto.projection.UserInfo;
+import com.nobrain.bookmarking.infra.s3.service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final FollowService followService;
     private final TokenService tokenService;
+    private final S3Service s3Service;
     private final PasswordEncoder passwordEncoder;
 
     public UserResponse.Profile getMyProfile() {
@@ -84,9 +89,14 @@ public class UserService {
     }
 
     @Transactional
-    public void changeProfileImage(UserRequest.ChangeProfileImage dto) {
+    public void changeProfileImage(MultipartFile image) throws IOException {
         Long userId = tokenService.getId();
-        findById(userId).changeProfileImage(dto.getProfileImage());
+        User user = findById(userId);
+
+        if (!image.isEmpty()) {
+            String storedFileName = s3Service.upload(image, "images");
+            user.changeProfileImage(storedFileName);
+        }
     }
 
     @Transactional

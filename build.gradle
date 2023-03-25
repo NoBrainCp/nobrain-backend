@@ -32,38 +32,31 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.security:spring-security-test'
     implementation 'mysql:mysql-connector-java:8.0.28'
-
-    // thymeleaf
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
     implementation 'ognl:ognl:3.1.12'
 
-    // querydsl
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}" // querydsl 라이브러리
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}" //  Querydsl 관련 코드 생성 기능 제공
 
-    // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-    // jwt
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     testImplementation 'org.projectlombok:lombok:1.18.22'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
-    // swagger
     implementation 'io.springfox:springfox-swagger2:2.9.2'
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
 
-    // mail
     implementation 'org.springframework.boot:spring-boot-starter-mail'
-
-    // jasypt
-    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
-
     implementation 'net.nurigo:sdk:4.2.7'
 
-    // Jsoup
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
+
     implementation 'org.jsoup:jsoup:1.15.3'
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'

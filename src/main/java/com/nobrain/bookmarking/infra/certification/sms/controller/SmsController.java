@@ -1,10 +1,11 @@
-package com.nobrain.bookmarking.domain.certification.phone;
+package com.nobrain.bookmarking.infra.certification.sms.controller;
 
-import com.nobrain.bookmarking.domain.certification.dto.CertificationRequest;
-import com.nobrain.bookmarking.domain.certification.phone.dto.PhoneRequest;
+import com.nobrain.bookmarking.infra.certification.dto.CertificationRequest;
+import com.nobrain.bookmarking.infra.certification.sms.dto.SmsRequest;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.model.SingleResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
+import com.nobrain.bookmarking.infra.certification.sms.service.SmsService;
 import lombok.RequiredArgsConstructor;
 import net.nurigo.sdk.message.model.Balance;
 import net.nurigo.sdk.message.response.MultipleDetailMessageSentResponse;
@@ -18,9 +19,9 @@ import static com.nobrain.bookmarking.global.error.ErrorCode.INVALID_AUTH_CODE;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("${app.domain}")
-public class PhoneController {
+public class SmsController {
 
-    private final PhoneService phoneService;
+    private final SmsService phoneService;
     private final ResponseService responseService;
 
     @GetMapping("message/balance")
@@ -55,13 +56,13 @@ public class PhoneController {
     }
 
     @PostMapping("/phone/users")
-    public SingleResult<MultipleDetailMessageSentResponse> sendMessageToUsers(@RequestBody PhoneRequest.MultipleMessage dto) {
+    public SingleResult<MultipleDetailMessageSentResponse> sendMessageToUsers(@RequestBody SmsRequest.MultipleMessage dto) {
         MultipleDetailMessageSentResponse response = phoneService.sendMessageToUsers(dto);
         return responseService.getSingleResult(response);
     }
 
     @PostMapping("/phone/{phoneNumber}/image")
-    public SingleResult<SingleMessageSentResponse> sendMessageWithImage(@PathVariable String phoneNumber, @RequestBody PhoneRequest.MmsMessage dto) throws IOException {
+    public SingleResult<SingleMessageSentResponse> sendMessageWithImage(@PathVariable String phoneNumber, @RequestBody SmsRequest.MmsMessage dto) throws IOException {
         SingleMessageSentResponse response = phoneService.sendMmsByResourcePath(phoneNumber, dto.getText(), dto.getResourcePath());
         return responseService.getSingleResult(response);
     }
