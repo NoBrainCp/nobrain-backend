@@ -35,6 +35,8 @@ public class BookmarkTagService {
     @Transactional
     public void update(Bookmark bookmark, BookmarkRequest.Info requestDto) {
         List<BookmarkTag> bookmarkTags = bookmark.getTags();
+
+        bookmarkTagRepository.deleteAllInBatch(bookmarkTags);
         tagService.deleteAllByBookmarkTags(bookmarkTags);
 
         List<BookmarkTag> savedBookmarkTags = mapToBookmarkTags(bookmark, requestDto.getTags());
