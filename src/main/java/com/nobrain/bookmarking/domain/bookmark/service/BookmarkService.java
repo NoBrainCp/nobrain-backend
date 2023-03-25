@@ -71,6 +71,20 @@ public class BookmarkService {
         return bookmarkQueryRepository.findStarredBookmarksCountByUserId(userId, isMe);
     }
 
+    public List<BookmarkResponse.Info> getPrivateBookmarks(String username) {
+        Long userId = findUserByUsername(username).getId();
+
+        return bookmarkQueryRepository.findPrivateBookmarksByUserId(userId).stream()
+                .map(this::toBookmarkInfoDto)
+                .collect(Collectors.toList());
+    }
+
+    public Long getPrivateBookmarksCount(String username) {
+        Long userId = findUserByUsername(username).getId();
+
+        return bookmarkQueryRepository.findPrivateBookmarksCountByUserId(userId);
+    }
+
     public List<BookmarkResponse.Info> searchBookmarks(String keyword, String condition) {
         Long userId = tokenService.getId();
 
@@ -134,6 +148,16 @@ public class BookmarkService {
     }
 
     @Transactional
+    public void updateAllBookmarksToPrivate(Long userId, String categoryName) {
+        List<Bookmark> bookmarks = bookmarkQueryRepository.findBookmarksByUserIdAndCategoryName(userId, categoryName);
+        bookmarks.forEach(bookmark -> {
+            if (bookmark.isPublic()) {
+                bookmark.changePublic(false);
+            }
+        });
+    }
+
+    @Transactional
     public void deleteBookmark(Long bookmarkId) {
         bookmarkRepository.deleteById(bookmarkId);
     }
@@ -170,4 +194,5 @@ public class BookmarkService {
                 .modifiedAt(bookmark.getModifiedAt().toLocalDate())
                 .build();
     }
+
 }

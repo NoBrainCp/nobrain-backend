@@ -30,12 +30,12 @@ public class CategoryController {
         return responseService.getListResult(categoryService.getCategories(username));
     }
 
-    @GetMapping("/bookmark/{bookmarkId}/categoryName")
-    public SingleResult<String> getCategoryNameByBookmark(@PathVariable Long bookmarkId) {
-        return responseService.getSingleResult(categoryService.getCategoryNameByBookmarkId(bookmarkId));
+    @GetMapping("/bookmark/{bookmarkId}/category")
+    public SingleResult<CategoryResponse.Info> getCategoryByBookmarkId(@PathVariable Long bookmarkId) {
+        return responseService.getSingleResult(categoryService.getCategoryByBookmarkId(bookmarkId));
     }
 
-    @GetMapping("/user/{userId}/category/{categoryName}")
+    @GetMapping("/user/{userId}/category/{categoryName}/public")
     public SingleResult<Boolean> getCategoryIsPublic(@PathVariable Long userId, @PathVariable String categoryName) {
         return responseService.getSingleResult(categoryService.getCategoryIdPublic(userId, categoryName));
     }

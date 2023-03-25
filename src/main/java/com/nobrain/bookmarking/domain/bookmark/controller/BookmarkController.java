@@ -44,6 +44,16 @@ public class BookmarkController {
         return responseService.getSingleResult(bookmarkService.getStarredBookmarksCount(username));
     }
 
+    @GetMapping("/user/{username}/private-bookmarks")
+    public ListResult<BookmarkResponse.Info> getPrivateBookmarks(@PathVariable String username) {
+        return responseService.getListResult(bookmarkService.getPrivateBookmarks(username));
+    }
+
+    @GetMapping("/user/{username}/private-bookmarks/count")
+    public SingleResult<Long> getPrivateBookmarksCount(@PathVariable String username) {
+        return responseService.getSingleResult(bookmarkService.getPrivateBookmarksCount(username));
+    }
+
     @GetMapping("/bookmark/search")
     public ListResult<BookmarkResponse.Info> searchBookmarks(@RequestParam String keyword, @RequestParam String condition) {
         return responseService.getListResult(bookmarkService.searchBookmarks(keyword, condition.toLowerCase()));
@@ -70,6 +80,12 @@ public class BookmarkController {
     @PutMapping("/bookmark/{bookmarkId}/public")
     public CommonResult updatePublic(@PathVariable Long bookmarkId, @RequestParam Boolean isPublic) {
         bookmarkService.updatePublic(bookmarkId, isPublic);
+        return responseService.getSuccessResult();
+    }
+
+    @PutMapping("/user/{userId}/category/{categoryName}/private")
+    public CommonResult updateAllBookmarksToPrivate(@PathVariable Long userId, @PathVariable String categoryName) {
+        bookmarkService.updateAllBookmarksToPrivate(userId, categoryName);
         return responseService.getSuccessResult();
     }
 

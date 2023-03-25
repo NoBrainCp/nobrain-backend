@@ -61,6 +61,25 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
     }
 
     @Override
+    public List<Bookmark> findPrivateBookmarksByUserId(Long userId) {
+        return queryFactory.selectFrom(bookmark)
+                .join(category).on(bookmark.category.id.eq(category.id))
+                .join(user).on(category.user.id.eq(user.id))
+                .where(bookmark.isPublic.eq(false).and(user.id.eq(userId)))
+                .fetch();
+    }
+
+    @Override
+    public Long findPrivateBookmarksCountByUserId(Long userId) {
+        return queryFactory.select(bookmark.count())
+                .from(bookmark)
+                .join(category).on(bookmark.category.id.eq(category.id))
+                .join(user).on(category.user.id.eq(user.id))
+                .where(bookmark.isPublic.eq(false).and(user.id.eq(userId)))
+                .fetchOne();
+    }
+
+    @Override
     public List<Bookmark> searchBookmarksByCondition(String keyword, String condition, Long userId) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         booleanBuilder.and(bookmark.title.containsIgnoreCase(keyword).or(bookmark.description.containsIgnoreCase(keyword)));
@@ -79,6 +98,14 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
 
         return query
                 .where(booleanBuilder)
+                .fetch();
+    }
+
+    @Override
+    public List<Bookmark> findBookmarksByUserIdAndCategoryName(Long userId, String categoryName) {
+        return queryFactory.selectFrom(bookmark)
+                .join(category).on(bookmark.category.id.eq(category.id))
+                .where(category.user.id.eq(userId).and(category.name.eq(categoryName)))
                 .fetch();
     }
 }

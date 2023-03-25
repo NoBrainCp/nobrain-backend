@@ -34,9 +34,13 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
     }
 
     @Override
-    public String findCategoryNameByBookmarkId(Long bookmarkId) {
-        return queryFactory
-                .select(category.name)
+    public CategoryResponse.Info findCategoryByBookmarkId(Long bookmarkId) {
+        return queryFactory.select(Projections.constructor(CategoryResponse.Info.class,
+                        category.id,
+                        category.name,
+                        category.description,
+                        category.isPublic,
+                        bookmark.id.count()))
                 .from(category)
                 .join(bookmark).on(category.id.eq(bookmark.category.id))
                 .where(bookmark.id.eq(bookmarkId))
