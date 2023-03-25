@@ -40,7 +40,7 @@ public class User extends BaseTimeEntity implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = REMOVE)
     private List<Category> categories;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
     @Builder
