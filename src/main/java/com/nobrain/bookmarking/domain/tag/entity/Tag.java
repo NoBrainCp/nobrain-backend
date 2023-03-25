@@ -27,7 +27,7 @@ public class Tag {
     private String name;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "tag", cascade = {PERSIST, REMOVE})
+    @OneToMany(mappedBy = "tag", cascade = {PERSIST, REMOVE}, orphanRemoval = true)
     List<BookmarkTag> bookmarks = new ArrayList<>();
 
     @Builder
