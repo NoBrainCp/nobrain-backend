@@ -9,6 +9,9 @@ import com.nobrain.bookmarking.global.response.model.SingleResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RequiredArgsConstructor
 @RestController
@@ -57,8 +60,8 @@ public class UserController {
     }
 
     @PutMapping("/user/profile-image")
-    public CommonResult changeProfileImage(@RequestBody UserRequest.ChangeProfileImage dto) {
-        userService.changeProfileImage(dto);
+    public CommonResult changeProfileImage(@RequestBody MultipartFile image) throws IOException {
+        userService.changeProfileImage(image);
         return responseService.getSuccessResult();
     }
 
