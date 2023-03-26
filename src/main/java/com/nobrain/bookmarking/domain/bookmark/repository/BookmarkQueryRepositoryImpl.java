@@ -23,25 +23,22 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<Bookmark> findAllByUserId(Long userId) {
+    public List<Bookmark> findAllByUserId(Long userId, Boolean isMe) {
+        BooleanBuilder bookmarkIsPublicBooleanBuilder = getBookmarkIsPublicBooleanBuilder(isMe);
         return queryFactory
                 .selectFrom(bookmark)
                 .join(category).on(bookmark.category.id.eq(category.id))
-                .where(category.user.id.eq(userId))
+                .where(category.user.id.eq(userId).and(bookmarkIsPublicBooleanBuilder))
                 .fetch();
     }
 
     @Override
     public List<Bookmark> findAllStarredBookmarksByUserId(Long userId, Boolean isMe) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-        if (!isMe) {
-            booleanBuilder.and(bookmark.isPublic.eq(true));
-        }
-
+        BooleanBuilder bookmarkIsPublicBooleanBuilder = getBookmarkIsPublicBooleanBuilder(isMe);
         return queryFactory.selectFrom(bookmark)
                 .join(category).on(bookmark.category.id.eq(category.id))
                 .join(user).on(category.user.id.eq(user.id))
-                .where(bookmark.isStarred.eq(true).and(user.id.eq(userId)).and(booleanBuilder))
+                .where(bookmark.isStarred.eq(true).and(user.id.eq(userId)).and(bookmarkIsPublicBooleanBuilder))
                 .fetch();
     }
 
@@ -107,5 +104,14 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
                 .join(category).on(bookmark.category.id.eq(category.id))
                 .where(category.user.id.eq(userId).and(category.name.eq(categoryName)))
                 .fetch();
+    }
+
+    private BooleanBuilder getBookmarkIsPublicBooleanBuilder(Boolean isMe) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        if (!isMe) {
+            booleanBuilder.and(bookmark.isPublic.eq(true));
+        }
+
+        return booleanBuilder;
     }
 }

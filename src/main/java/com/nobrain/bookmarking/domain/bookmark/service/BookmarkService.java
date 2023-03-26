@@ -40,8 +40,9 @@ public class BookmarkService {
 
     public List<BookmarkResponse.Info> getAllBookmarksByUsername(String username) {
         Long userId = findUserByUsername(username).getId();
+        boolean isMe = isMe(userId);
 
-        return bookmarkQueryRepository.findAllByUserId(userId).stream()
+        return bookmarkQueryRepository.findAllByUserId(userId, isMe).stream()
                 .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }
