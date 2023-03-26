@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CategoryQueryRepository {
 
-    List<CategoryResponse.Info> findAllCategoryInfoWithCount(String username);
+    List<CategoryResponse.Info> findAllCategoryInfoWithCount(String username, Boolean isMe);
     CategoryResponse.Info findCategoryByBookmarkId(Long bookmarkId);
     Boolean findCategoryIsPublic(Long userId, String categoryName);
 }

@@ -1,6 +1,7 @@
 package com.nobrain.bookmarking.domain.category.repository;
 
 import com.nobrain.bookmarking.domain.category.dto.CategoryResponse;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,8 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<CategoryResponse.Info> findAllCategoryInfoWithCount(String username) {
+    public List<CategoryResponse.Info> findAllCategoryInfoWithCount(String username, Boolean isMe) {
+        BooleanBuilder categoryIsPublicBooleanBuilder = getCategoryIsPublicBooleanBuilder(isMe);
         return queryFactory.select(Projections.constructor(CategoryResponse.Info.class,
                         category.id,
                         category.name,
@@ -27,7 +29,7 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
                         bookmark.id.count()))
                 .from(category)
                 .leftJoin(bookmark).on(bookmark.category.id.eq(category.id))
-                .where(category.user.name.eq(username))
+                .where(category.user.name.eq(username).and(categoryIsPublicBooleanBuilder))
                 .groupBy(category.name)
                 .orderBy(bookmark.id.count().desc())
                 .fetch();
@@ -54,5 +56,14 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
                 .from(category)
                 .where(category.user.id.eq(userId).and(category.name.eq(categoryName)))
                 .fetchOne();
+    }
+
+    private BooleanBuilder getCategoryIsPublicBooleanBuilder(Boolean isMe) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+        if (!isMe) {
+            return booleanBuilder.and(category.isPublic.eq(true));
+        }
+
+        return booleanBuilder;
     }
 }
