@@ -61,7 +61,7 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
     private BooleanBuilder getCategoryIsPublicBooleanBuilder(Boolean isMe) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
         if (!isMe) {
-            return booleanBuilder.and(category.isPublic.eq(true));
+            booleanBuilder.and(category.isPublic.eq(true));
         }
 
         return booleanBuilder;
