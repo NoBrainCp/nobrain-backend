@@ -28,7 +28,7 @@ public class BookmarkController {
     }
 
     @GetMapping("/user/{username}/{category}/bookmarks")
-    public ListResult<BookmarkResponse.Info> getBookmarksInCategory(
+    public ListResult<BookmarkResponse.Info> getBookmarksByCategory(
             @PathVariable String username,
             @PathVariable String category) {
         return responseService.getListResult(bookmarkService.getBookmarksByCategory(username, category));

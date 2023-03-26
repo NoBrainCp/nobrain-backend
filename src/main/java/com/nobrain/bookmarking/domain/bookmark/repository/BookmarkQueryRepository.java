@@ -9,6 +9,7 @@ import java.util.List;
 public interface BookmarkQueryRepository {
 
     List<Bookmark> findAllByUserId(Long userId, Boolean isMe);
+    List<Bookmark> findAllByCategoryId(Long categoryId, Boolean isMe);
     List<Bookmark> findAllStarredBookmarksByUserId(Long userId, Boolean isMe);
     Long findStarredBookmarksCountByUserId(Long userId, Boolean isMe);
     List<Bookmark> findPrivateBookmarksByUserId(Long userId);

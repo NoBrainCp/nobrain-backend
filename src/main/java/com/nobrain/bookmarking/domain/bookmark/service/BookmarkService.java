@@ -50,8 +50,9 @@ public class BookmarkService {
     public List<BookmarkResponse.Info> getBookmarksByCategory(String username, String categoryName) {
         User user = findUserByUsername(username);
         Category category = categoryRepository.findByUserAndName(user, categoryName).orElseThrow(() -> new CategoryNotFoundException(categoryName));
+        boolean isMe = isMe(user.getId());
 
-        return bookmarkRepository.findAllByCategory(category).stream()
+        return bookmarkQueryRepository.findAllByCategoryId(category.getId(), isMe).stream()
                 .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }

@@ -25,10 +25,17 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
     @Override
     public List<Bookmark> findAllByUserId(Long userId, Boolean isMe) {
         BooleanBuilder bookmarkIsPublicBooleanBuilder = getBookmarkIsPublicBooleanBuilder(isMe);
-        return queryFactory
-                .selectFrom(bookmark)
+        return queryFactory.selectFrom(bookmark)
                 .join(category).on(bookmark.category.id.eq(category.id))
                 .where(category.user.id.eq(userId).and(bookmarkIsPublicBooleanBuilder))
+                .fetch();
+    }
+
+    @Override
+    public List<Bookmark> findAllByCategoryId(Long categoryId, Boolean isMe) {
+        BooleanBuilder bookmarkIsPublicBooleanBuilder = getBookmarkIsPublicBooleanBuilder(isMe);
+        return queryFactory.selectFrom(bookmark)
+                .where(bookmark.category.id.eq(categoryId).and(bookmarkIsPublicBooleanBuilder))
                 .fetch();
     }
 
@@ -44,16 +51,12 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
 
     @Override
     public Long findStarredBookmarksCountByUserId(Long userId, Boolean isMe) {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-        if (!isMe) {
-            booleanBuilder.and(bookmark.isPublic.eq(true));
-        }
-
+        BooleanBuilder bookmarkIsPublicBooleanBuilder = getBookmarkIsPublicBooleanBuilder(isMe);
         return queryFactory.select(bookmark.count())
                 .from(bookmark)
                 .join(category).on(bookmark.category.id.eq(category.id))
                 .join(user).on(category.user.id.eq(user.id))
-                .where(bookmark.isStarred.eq(true).and(user.id.eq(userId)).and(booleanBuilder))
+                .where(bookmark.isStarred.eq(true).and(user.id.eq(userId)).and(bookmarkIsPublicBooleanBuilder))
                 .fetchOne();
     }
 
