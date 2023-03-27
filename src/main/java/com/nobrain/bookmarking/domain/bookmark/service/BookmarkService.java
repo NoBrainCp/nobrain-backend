@@ -89,8 +89,9 @@ public class BookmarkService {
 
     public List<BookmarkResponse.Info> searchBookmarks(String keyword, String condition) {
         Long userId = tokenService.getId();
+        boolean isMe = isMe(userId);
 
-        return bookmarkQueryRepository.searchBookmarksByCondition(keyword, condition, userId).stream()
+        return bookmarkQueryRepository.searchBookmarksByCondition(keyword, condition, userId, isMe).stream()
                 .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }
