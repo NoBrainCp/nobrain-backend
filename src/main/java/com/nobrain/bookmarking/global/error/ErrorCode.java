@@ -2,8 +2,7 @@ package com.nobrain.bookmarking.global.error;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ErrorCode {
@@ -30,6 +29,9 @@ public enum ErrorCode {
     // Category
     CATEGORY_NAME_DUPLICATION(400, "C001", "Category name is Duplication"),
     CATEGORY_NAME_NOT_FOUND(400, "C002", "Category name is not Found"),
+
+    // Bookmark
+    BOOKMARK_DUPLICATION(PRECONDITION_FAILED.value(), "B001", "카테고리에 이미 같은 북마크가 존재합니다."),
 
     INVALID_AUTH_CODE(401, "A001", "인증 코드가 올바르지 않습니다.");
 
