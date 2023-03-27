@@ -40,8 +40,9 @@ public class BookmarkService {
 
     public List<BookmarkResponse.Info> getAllBookmarksByUsername(String username) {
         Long userId = findUserByUsername(username).getId();
+        boolean isMe = isMe(userId);
 
-        return bookmarkQueryRepository.findAllByUserId(userId).stream()
+        return bookmarkQueryRepository.findAllByUserId(userId, isMe).stream()
                 .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }
@@ -49,8 +50,9 @@ public class BookmarkService {
     public List<BookmarkResponse.Info> getBookmarksByCategory(String username, String categoryName) {
         User user = findUserByUsername(username);
         Category category = categoryRepository.findByUserAndName(user, categoryName).orElseThrow(() -> new CategoryNotFoundException(categoryName));
+        boolean isMe = isMe(user.getId());
 
-        return bookmarkRepository.findAllByCategory(category).stream()
+        return bookmarkQueryRepository.findAllByCategoryId(category.getId(), isMe).stream()
                 .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }
@@ -87,8 +89,9 @@ public class BookmarkService {
 
     public List<BookmarkResponse.Info> searchBookmarks(String keyword, String condition) {
         Long userId = tokenService.getId();
+        boolean isMe = isMe(userId);
 
-        return bookmarkQueryRepository.searchBookmarksByCondition(keyword, condition, userId).stream()
+        return bookmarkQueryRepository.searchBookmarksByCondition(keyword, condition, userId, isMe).stream()
                 .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }

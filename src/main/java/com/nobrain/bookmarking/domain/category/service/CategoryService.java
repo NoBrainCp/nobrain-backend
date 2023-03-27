@@ -1,5 +1,6 @@
 package com.nobrain.bookmarking.domain.category.service;
 
+import com.nobrain.bookmarking.domain.auth.service.TokenService;
 import com.nobrain.bookmarking.domain.category.dto.CategoryRequest;
 import com.nobrain.bookmarking.domain.category.dto.CategoryResponse;
 import com.nobrain.bookmarking.domain.category.entity.Category;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
@@ -25,6 +27,7 @@ public class CategoryService {
     private final CategoryQueryRepository categoryQueryRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final TokenService tokenService;
 
     public CategoryResponse.Info getCategory(String username, String categoryName) {
         User user = findUserByUsername(username);
@@ -38,7 +41,9 @@ public class CategoryService {
     }
 
     public List<CategoryResponse.Info> getCategories(String username) {
-        return categoryQueryRepository.findAllCategoryInfoWithCount(username).stream()
+        Long userId = findUserByUsername(username).getId();
+        boolean isMe = isMe(userId);
+        return categoryQueryRepository.findAllCategoryInfoWithCount(username, isMe).stream()
                 .map(category -> CategoryResponse.Info.builder()
                     .id(category.getId())
                     .name(category.getName())
@@ -91,5 +96,10 @@ public class CategoryService {
 
     private User findUserByUsername(String username) {
         return userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
+    }
+
+    private boolean isMe(Long userId) {
+        Long myId = tokenService.getId();
+        return Objects.equals(userId, myId);
     }
 }
