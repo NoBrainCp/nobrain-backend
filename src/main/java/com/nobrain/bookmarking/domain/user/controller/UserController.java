@@ -1,5 +1,6 @@
 package com.nobrain.bookmarking.domain.user.controller;
 
+import com.nobrain.bookmarking.domain.user.annotation.LoginUserId;
 import com.nobrain.bookmarking.domain.user.dto.UserRequest;
 import com.nobrain.bookmarking.domain.user.dto.UserResponse;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
@@ -23,8 +24,8 @@ public class UserController {
     private final ResponseService responseService;
 
     @GetMapping("/user/my-profile")
-    public SingleResult<UserResponse.Profile> getMyProfile() {
-        return responseService.getSingleResult(userService.getMyProfile());
+    public SingleResult<UserResponse.Profile> getMyProfile(@LoginUserId Long userId) {
+        return responseService.getSingleResult(userService.getMyProfile(userId));
     }
 
     @GetMapping("/user/{username}/info")

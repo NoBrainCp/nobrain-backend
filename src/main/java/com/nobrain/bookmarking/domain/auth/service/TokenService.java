@@ -107,7 +107,12 @@ public class TokenService {
 
     // Request 의 Header 에서 Token 값을 가져옴. "Authorization" : "Token value"
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("Authorization");
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null) {
+            return request.getHeader("Authorization").split("Bearer ")[1];
+        }
+
+        return null;
     }
 
     // JWT Token 의 유효성 + 만료일자 확인

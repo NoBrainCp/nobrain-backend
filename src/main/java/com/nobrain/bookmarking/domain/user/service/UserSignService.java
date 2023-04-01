@@ -39,6 +39,7 @@ public class UserSignService {
                 .username(user.getName())
                 .email(user.getEmail())
                 .accessToken(accessToken)
+                .tokenType("Bearer")
                 .build();
     }
 
