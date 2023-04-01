@@ -13,23 +13,25 @@ import java.io.IOException;
 public class MetaImageCrawler {
 
     public String getMetaImageFromUrl(String url) {
-        Document doc = null;
-
         try {
-            doc = Jsoup.connect(url).get();
+            Document doc = Jsoup.connect(url).get();
+            Elements metaTags = doc.select("meta[property=og:image], meta[name=twitter:image], meta[itemprop=image]");
+
+            for (Element metaTag : metaTags) {
+                String imageUrl = metaTag.attr("content");
+
+                if (!imageUrl.isEmpty()) {
+                    if (metaTag.hasAttr("itemprop")) {
+                        return url + "/" + imageUrl;
+                    }
+                    return imageUrl;
+                }
+            }
         } catch (IOException e) {
             throw new UrlNotFoundException(url);
         }
 
-        Elements metaTags = doc.getElementsByTag("meta");
-        for (Element metaTag : metaTags) {
-            String property = metaTag.attr("property");
-
-            if (property.equals("og:image")) {
-                return metaTag.attr("content");
-            }
-        }
-
         return null;
     }
+
 }
