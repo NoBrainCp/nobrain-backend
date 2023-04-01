@@ -29,8 +29,7 @@ public class UserService {
     private final S3Service s3Service;
     private final PasswordEncoder passwordEncoder;
 
-    public UserResponse.Profile getMyProfile() {
-        Long userId = tokenService.getId();
+    public UserResponse.Profile getMyProfile(Long userId) {
         User user = findById(userId);
 
         return UserResponse.Profile.builder()

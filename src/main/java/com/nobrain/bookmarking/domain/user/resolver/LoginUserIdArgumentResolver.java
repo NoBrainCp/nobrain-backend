@@ -10,6 +10,8 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RequiredArgsConstructor
 @Component
 public class LoginUserIdArgumentResolver implements HandlerMethodArgumentResolver {
@@ -24,7 +26,10 @@ public class LoginUserIdArgumentResolver implements HandlerMethodArgumentResolve
 
     @Override
     public Long resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-        String accessToken = webRequest.getHeader("Authorization").split("Bearer ")[1];
+        HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
+        String accessToken = tokenService.resolveToken(request);
+        tokenService.validateToken(accessToken);
+
         return Long.parseLong(tokenService.getId(accessToken));
     }
 }

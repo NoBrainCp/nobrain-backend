@@ -17,6 +17,7 @@ public class UserResponse {
         private String email;
         private String username;
         private String accessToken;
+        private String tokenType;
     }
 
     @Getter
