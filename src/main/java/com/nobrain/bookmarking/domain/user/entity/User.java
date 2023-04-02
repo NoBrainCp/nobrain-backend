@@ -36,6 +36,7 @@ public class User extends BaseTimeEntity implements UserDetails {
     private String phoneNumber;
     private LocalDate birthDate;
     private String profileImage;
+    private String oauthId;
 
     @OneToMany(mappedBy = "user", cascade = REMOVE)
     private List<Category> categories;
@@ -44,7 +45,7 @@ public class User extends BaseTimeEntity implements UserDetails {
     private List<String> roles = new ArrayList<>();
 
     @Builder
-    public User(String loginId, String email, String password, String name, String phoneNumber, LocalDate birthDate, String profileImage, List<Category> categories, List<String> roles) {
+    public User(String loginId, String email, String password, String name, String phoneNumber, LocalDate birthDate, String profileImage, String oauthId, List<Category> categories, List<String> roles) {
         this.loginId = loginId;
         this.email = email;
         this.password = password;
@@ -52,6 +53,7 @@ public class User extends BaseTimeEntity implements UserDetails {
         this.phoneNumber = phoneNumber;
         this.birthDate = birthDate;
         this.profileImage = profileImage;
+        this.oauthId = oauthId;
         this.categories = categories;
         this.roles = roles;
     }
