@@ -1,4 +1,4 @@
-package com.nobrain.bookmarking.global.oauth.dto;
+package com.nobrain.bookmarking.domain.oauth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

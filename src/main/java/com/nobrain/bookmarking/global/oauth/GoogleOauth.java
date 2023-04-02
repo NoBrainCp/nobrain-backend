@@ -2,8 +2,8 @@ package com.nobrain.bookmarking.global.oauth;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nobrain.bookmarking.global.oauth.dto.GoogleOAuthToken;
-import com.nobrain.bookmarking.global.oauth.dto.GoogleUser;
+import com.nobrain.bookmarking.domain.oauth.dto.GoogleOAuthToken;
+import com.nobrain.bookmarking.domain.oauth.dto.GoogleUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
