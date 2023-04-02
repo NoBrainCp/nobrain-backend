@@ -94,7 +94,7 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
             query.join(category).on(bookmark.category.id.eq(category.id))
                     .join(user).on(category.user.id.eq(user.id))
                     .join(follow).on(user.id.eq(follow.toUser.id));
-            booleanBuilder.and(follow.fromUser.id.eq(userId)).and(bookmarkIsPublicBooleanBuilder);
+            booleanBuilder.and(follow.fromUser.id.eq(userId)).and(bookmark.isPublic.eq(true));
         } else {
             booleanBuilder.and(bookmarkIsPublicBooleanBuilder);
         }
