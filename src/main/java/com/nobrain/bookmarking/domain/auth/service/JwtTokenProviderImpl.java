@@ -1,11 +1,13 @@
 package com.nobrain.bookmarking.domain.auth.service;
 
-import com.nobrain.bookmarking.domain.auth.dto.AccessTokenRequest;
 import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
 import com.nobrain.bookmarking.domain.auth.entity.RefreshToken;
 import com.nobrain.bookmarking.domain.auth.exception.TokenInvalidException;
 import com.nobrain.bookmarking.domain.auth.repository.RefreshTokenRepository;
 import com.nobrain.bookmarking.domain.auth.util.JwtTokenExtractor;
+import com.nobrain.bookmarking.domain.user.entity.User;
+import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
+import com.nobrain.bookmarking.domain.user.repository.UserRepository;
 import io.jsonwebtoken.*;
 import org.apache.http.HttpHeaders;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +33,7 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
     private final long expirationTimeMilliseconds;
 
     private final JwtTokenExtractor tokenExtractor;
+    private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
     public JwtTokenProviderImpl(
@@ -38,21 +41,24 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
             @Value("${spring.jwt.subject}") String accessTokenSubject,
             @Value("${spring.jwt.expiration-time}") long expirationTimeMilliseconds,
             JwtTokenExtractor tokenExtractor,
+            UserRepository userRepository,
             RefreshTokenRepository refreshTokenRepository) {
 
         this.secretKey = new SecretKeySpec(securityKey.getBytes(), SignatureAlgorithm.HS256.getJcaName());
         this.accessTokenSubject = accessTokenSubject;
         this.expirationTimeMilliseconds = expirationTimeMilliseconds;
         this.tokenExtractor = tokenExtractor;
+        this.userRepository = userRepository;
         this.refreshTokenRepository = refreshTokenRepository;
     }
 
     @Override
-    public String generateAccessToken(AccessTokenRequest request, UserPayload payload) {
-        refreshTokenRepository.findById(request.getRefreshToken())
-                .orElseThrow(() -> new TokenInvalidException(request.getRefreshToken()));
+    public String generateAccessToken(String refreshTokenRequest) {
+        RefreshToken refreshToken = refreshTokenRepository.findById(refreshTokenRequest)
+                .orElseThrow(() -> new TokenInvalidException(refreshTokenRequest));
 
-        return generateToken(payload);
+        User user = userRepository.findById(refreshToken.getUserId()).orElseThrow(UserNotFoundException::new);
+        return generateToken(new UserPayload(user.getId(), user.getName(), user.getRoles()));
     }
 
     @Override
