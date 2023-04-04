@@ -34,7 +34,12 @@ public enum ErrorCode {
     // Bookmark
     BOOKMARK_DUPLICATION(PRECONDITION_FAILED.value(), "B001", "카테고리에 이미 같은 북마크가 존재합니다."),
 
-    INVALID_AUTH_CODE(401, "A001", "인증 코드가 올바르지 않습니다.");
+    // Auth
+    UNAUTHORIZATION(UNAUTHORIZED.value(), "A001", "접근 권한이 없습니다."),
+    INVALID_AUTH_CODE(UNAUTHORIZED.value(), "A002", "인증 코드가 올바르지 않습니다."),
+    INVALID_TOKEN(UNAUTHORIZED.value(), "A003", "잘못된 형식의 토큰입니다."),
+    TOKEN_NOT_EXISTS(UNAUTHORIZED.value(), "A004", "토큰이 존재하지 않습니다"),
+    TOKEN_EXPIRATION(UNAUTHORIZED.value(), "A005", "토큰의 유효시간이 만료되었습니다.");
 
     private int status;
     private final String code;
