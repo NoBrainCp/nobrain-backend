@@ -8,9 +8,12 @@ spring:
       - API-KEY
       - aws
       - oauth
+      - security
 
   jwt:
-    secret: ENC(zoV04jn/ttqdTIsRL/QTriKYAHCsjsoihsm5KjXfm2C+Z0TsX8ZHdWHmoizPf2rU)in
+    secret-key: ENC(zoV04jn/ttqdTIsRL/QTriKYAHCsjsoihsm5KjXfm2C+Z0TsX8ZHdWHmoizPf2rU)
+    subject: accessToken
+    expiration-time: 1800000
 
   mail:
     host: smtp.gmail.com
@@ -30,6 +33,7 @@ spring:
 
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
 
 app:
   domain: /api
