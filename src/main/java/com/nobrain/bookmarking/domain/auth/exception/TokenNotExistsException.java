@@ -5,7 +5,7 @@ import com.nobrain.bookmarking.global.error.exception.UnauthorizedException;
 
 public class TokenNotExistsException extends UnauthorizedException {
 
-    public TokenNotExistsException() {
-        super("존재하지 않는 토큰입니다.", ErrorCode.TOKEN_NOT_EXISTS);
+    public TokenNotExistsException(String tokenType) {
+        super("존재하지 않는 " + tokenType  + " 입니다.", ErrorCode.TOKEN_NOT_EXISTS);
     }
 }
