@@ -37,9 +37,9 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
     private final RefreshTokenRepository refreshTokenRepository;
 
     public JwtTokenProviderImpl(
-            @Value("${spring.jwt.secret-key}") String securityKey,
-            @Value("${spring.jwt.subject}") String accessTokenSubject,
-            @Value("${spring.jwt.expiration-time}") long expirationTimeMilliseconds,
+            @Value("${security.jwt.secret-key}") String securityKey,
+            @Value("${security.jwt.subject}") String accessTokenSubject,
+            @Value("${security.jwt.expiration-time}") long expirationTimeMilliseconds,
             JwtTokenExtractor tokenExtractor,
             UserRepository userRepository,
             RefreshTokenRepository refreshTokenRepository) {
