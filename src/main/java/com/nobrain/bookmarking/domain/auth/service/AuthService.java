@@ -10,8 +10,8 @@ import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserLoginIdNotFoundException;
 import com.nobrain.bookmarking.domain.user.exception.UserNotCorrectPasswordException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
+import com.nobrain.bookmarking.global.security.Encryptor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,22 +20,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class AuthService {
 
-    private final static String tokenType = "Bearer";
+    private final static String TOKEN_TYPE = "Bearer";
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final Encryptor encryptor;
     private final JwtTokenProvider tokenProvider;
 
     public LoginResponse login(LoginRequest dto) {
         User user = userRepository.findByLoginId(dto.getLoginId()).orElseThrow(() -> new UserLoginIdNotFoundException(dto.getLoginId()));
-        if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
+        if (!encryptor.isMatch(dto.getPassword(), user.getPassword())) {
             throw new UserNotCorrectPasswordException(dto.getPassword());
         }
 
         UserPayload userPayload = new UserPayload(user.getId(), user.getName(), user.getRoles());
         TokenDto tokenDto = new TokenDto();
-        tokenDto.setTokenType(tokenType);
+        tokenDto.setTokenType(TOKEN_TYPE);
         tokenDto.setAccessToken(tokenProvider.generateToken(userPayload));
 
         if (dto.isKeepLoggedIn()) {
