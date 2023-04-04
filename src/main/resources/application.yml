@@ -1,6 +1,9 @@
 server:
   port: 8080
 
+app:
+  domain: /api
+
 spring:
   profiles:
     include:
@@ -33,15 +36,3 @@ spring:
 
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
-
-
-app:
-  domain: /api
-
-jasypt:
-  encryptor:
-    bean: jasyptStringEncryptor
-    algorithm: PBEWithMD5AndDes
-    pool-size: 1
-    output-type: base64
-    iterations: 1000
