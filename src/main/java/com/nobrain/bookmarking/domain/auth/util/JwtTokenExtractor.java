@@ -9,7 +9,7 @@ public class JwtTokenExtractor {
 
     public String extract(String authorizationHeader, String tokenType) {
         if (authorizationHeader == null) {
-            throw new TokenNotExistsException();
+            throw new TokenNotExistsException("Access Token");
         }
 
         String[] splitHeader = authorizationHeader.split(" ");
