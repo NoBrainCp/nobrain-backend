@@ -1,6 +1,7 @@
 package com.nobrain.bookmarking.domain.user.resolver;
 
-import com.nobrain.bookmarking.domain.auth.service.TokenService;
+import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
+import com.nobrain.bookmarking.domain.auth.service.JwtTokenProvider;
 import com.nobrain.bookmarking.domain.user.annotation.LoginUserId;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
@@ -16,7 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class LoginUserIdArgumentResolver implements HandlerMethodArgumentResolver {
 
-    private final TokenService tokenService;
+    private final JwtTokenProvider tokenProvider;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -27,9 +28,10 @@ public class LoginUserIdArgumentResolver implements HandlerMethodArgumentResolve
     @Override
     public Long resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
         HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
-        String accessToken = tokenService.resolveToken(request);
-        tokenService.validateToken(accessToken);
+        String accessToken = tokenProvider.resolveToken(request);
+        tokenProvider.validateToken(accessToken);
 
-        return Long.parseLong(tokenService.getId(accessToken));
+        UserPayload payload = tokenProvider.getPayload(request);
+        return payload.getUserId();
     }
 }
