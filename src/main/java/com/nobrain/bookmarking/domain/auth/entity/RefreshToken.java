@@ -9,8 +9,8 @@ import org.springframework.data.redis.core.RedisHash;
 public class RefreshToken {
 
     @Id
-    private String refreshToken;
-    private Long userId;
+    private final String refreshToken;
+    private final Long userId;
 
     public RefreshToken(final String refreshToken, final Long userId) {
         this.refreshToken = refreshToken;
