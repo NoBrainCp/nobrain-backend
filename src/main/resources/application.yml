@@ -2,7 +2,7 @@ server:
   port: 8080
 
 app:
-  domain: /api
+  domain: /api/v1
 
 spring:
   profiles:
