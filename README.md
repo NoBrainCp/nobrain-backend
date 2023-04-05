@@ -1,2 +1,2 @@
 # nobrain-backend
-Social Bookmarking Website
+📚👨‍👦‍👦NoBrain: Social Bookmarking Website
