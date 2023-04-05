@@ -1,8 +1,10 @@
 package com.nobrain.bookmarking.domain.category.controller;
 
+import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
 import com.nobrain.bookmarking.domain.category.dto.CategoryRequest;
 import com.nobrain.bookmarking.domain.category.dto.CategoryResponse;
 import com.nobrain.bookmarking.domain.category.service.CategoryService;
+import com.nobrain.bookmarking.domain.user.annotation.VerifiedUser;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.model.ListResult;
 import com.nobrain.bookmarking.global.response.model.SingleResult;
@@ -14,50 +16,53 @@ import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("${app.domain}")
+@RequestMapping("${app.domain}/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
     private final ResponseService responseService;
 
-    @GetMapping("/user/{username}/category/{categoryName}")
-    public SingleResult<CategoryResponse.Info> getCategory(@PathVariable String username, @PathVariable String categoryName) {
-        return responseService.getSingleResult(categoryService.getCategory(username, categoryName));
+    @GetMapping("/{categoryName}/users/{username}")
+    public SingleResult<CategoryResponse.Header> getCategoryHeader(@PathVariable String username,
+                                                                   @PathVariable String categoryName) {
+        return responseService.getSingleResult(categoryService.getCategoryHeader(username, categoryName));
     }
 
-    @GetMapping("/user/{username}/categories")
+    @GetMapping("/users/{username}")
     public ListResult<CategoryResponse.Info> getCategories(@PathVariable String username) {
         return responseService.getListResult(categoryService.getCategories(username));
     }
 
-    @GetMapping("/bookmark/{bookmarkId}/category")
+    @GetMapping("/bookmarks/{bookmarkId}")
     public SingleResult<CategoryResponse.Info> getCategoryByBookmarkId(@PathVariable Long bookmarkId) {
         return responseService.getSingleResult(categoryService.getCategoryByBookmarkId(bookmarkId));
     }
 
-    @GetMapping("/user/{userId}/category/{categoryName}/public")
-    public SingleResult<Boolean> getCategoryIsPublic(@PathVariable Long userId, @PathVariable String categoryName) {
+    @GetMapping("/{categoryName}/public/users/{userId}")
+    public SingleResult<Boolean> getCategoryIsPublic(@PathVariable Long userId,
+                                                     @PathVariable String categoryName) {
         return responseService.getSingleResult(categoryService.getCategoryIdPublic(userId, categoryName));
     }
 
-    @PostMapping("/{username}/category")
+    @PostMapping("")
     public SingleResult<String> addCategory(
-            @PathVariable String username,
+            @VerifiedUser UserPayload payload,
             @Valid @RequestBody CategoryRequest.Info requestDto) {
-        return responseService.getSingleResult(categoryService.create(username, requestDto));
+        return responseService.getSingleResult(categoryService.create(payload, requestDto));
     }
 
-    @PutMapping("/{username}/category/{categoryName}")
-    public CommonResult updateCategory(@PathVariable String username,
+    @PutMapping("/{categoryName}")
+    public CommonResult updateCategory(@VerifiedUser UserPayload payload,
                                        @PathVariable String categoryName,
                                        @RequestBody CategoryRequest.Info requestDto) {
-        categoryService.updateCategory(username, categoryName, requestDto);
+        categoryService.updateCategory(payload, categoryName, requestDto);
         return responseService.getSuccessResult();
     }
 
-    @DeleteMapping("/{username}/category/{categoryName}")
-    public CommonResult deleteCategory(@PathVariable String username, @PathVariable String categoryName) {
-        categoryService.deleteCategory(username, categoryName);
+    @DeleteMapping("/{categoryName}")
+    public CommonResult deleteCategory(@VerifiedUser UserPayload payload,
+                                       @PathVariable String categoryName) {
+        categoryService.deleteCategory(payload, categoryName);
         return responseService.getSuccessResult();
     }
 }

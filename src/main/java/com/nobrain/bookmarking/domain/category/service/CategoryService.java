@@ -1,5 +1,6 @@
 package com.nobrain.bookmarking.domain.category.service;
 
+import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
 import com.nobrain.bookmarking.domain.auth.service.TokenService;
 import com.nobrain.bookmarking.domain.category.dto.CategoryRequest;
 import com.nobrain.bookmarking.domain.category.dto.CategoryResponse;
@@ -29,15 +30,12 @@ public class CategoryService {
     private final UserRepository userRepository;
     private final TokenService tokenService;
 
-    public CategoryResponse.Info getCategory(String username, String categoryName) {
+    public CategoryResponse.Header getCategoryHeader(String username, String categoryName) {
         User user = findUserByUsername(username);
-        Category category = categoryRepository.findByUserAndName(user, categoryName).orElseThrow(() -> new CategoryNotFoundException(categoryName));
-        return CategoryResponse.Info.builder()
-                .id(category.getId())
-                .name(category.getName())
-                .description(category.getDescription())
-                .isPublic(category.isPublic())
-                .build();
+        Category category = categoryRepository.findByUserAndName(user, categoryName)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryName));
+
+        return CategoryResponse.Header.toDto(category);
     }
 
     public List<CategoryResponse.Info> getCategories(String username) {
@@ -63,8 +61,8 @@ public class CategoryService {
     }
 
     @Transactional
-    public String create(String username, CategoryRequest.Info requestDto) {
-        User user = findUserByUsername(username);
+    public String create(UserPayload payload, CategoryRequest.Info requestDto) {
+        User user = findUserByUsername(payload.getUsername());
         if (categoryRepository.existsByUserAndName(user, requestDto.getName())) {
             throw new CategoryNameDuplicationException(requestDto.getName());
         }
@@ -73,8 +71,8 @@ public class CategoryService {
     }
 
     @Transactional
-    public void updateCategory(String username, String categoryName, CategoryRequest.Info requestDto) {
-        User user = findUserByUsername(username);
+    public void updateCategory(UserPayload payload, String categoryName, CategoryRequest.Info requestDto) {
+        User user = findUserByUsername(payload.getUsername());
         Category category = categoryRepository.findByUserAndName(user, categoryName).orElseThrow(() -> new CategoryNotFoundException(categoryName));
 
         if (!categoryName.equals(requestDto.getName()) && categoryRepository.existsByUserAndName(user, requestDto.getName())) {
@@ -85,8 +83,8 @@ public class CategoryService {
     }
 
     @Transactional
-    public void deleteCategory(String username, String categoryName) {
-        User user = findUserByUsername(username);
+    public void deleteCategory(UserPayload payload, String categoryName) {
+        User user = findUserByUsername(payload.getUsername());
         categoryRepository.deleteByUserAndName(user, categoryName);
     }
 
