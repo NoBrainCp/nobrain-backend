@@ -69,7 +69,12 @@ public class UserRequest {
     }
 
     @Getter
-    public static class ChangeProfileImage {
-        String profileImage;
+    public static class ChangeName {
+        private String newName;
+    }
+
+    @Getter
+    public static class RemoveUser {
+        private String password;
     }
 }

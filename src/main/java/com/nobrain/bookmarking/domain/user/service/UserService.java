@@ -1,18 +1,18 @@
 package com.nobrain.bookmarking.domain.user.service;
 
-import com.nobrain.bookmarking.domain.auth.service.TokenService;
+import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
 import com.nobrain.bookmarking.domain.follow.service.FollowService;
 import com.nobrain.bookmarking.domain.user.dto.UserRequest;
 import com.nobrain.bookmarking.domain.user.dto.UserResponse;
+import com.nobrain.bookmarking.domain.user.dto.projection.UserInfo;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserNotCorrectPasswordException;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.domain.user.exception.UsernameDuplicationException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
-import com.nobrain.bookmarking.domain.user.dto.projection.UserInfo;
+import com.nobrain.bookmarking.global.security.Encryptor;
 import com.nobrain.bookmarking.infra.s3.service.S3Service;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,71 +25,52 @@ import java.io.IOException;
 public class UserService {
     private final UserRepository userRepository;
     private final FollowService followService;
-    private final TokenService tokenService;
     private final S3Service s3Service;
-    private final PasswordEncoder passwordEncoder;
+    private final Encryptor encryptor;
 
-    public UserResponse.Profile getMyProfile(Long userId) {
-        User user = findById(userId);
-
-        return UserResponse.Profile.builder()
-                .userId(userId)
-                .loginId(user.getLoginId())
-                .email(user.getEmail())
-                .username(user.getName())
-                .phoneNumber(user.getPhoneNumber())
-                .birthDate(user.getBirthDate())
-                .profileImage(user.getProfileImage())
-                .roles(user.getRoles())
-                .build();
+    public UserResponse.Profile getMyProfile(UserPayload payload) {
+        User user = findById(payload.getUserId());
+        return new UserResponse.Profile().toDto(user);
     }
 
     public UserResponse.Info getUserInfo(String username) {
         UserInfo userInfo = userRepository.findUserInfoByName(username).orElseThrow(() -> new UserNotFoundException(username));
-
-        return UserResponse.Info.builder()
-                .userId(userInfo.getId())
-                .username(userInfo.getName())
-                .email(userInfo.getEmail())
-                .profileImage(userInfo.getProfileImage())
-                .build();
+        return new UserResponse.Info().toDto(userInfo);
     }
 
     @Transactional
-    public String changeName(Long id, String username) {
-        if (userRepository.existsByName(username)) {
-            throw new UsernameDuplicationException(username);
+    public String changeName(UserPayload payload, UserRequest.ChangeName changeName) {
+        String newName = changeName.getNewName();
+        if (userRepository.existsByName(newName)) {
+            throw new UsernameDuplicationException(newName);
         }
 
-        findById(id).changeName(username);
-        return username;
+        findById(payload.getUserId()).changeName(newName);
+        return newName;
     }
 
     @Transactional
     public void changeForgotPassword(UserRequest.ChangeForgotPassword dto) {
-        if (!dto.getPassword().equals(dto.getPasswordCheck())) {
-            throw new UserNotCorrectPasswordException(dto.getPassword());
-        }
+        validateCheckPassword(dto.getPassword(), dto.getPasswordCheck());
 
         User user = findByLoginId(dto.getLoginId());
-        user.changePassword(passwordEncoder.encode(dto.getPassword()));
+        user.changePassword(encryptor.encrypt(dto.getPassword()));
     }
 
     @Transactional
-    public void changePassword(UserRequest.ChangePassword dto) {
-        Long userId = tokenService.getId();
+    public void changePassword(final UserPayload payload, UserRequest.ChangePassword dto) {
+        Long userId = payload.getUserId();
         User user = findById(userId);
-        if (!dto.getNewPassword().equals(dto.getPasswordCheck())
-                || !passwordEncoder.matches(dto.getPrePassword(), user.getPassword())) {
-            throw new UserNotCorrectPasswordException(dto.getPrePassword());
-        }
 
-        user.changePassword(passwordEncoder.encode(dto.getNewPassword()));
+        validateCheckPassword(dto.getNewPassword(), dto.getPasswordCheck());
+        validatePassword(dto.getPrePassword(), user.getPassword());
+
+        user.changePassword(encryptor.encrypt(dto.getNewPassword()));
     }
 
     @Transactional
-    public void changeProfileImage(MultipartFile image) throws IOException {
-        Long userId = tokenService.getId();
+    public void changeProfileImage(final UserPayload payload, MultipartFile image) throws IOException {
+        Long userId = payload.getUserId();
         User user = findById(userId);
 
         if (!image.isEmpty()) {
@@ -99,15 +80,17 @@ public class UserService {
     }
 
     @Transactional
-    public void delete(Long id) {
-        User user = findById(id);
+    public void delete(UserPayload payload, UserRequest.RemoveUser removeUser) {
+        User user = findById(payload.getUserId());
+        validatePassword(removeUser.getPassword(), user.getPassword());
+
         followService.deleteAllFollows(user);
         userRepository.delete(user);
     }
 
     @Transactional
-    public void deleteProfileImage() {
-        Long userId = tokenService.getId();
+    public void deleteProfileImage(UserPayload payload) {
+        Long userId = payload.getUserId();
         findById(userId).changeProfileImage(null);
     }
 
@@ -119,4 +102,15 @@ public class UserService {
         return userRepository.findByLoginId(loginId).orElseThrow(() -> new UserNotFoundException(loginId));
     }
 
+    private void validatePassword(String password, String hashed) {
+        if (!encryptor.isMatch(password, hashed)) {
+            throw new UserNotCorrectPasswordException(password);
+        }
+    }
+
+    private void validateCheckPassword(String password, String checkPassword) {
+        if (!password.equals(checkPassword)) {
+            throw new UserNotCorrectPasswordException(password);
+        }
+    }
 }
