@@ -1,7 +1,6 @@
 package com.nobrain.bookmarking.domain.category.service;
 
 import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
-import com.nobrain.bookmarking.domain.auth.service.TokenService;
 import com.nobrain.bookmarking.domain.category.dto.CategoryRequest;
 import com.nobrain.bookmarking.domain.category.dto.CategoryResponse;
 import com.nobrain.bookmarking.domain.category.entity.Category;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -28,7 +26,6 @@ public class CategoryService {
     private final CategoryQueryRepository categoryQueryRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
-    private final TokenService tokenService;
 
     public CategoryResponse.Header getCategoryHeader(String username, String categoryName) {
         User user = findUserByUsername(username);
@@ -38,18 +35,10 @@ public class CategoryService {
         return CategoryResponse.Header.toDto(category);
     }
 
-    public List<CategoryResponse.Info> getCategories(String username) {
+    public List<CategoryResponse.Info> getCategories(UserPayload myPayload, String username) {
         Long userId = findUserByUsername(username).getId();
-        boolean isMe = isMe(userId);
-        return categoryQueryRepository.findAllCategoryInfoWithCount(username, isMe).stream()
-                .map(category -> CategoryResponse.Info.builder()
-                    .id(category.getId())
-                    .name(category.getName())
-                    .description(category.getDescription())
-                    .isPublic(category.isPublic())
-                    .count(category.getCount())
-                    .build())
-                .collect(Collectors.toList());
+        boolean isMe = isMe(myPayload.getUserId(), userId);
+        return categoryQueryRepository.findAllCategoryInfoWithCount(username, isMe);
     }
 
     public CategoryResponse.Info getCategoryByBookmarkId(Long bookmarkId) {
@@ -61,25 +50,20 @@ public class CategoryService {
     }
 
     @Transactional
-    public String create(UserPayload payload, CategoryRequest.Info requestDto) {
+    public String create(UserPayload payload, CategoryRequest.Info categoryInfo) {
         User user = findUserByUsername(payload.getUsername());
-        if (categoryRepository.existsByUserAndName(user, requestDto.getName())) {
-            throw new CategoryNameDuplicationException(requestDto.getName());
-        }
-
-        return categoryRepository.save(requestDto.toEntity(user)).getName();
+        validateCategoryDuplication(user, categoryInfo.getName());
+        return categoryRepository.save(categoryInfo.toEntity(user)).getName();
     }
 
     @Transactional
-    public void updateCategory(UserPayload payload, String categoryName, CategoryRequest.Info requestDto) {
+    public void updateCategory(UserPayload payload, String originCategoryName, CategoryRequest.Info categoryInfo) {
         User user = findUserByUsername(payload.getUsername());
-        Category category = categoryRepository.findByUserAndName(user, categoryName).orElseThrow(() -> new CategoryNotFoundException(categoryName));
+        Category category = categoryRepository.findByUserAndName(user, originCategoryName)
+                .orElseThrow(() -> new CategoryNotFoundException(originCategoryName));
 
-        if (!categoryName.equals(requestDto.getName()) && categoryRepository.existsByUserAndName(user, requestDto.getName())) {
-            throw new CategoryNameDuplicationException(requestDto.getName());
-        }
-
-        category.update(requestDto);
+        validateUpdateCategoryDuplication(user, originCategoryName, categoryInfo.getName());
+        category.update(categoryInfo);
     }
 
     @Transactional
@@ -88,16 +72,23 @@ public class CategoryService {
         categoryRepository.deleteByUserAndName(user, categoryName);
     }
 
-    private Category findCategoryByCategoryId(Long categoryId) {
-        return categoryRepository.findById(categoryId).orElseThrow(() -> new CategoryNotFoundException(String.valueOf(categoryId)));
+    private void validateCategoryDuplication(User user, String categoryName) {
+        if (categoryRepository.existsByUserAndName(user, categoryName)) {
+            throw new CategoryNameDuplicationException(categoryName);
+        }
+    }
+
+    private void validateUpdateCategoryDuplication(User user, String originName, String changeName) {
+        if (!originName.equals(changeName) && categoryRepository.existsByUserAndName(user, changeName)) {
+            throw new CategoryNameDuplicationException(changeName);
+        }
     }
 
     private User findUserByUsername(String username) {
         return userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
     }
 
-    private boolean isMe(Long userId) {
-        Long myId = tokenService.getId();
-        return Objects.equals(userId, myId);
+    private boolean isMe(Long myId, Long userId) {
+        return Objects.equals(myId, userId);
     }
 }

@@ -29,8 +29,9 @@ public class CategoryController {
     }
 
     @GetMapping("/users/{username}")
-    public ListResult<CategoryResponse.Info> getCategories(@PathVariable String username) {
-        return responseService.getListResult(categoryService.getCategories(username));
+    public ListResult<CategoryResponse.Info> getCategories(@VerifiedUser UserPayload myPayload,
+                                                           @PathVariable String username) {
+        return responseService.getListResult(categoryService.getCategories(myPayload, username));
     }
 
     @GetMapping("/bookmarks/{bookmarkId}")
