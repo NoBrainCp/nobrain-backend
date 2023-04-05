@@ -1,6 +1,7 @@
 package com.nobrain.bookmarking.domain.user.controller;
 
-import com.nobrain.bookmarking.domain.user.annotation.LoginUserId;
+import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
+import com.nobrain.bookmarking.domain.user.annotation.VerifiedUser;
 import com.nobrain.bookmarking.domain.user.dto.UserRequest;
 import com.nobrain.bookmarking.domain.user.dto.UserResponse;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
@@ -24,8 +25,8 @@ public class UserController {
     private final ResponseService responseService;
 
     @GetMapping("/user/my-profile")
-    public SingleResult<UserResponse.Profile> getMyProfile(@LoginUserId Long userId) {
-        return responseService.getSingleResult(userService.getMyProfile(userId));
+    public SingleResult<UserResponse.Profile> getMyProfile(@VerifiedUser UserPayload payload) {
+        return responseService.getSingleResult(userService.getMyProfile(payload));
     }
 
     @GetMapping("/user/{username}/info")
@@ -43,9 +44,10 @@ public class UserController {
         return responseService.getSingleResult(userRepository.existsByLoginId(loginId));
     }
 
-    @PutMapping("/user/{userId}/username/{username}")
-    public SingleResult<String> changeName(@PathVariable Long userId, @PathVariable String username) {
-        return responseService.getSingleResult(userService.changeName(userId, username));
+    @PutMapping("/user/username")
+    public SingleResult<String> changeName(@VerifiedUser UserPayload payload,
+                                           @RequestBody UserRequest.ChangeName changeName) {
+        return responseService.getSingleResult(userService.changeName(payload, changeName));
     }
 
     @PutMapping("/user/forgot-password")
@@ -55,26 +57,29 @@ public class UserController {
     }
 
     @PutMapping("/user/password")
-    public CommonResult changePassword(@RequestBody UserRequest.ChangePassword dto) {
-        userService.changePassword(dto);
+    public CommonResult changePassword(@VerifiedUser final UserPayload payload,
+                                       @RequestBody UserRequest.ChangePassword dto) {
+        userService.changePassword(payload, dto);
         return responseService.getSuccessResult();
     }
 
     @PutMapping("/user/profile-image")
-    public CommonResult changeProfileImage(@RequestBody MultipartFile image) throws IOException {
-        userService.changeProfileImage(image);
+    public CommonResult changeProfileImage(@VerifiedUser final UserPayload payload,
+                                           @RequestBody MultipartFile image) throws IOException {
+        userService.changeProfileImage(payload, image);
         return responseService.getSuccessResult();
     }
 
-    @DeleteMapping("/user/{userId}")
-    public CommonResult delete(@PathVariable Long userId) {
-        userService.delete(userId);
+    @DeleteMapping("/user")
+    public CommonResult delete(@VerifiedUser final UserPayload payload,
+                               @RequestBody UserRequest.RemoveUser removeUser) {
+        userService.delete(payload, removeUser);
         return responseService.getSuccessResult();
     }
 
     @DeleteMapping("/user/profile-image")
-    public CommonResult deleteProfileImage() {
-        userService.deleteProfileImage();
+    public CommonResult deleteProfileImage(@VerifiedUser final UserPayload payload) {
+        userService.deleteProfileImage(payload);
         return responseService.getSuccessResult();
     }
 }
