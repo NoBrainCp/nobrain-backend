@@ -43,3 +43,4 @@ src/main/generated
 src/main/resources/application-API-KEY.yml
 src/main/resources/application-aws.yml
 src/main/resources/application-oauth.yml
+src/main/resources/application-security.yml

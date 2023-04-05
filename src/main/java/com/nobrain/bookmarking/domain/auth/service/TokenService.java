@@ -3,7 +3,7 @@ package com.nobrain.bookmarking.domain.auth.service;
 import com.nobrain.bookmarking.domain.auth.dto.AccessTokenRequest;
 import com.nobrain.bookmarking.domain.auth.dto.RefreshTokenRequest;
 import com.nobrain.bookmarking.domain.auth.entity.RefreshToken;
-import com.nobrain.bookmarking.domain.auth.exception.InvalidRefreshTokenException;
+import com.nobrain.bookmarking.domain.auth.exception.TokenInvalidException;
 import com.nobrain.bookmarking.domain.auth.repository.RefreshTokenRepository;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
@@ -33,7 +33,7 @@ import java.util.UUID;
 @Service
 public class TokenService {
 
-    @Value("${spring.jwt.secret}")
+    @Value("${spring.jwt.secret-key}")
     private String secretStringKey;
     private static final int ACCESS_TOKEN_EXPIRES = 30 * 60 * 1000;
 
@@ -62,7 +62,7 @@ public class TokenService {
 
     public String generateAccessToken(AccessTokenRequest request) {
         RefreshToken refreshToken = refreshTokenRepository.findById(request.getRefreshToken())
-                .orElseThrow(() -> new InvalidRefreshTokenException(request.getRefreshToken()));
+                .orElseThrow(() -> new TokenInvalidException(request.getRefreshToken()));
         Long userId = refreshToken.getUserId();
         Date now = new Date();
         Date expiration = new Date(now.getTime() + ACCESS_TOKEN_EXPIRES);

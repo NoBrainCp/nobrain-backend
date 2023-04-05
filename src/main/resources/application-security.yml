@@ -1,0 +1,13 @@
+security:
+  jwt:
+    secret-key: ENC(zoV04jn/ttqdTIsRL/QTriKYAHCsjsoihsm5KjXfm2C+Z0TsX8ZHdWHmoizPf2rU)
+    subject: accessToken
+    expiration-time: 1800000
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    algorithm: PBEWithMD5AndDes
+    pool-size: 1
+    output-type: base64
+    iterations: 1000

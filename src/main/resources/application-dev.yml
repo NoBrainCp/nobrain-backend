@@ -15,7 +15,7 @@ spring:
     show-sql: true
 
   datasource:
-    url: jdbc:h2:tcp://localhost/~/nobrain
+    url: jdbc:h2:tcp://localhost/~/nobrain/database/nobrain-h2
     username: sa
     password:
     driver-class-name: org.h2.Driver
