@@ -11,43 +11,43 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("${app.domain}")
+@RequestMapping("${app.domain}/users")
 public class FollowController {
 
     private final FollowService followService;
     private final ResponseService responseService;
 
-    @GetMapping("/user/{username}/follow-cnt")
+    @GetMapping("/{username}/follow-cnt")
     public SingleResult<FollowResponse.FollowCount> getFollowCount(@PathVariable String username) {
         return responseService.getSingleResult(followService.getFollowCount(username));
     }
 
-    @GetMapping("/user/{username}/followers")
+    @GetMapping("/{username}/followers")
     public ListResult<FollowResponse.Info> getFollowerList(@PathVariable String username) {
         return responseService.getListResult(followService.getFollowerList(username));
     }
 
-    @GetMapping("/user/{username}/followings")
+    @GetMapping("/{username}/followings")
     public ListResult<FollowResponse.Info> getFollowingList(@PathVariable String username) {
         return responseService.getListResult(followService.getFollowingList(username));
     }
 
-    @GetMapping("/user/{username}/follower-cards")
+    @GetMapping("/{username}/follower-cards")
     public ListResult<FollowResponse.FollowCard> getFollowerCardList(@PathVariable String username) {
         return responseService.getListResult(followService.getFollowerCardList(username));
     }
 
-    @GetMapping("/user/{username}/following-cards")
+    @GetMapping("/{username}/following-cards")
     public ListResult<FollowResponse.FollowCard> getFollowingCardList(@PathVariable String username) {
         return responseService.getListResult(followService.getFollowingCardList(username));
     }
 
-    @GetMapping("/user/{toUserId}/is-follow")
+    @GetMapping("/{toUserId}/is-follow")
     public SingleResult<Boolean> isFollow(@PathVariable Long toUserId) {
         return responseService.getSingleResult(followService.isFollow(toUserId));
     }
 
-    @PostMapping("/user/{toUserId}/follow")
+    @PostMapping("/{toUserId}/follow")
     public CommonResult follow(@PathVariable Long toUserId) {
         followService.follow(toUserId);
         return responseService.getSuccessResult();
