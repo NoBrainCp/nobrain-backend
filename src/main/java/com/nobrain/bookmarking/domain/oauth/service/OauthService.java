@@ -20,7 +20,6 @@ public class OauthService {
     private final GoogleOauth googleOauth;
     private final HttpServletResponse response;
     private final UserRepository userRepository;
-    private final TokenService tokenService;
 
     public void request(SocialLoginType socialLoginType) throws IOException {
         String redirectURL;

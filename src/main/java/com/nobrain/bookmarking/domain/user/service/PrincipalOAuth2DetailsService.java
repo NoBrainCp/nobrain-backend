@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 public class PrincipalOAuth2DetailsService extends DefaultOAuth2UserService {
 
     private final UserRepository userRepository;
-    private final TokenService tokenService;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
