@@ -17,67 +17,67 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("${app.domain}")
+@RequestMapping("${app.domain}/users")
 public class UserController {
 
     private final UserRepository userRepository;
     private final UserService userService;
     private final ResponseService responseService;
 
-    @GetMapping("/user/my-profile")
+    @GetMapping("/my-profile")
     public SingleResult<UserResponse.Profile> getMyProfile(@VerifiedUser UserPayload payload) {
         return responseService.getSingleResult(userService.getMyProfile(payload));
     }
 
-    @GetMapping("/user/{username}/info")
+    @GetMapping("/{username}/info")
     public SingleResult<UserResponse.Info> getUserInfo(@PathVariable String username) {
         return responseService.getSingleResult(userService.getUserInfo(username));
     }
 
-    @GetMapping("/user/username/{username}/exists")
+    @GetMapping("/username/{username}/exists")
     public SingleResult<Boolean> existsUsername(@PathVariable String username) {
         return responseService.getSingleResult(userRepository.existsByName(username));
     }
 
-    @GetMapping("/user/login-id/{loginId}/exists")
+    @GetMapping("/login-id/{loginId}/exists")
     public SingleResult<Boolean> existsLoginId(@PathVariable String loginId) {
         return responseService.getSingleResult(userRepository.existsByLoginId(loginId));
     }
 
-    @PutMapping("/user/username")
+    @PutMapping("/username")
     public SingleResult<String> changeName(@VerifiedUser UserPayload payload,
                                            @RequestBody UserRequest.ChangeName changeName) {
         return responseService.getSingleResult(userService.changeName(payload, changeName));
     }
 
-    @PutMapping("/user/forgot-password")
+    @PutMapping("/password/reset")
     public CommonResult changeForgotPassword(@RequestBody UserRequest.ChangeForgotPassword dto) {
         userService.changeForgotPassword(dto);
         return responseService.getSuccessResult();
     }
 
-    @PutMapping("/user/password")
+    @PutMapping("/password")
     public CommonResult changePassword(@VerifiedUser final UserPayload payload,
                                        @RequestBody UserRequest.ChangePassword dto) {
         userService.changePassword(payload, dto);
         return responseService.getSuccessResult();
     }
 
-    @PutMapping("/user/profile-image")
+    @PutMapping("/profile-image")
     public CommonResult changeProfileImage(@VerifiedUser final UserPayload payload,
                                            @RequestBody MultipartFile image) throws IOException {
         userService.changeProfileImage(payload, image);
         return responseService.getSuccessResult();
     }
 
-    @DeleteMapping("/user")
+    @DeleteMapping("/me")
     public CommonResult delete(@VerifiedUser final UserPayload payload,
                                @RequestBody UserRequest.RemoveUser removeUser) {
         userService.delete(payload, removeUser);
         return responseService.getSuccessResult();
     }
 
-    @DeleteMapping("/user/profile-image")
+    @DeleteMapping("/profile-image")
     public CommonResult deleteProfileImage(@VerifiedUser final UserPayload payload) {
         userService.deleteProfileImage(payload);
         return responseService.getSuccessResult();
