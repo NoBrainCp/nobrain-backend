@@ -14,7 +14,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -49,11 +48,11 @@ public class SecurityConfig {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션 생성 안함.
             .and()
                 .authorizeHttpRequests()
-                .antMatchers("/*/sign-in", "/*/sign-in/**/" , "/*/sign-up", "/*/sign-up/**", "/social/**", "/oauth2/**", "/login/oauth2/code/google", "/user/oauth/password/**").permitAll()
+                .antMatchers("/*/sign-in", "/*/sign-in/**/" , "/*/sign-up", "/*/sign-up/**", "/social/**", "/oauth2/**", "/login/oauth2/code/google", "/user/oauth/password/**").permitAll();
 //                .anyRequest().hasRole("USER")
-            .and()
-            .addFilterBefore(new JwtAuthenticationFilter(tokenService),
-                    UsernamePasswordAuthenticationFilter.class); // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 전에 넣는다.
+//            .and()
+//            .addFilterBefore(new JwtAuthenticationFilter(tokenService),
+//                    UsernamePasswordAuthenticationFilter.class); // JwtAuthenticationFilter를 UsernamePasswordAuthenticationFilter 전에 넣는다.
 
         http
             .oauth2Login()
