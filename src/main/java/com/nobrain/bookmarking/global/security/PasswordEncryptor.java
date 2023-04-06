@@ -2,7 +2,7 @@ package com.nobrain.bookmarking.global.security;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-public class EncryptorImpl implements Encryptor {
+public class PasswordEncryptor implements Encryptor {
 
     @Override
     public String encrypt(String password) {

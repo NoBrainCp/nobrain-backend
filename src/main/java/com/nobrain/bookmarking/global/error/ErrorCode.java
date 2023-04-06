@@ -39,7 +39,8 @@ public enum ErrorCode {
     INVALID_AUTH_CODE(UNAUTHORIZED.value(), "A002", "인증 코드가 올바르지 않습니다."),
     INVALID_TOKEN(UNAUTHORIZED.value(), "A003", "잘못된 형식의 토큰입니다."),
     TOKEN_NOT_EXISTS(UNAUTHORIZED.value(), "A004", "토큰이 존재하지 않습니다"),
-    TOKEN_EXPIRATION(UNAUTHORIZED.value(), "A005", "토큰의 유효시간이 만료되었습니다.");
+    TOKEN_EXPIRATION(UNAUTHORIZED.value(), "A005", "토큰의 유효시간이 만료되었습니다."),
+    INVALID_AUTHORIZATION_HEADER(UNAUTHORIZED.value(), "A006", "유효하지 않은 인증 헤더입니다.");
 
     private int status;
     private final String code;

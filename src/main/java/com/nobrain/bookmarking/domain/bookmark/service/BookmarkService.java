@@ -36,7 +36,6 @@ public class BookmarkService {
 
     private final BookmarkTagService bookmarkTagService;
     private final TokenService tokenService;
-    private final MetaImageCrawler metaImageCrawler;
 
     public List<BookmarkResponse.Info> getAllBookmarksByUsername(String username) {
         Long userId = findUserByUsername(username).getId();
@@ -105,7 +104,7 @@ public class BookmarkService {
 
         User user = findUserByUsername(username);
         Category category = categoryRepository.findByUserAndName(user, requestDto.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(requestDto.getCategoryName()));
-        String metaImage = metaImageCrawler.getMetaImageFromUrl(requestDto.getUrl());
+        String metaImage = MetaImageCrawler.getMetaImageFromUrl(requestDto.getUrl());
         Bookmark bookmark = requestDto.toEntity(metaImage, category);
 
         validateBookmark(requestDto, category);
@@ -125,7 +124,7 @@ public class BookmarkService {
 
         Bookmark bookmark = findById(bookmarkId);
         Category category = categoryRepository.findByName(requestDto.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(requestDto.getCategoryName()));
-        String metaImage = metaImageCrawler.getMetaImageFromUrl(requestDto.getUrl());
+        String metaImage = MetaImageCrawler.getMetaImageFromUrl(requestDto.getUrl());
 
         bookmark.update(requestDto, metaImage, category);
 

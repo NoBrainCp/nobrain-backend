@@ -1,9 +1,9 @@
 package com.nobrain.bookmarking.domain.auth.interceptor;
 
-import com.nobrain.bookmarking.domain.auth.exception.TokenInvalidException;
 import com.nobrain.bookmarking.domain.auth.service.JwtTokenProvider;
+import com.nobrain.bookmarking.domain.auth.util.JwtTokenExtractor;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -18,22 +18,16 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (hasAuthorization(request)) {
-            validateAuthorization(request);
+        if (isPreflight(request)) {
             return true;
         }
 
+        String token = JwtTokenExtractor.extract(request);
+        tokenProvider.validateToken(token);
         return true;
     }
 
-    private boolean hasAuthorization(HttpServletRequest request) {
-        return request.getHeader(HttpHeaders.AUTHORIZATION) != null;
-    }
-
-    private void validateAuthorization(HttpServletRequest request) {
-        String token = tokenProvider.resolveToken(request);
-        if (!tokenProvider.validateToken(token)) {
-            throw new TokenInvalidException(token);
-        }
+    private boolean isPreflight(HttpServletRequest request) {
+        return request.getMethod().equals(HttpMethod.OPTIONS.toString());
     }
 }

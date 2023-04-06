@@ -8,6 +8,10 @@ public class UnauthorizedException extends ApplicationException {
         super(value, ErrorCode.UNAUTHORIZATION);
     }
 
+    public UnauthorizedException(ErrorCode errorCode) {
+        super(errorCode);
+    }
+
     public UnauthorizedException(String message, ErrorCode errorCode) {
         super(message, errorCode);
     }

@@ -1,7 +1,9 @@
 package com.nobrain.bookmarking.domain.follow.controller;
 
+import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
 import com.nobrain.bookmarking.domain.follow.dto.FollowResponse;
 import com.nobrain.bookmarking.domain.follow.service.FollowService;
+import com.nobrain.bookmarking.domain.user.annotation.VerifiedUser;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.model.ListResult;
 import com.nobrain.bookmarking.global.response.model.SingleResult;
@@ -11,45 +13,49 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("${app.domain}")
+@RequestMapping("${app.domain}/users")
 public class FollowController {
 
     private final FollowService followService;
     private final ResponseService responseService;
 
-    @GetMapping("/user/{username}/follow-cnt")
+    @GetMapping("/{username}/follow-cnt")
     public SingleResult<FollowResponse.FollowCount> getFollowCount(@PathVariable String username) {
         return responseService.getSingleResult(followService.getFollowCount(username));
     }
 
-    @GetMapping("/user/{username}/followers")
+    @GetMapping("/{username}/followers")
     public ListResult<FollowResponse.Info> getFollowerList(@PathVariable String username) {
         return responseService.getListResult(followService.getFollowerList(username));
     }
 
-    @GetMapping("/user/{username}/followings")
+    @GetMapping("/{username}/followings")
     public ListResult<FollowResponse.Info> getFollowingList(@PathVariable String username) {
         return responseService.getListResult(followService.getFollowingList(username));
     }
 
-    @GetMapping("/user/{username}/follower-cards")
-    public ListResult<FollowResponse.FollowCard> getFollowerCardList(@PathVariable String username) {
-        return responseService.getListResult(followService.getFollowerCardList(username));
+    @GetMapping("/{username}/follower-cards")
+    public ListResult<FollowResponse.FollowCard> getFollowerCardList(@VerifiedUser UserPayload myPayload,
+                                                                     @PathVariable String username) {
+        return responseService.getListResult(followService.getFollowerCardList(myPayload, username));
     }
 
-    @GetMapping("/user/{username}/following-cards")
-    public ListResult<FollowResponse.FollowCard> getFollowingCardList(@PathVariable String username) {
-        return responseService.getListResult(followService.getFollowingCardList(username));
+    @GetMapping("/{username}/following-cards")
+    public ListResult<FollowResponse.FollowCard> getFollowingCardList(@VerifiedUser UserPayload myPayload,
+                                                                      @PathVariable String username) {
+        return responseService.getListResult(followService.getFollowingCardList(myPayload, username));
     }
 
-    @GetMapping("/user/{toUserId}/is-follow")
-    public SingleResult<Boolean> isFollow(@PathVariable Long toUserId) {
-        return responseService.getSingleResult(followService.isFollow(toUserId));
+    @GetMapping("/{toUserId}/is-follow")
+    public SingleResult<Boolean> isFollow(@VerifiedUser UserPayload myPayload,
+                                          @PathVariable Long toUserId) {
+        return responseService.getSingleResult(followService.isFollow(myPayload, toUserId));
     }
 
-    @PostMapping("/user/{toUserId}/follow")
-    public CommonResult follow(@PathVariable Long toUserId) {
-        followService.follow(toUserId);
+    @PostMapping("/{toUserId}/follow")
+    public CommonResult follow(@VerifiedUser UserPayload myPayload,
+                               @PathVariable Long toUserId) {
+        followService.follow(myPayload, toUserId);
         return responseService.getSuccessResult();
     }
 }

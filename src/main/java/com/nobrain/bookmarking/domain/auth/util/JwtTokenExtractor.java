@@ -1,22 +1,40 @@
 package com.nobrain.bookmarking.domain.auth.util;
 
-import com.nobrain.bookmarking.domain.auth.exception.TokenInvalidException;
-import com.nobrain.bookmarking.domain.auth.exception.TokenNotExistsException;
+import com.nobrain.bookmarking.domain.auth.exception.AuthorizationHeaderInvalidException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 
 @Component
 public class JwtTokenExtractor {
 
-    public String extract(String authorizationHeader, String tokenType) {
-        if (authorizationHeader == null) {
-            throw new TokenNotExistsException("Access Token");
+    private static final String TOKEN_TYPE = "Bearer";
+    private static final int TOKEN_INDEX = 1;
+    private static final String BLANK = " ";
+
+    public static String extract(HttpServletRequest request) {
+        Enumeration<String> headers = request.getHeaders(HttpHeaders.AUTHORIZATION);
+        while (headers.hasMoreElements()) {
+            String value = headers.nextElement();
+            if (value.toLowerCase().startsWith(TOKEN_TYPE.toLowerCase())) {
+                return value.split(BLANK)[TOKEN_INDEX];
+            }
         }
 
-        String[] splitHeader = authorizationHeader.split(" ");
-        if (splitHeader.length != 2 || !splitHeader[0].equalsIgnoreCase(tokenType)) {
-            throw new TokenInvalidException(authorizationHeader);
+        throw new AuthorizationHeaderInvalidException();
+    }
+
+    public static boolean hasAccessToken(HttpServletRequest request) {
+        Enumeration<String> headers = request.getHeaders(HttpHeaders.AUTHORIZATION);
+        while (headers.hasMoreElements()) {
+            String value = headers.nextElement();
+            if (value.toLowerCase().startsWith(TOKEN_TYPE.toLowerCase())) {
+                return true;
+            }
         }
 
-        return splitHeader[1];
+        return false;
     }
 }

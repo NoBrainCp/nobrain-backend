@@ -12,7 +12,7 @@ import java.io.IOException;
 @Component
 public class MetaImageCrawler {
 
-    public String getMetaImageFromUrl(String url) {
+    public static String getMetaImageFromUrl(String url) {
         try {
             Document doc = Jsoup.connect(url).get();
             Elements metaTags = doc.select("meta[property=og:image], meta[name=twitter:image], meta[itemprop=image]");
