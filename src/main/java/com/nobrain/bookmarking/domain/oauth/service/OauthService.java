@@ -1,6 +1,5 @@
 package com.nobrain.bookmarking.domain.oauth.service;
 
-import com.nobrain.bookmarking.domain.auth.service.TokenService;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
 import com.nobrain.bookmarking.domain.oauth.enums.SocialLoginType;
 import com.nobrain.bookmarking.domain.oauth.dto.GoogleOAuthToken;

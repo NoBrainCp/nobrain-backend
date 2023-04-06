@@ -1,8 +1,10 @@
 package com.nobrain.bookmarking.domain.bookmark.controller;
 
+import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkRequest;
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkResponse;
 import com.nobrain.bookmarking.domain.bookmark.service.BookmarkService;
+import com.nobrain.bookmarking.domain.user.annotation.VerifiedUser;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.model.ListResult;
 import com.nobrain.bookmarking.global.response.model.SingleResult;
@@ -16,80 +18,84 @@ import javax.validation.Valid;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("${app.domain}")
+@RequestMapping("${app.domain}/bookmarks")
 public class BookmarkController {
 
     private final BookmarkService bookmarkService;
     private final ResponseService responseService;
 
-    @GetMapping("/user/{username}/bookmarks")
-    public ListResult<BookmarkResponse.Info> getAllBookmarksByUsername(@PathVariable String username) {
-        return responseService.getListResult(bookmarkService.getAllBookmarksByUsername(username));
+    @GetMapping("/users/{username}")
+    public ListResult<BookmarkResponse.Info> getBookmarksByUsername(@VerifiedUser UserPayload myPayload, @PathVariable String username) {
+        return responseService.getListResult(bookmarkService.getBookmarksByUsername(myPayload, username));
     }
 
-    @GetMapping("/user/{username}/{category}/bookmarks")
-    public ListResult<BookmarkResponse.Info> getBookmarksByCategory(
-            @PathVariable String username,
-            @PathVariable String category) {
-        return responseService.getListResult(bookmarkService.getBookmarksByCategory(username, category));
+    @GetMapping("/users/{username}/categories/{categoryName}")
+    public ListResult<BookmarkResponse.Info> getBookmarksByCategory(@VerifiedUser UserPayload myPayload,
+                                                                    @PathVariable String username,
+                                                                    @PathVariable String categoryName) {
+        return responseService.getListResult(bookmarkService.getBookmarksByCategory(myPayload, username, categoryName));
     }
 
-    @GetMapping("/user/{username}/starred-bookmarks")
-    public ListResult<BookmarkResponse.Info> getStarredBookmarks(@PathVariable String username) {
-        return responseService.getListResult(bookmarkService.getStarredBookmarks(username));
+    @GetMapping("/starred/users/{username}")
+    public ListResult<BookmarkResponse.Info> getStarredBookmarks(@VerifiedUser UserPayload myPayload, @PathVariable String username) {
+        return responseService.getListResult(bookmarkService.getStarredBookmarks(myPayload, username));
     }
 
-    @GetMapping("/user/{username}/starred-bookmarks/count")
-    public SingleResult<Long> getStarredBookmarksCount(@PathVariable String username) {
-        return responseService.getSingleResult(bookmarkService.getStarredBookmarksCount(username));
+    @GetMapping("/starred/count/users/{username}")
+    public SingleResult<Long> getStarredBookmarksCount(@VerifiedUser UserPayload myPayload, @PathVariable String username) {
+        return responseService.getSingleResult(bookmarkService.getStarredBookmarksCount(myPayload, username));
     }
 
-    @GetMapping("/user/{username}/private-bookmarks")
-    public ListResult<BookmarkResponse.Info> getPrivateBookmarks(@PathVariable String username) {
-        return responseService.getListResult(bookmarkService.getPrivateBookmarks(username));
+    @GetMapping("/private")
+    public ListResult<BookmarkResponse.Info> getPrivateBookmarks(@VerifiedUser UserPayload myPayload) {
+        return responseService.getListResult(bookmarkService.getPrivateBookmarks(myPayload));
     }
 
-    @GetMapping("/user/{username}/private-bookmarks/count")
-    public SingleResult<Long> getPrivateBookmarksCount(@PathVariable String username) {
-        return responseService.getSingleResult(bookmarkService.getPrivateBookmarksCount(username));
+    @GetMapping("/private/count")
+    public SingleResult<Long> getPrivateBookmarksCount(@VerifiedUser UserPayload myPayload) {
+        return responseService.getSingleResult(bookmarkService.getPrivateBookmarksCount(myPayload));
     }
 
-    @GetMapping("/bookmark/search")
-    public ListResult<BookmarkResponse.Info> searchBookmarks(@RequestParam String keyword, @RequestParam String condition) {
-        return responseService.getListResult(bookmarkService.searchBookmarks(keyword, condition.toLowerCase()));
+    @GetMapping("/search")
+    public ListResult<BookmarkResponse.Info> searchBookmarks(@VerifiedUser UserPayload myPayload,
+                                                             @RequestParam String keyword,
+                                                             @RequestParam String condition) {
+        return responseService.getListResult(bookmarkService.searchBookmarks(myPayload, keyword, condition.toLowerCase()));
     }
 
-    @PostMapping("/user/{username}/bookmark")
-    public CommonResult addBookmark(@PathVariable String username, @RequestBody @Valid BookmarkRequest.Info requestDto) {
-        bookmarkService.createBookmark(username, requestDto);
+    @PostMapping("")
+    public CommonResult addBookmark(@VerifiedUser UserPayload myPayload,
+                                    @RequestBody @Valid BookmarkRequest.Info requestDto) {
+        bookmarkService.createBookmark(myPayload, requestDto);
         return responseService.getSuccessResult();
     }
 
-    @PutMapping("/bookmark/{bookmarkId}")
-    public CommonResult updateBookmark(@PathVariable Long bookmarkId, @RequestBody @Valid BookmarkRequest.Info requestDto) {
+    @PutMapping("/{bookmarkId}")
+    public CommonResult updateBookmark(@PathVariable Long bookmarkId,
+                                       @RequestBody @Valid BookmarkRequest.Info requestDto) {
         bookmarkService.updateBookmark(bookmarkId, requestDto);
         return responseService.getSuccessResult();
     }
 
-    @PutMapping("/bookmark/{bookmarkId}/starred")
+    @PutMapping("/{bookmarkId}/starred")
     public CommonResult updateStarred(@PathVariable Long bookmarkId, @RequestParam Boolean isStarred) {
         bookmarkService.updateStarred(bookmarkId, isStarred);
         return responseService.getSuccessResult();
     }
 
-    @PutMapping("/bookmark/{bookmarkId}/public")
+    @PutMapping("/{bookmarkId}/public")
     public CommonResult updatePublic(@PathVariable Long bookmarkId, @RequestParam Boolean isPublic) {
         bookmarkService.updatePublic(bookmarkId, isPublic);
         return responseService.getSuccessResult();
     }
 
-    @PutMapping("/user/{userId}/category/{categoryName}/private")
-    public CommonResult updateAllBookmarksToPrivate(@PathVariable Long userId, @PathVariable String categoryName) {
-        bookmarkService.updateAllBookmarksToPrivate(userId, categoryName);
+    @PutMapping("/private/category/{categoryName}")
+    public CommonResult updateBookmarksToPrivate(@VerifiedUser UserPayload myPayload, @PathVariable String categoryName) {
+        bookmarkService.updateBookmarksToPrivate(myPayload, categoryName);
         return responseService.getSuccessResult();
     }
 
-    @DeleteMapping("/bookmark/{bookmarkId}")
+    @DeleteMapping("/{bookmarkId}")
     public CommonResult deleteBookmark(@PathVariable Long bookmarkId) {
         bookmarkService.deleteBookmark(bookmarkId);
         return responseService.getSuccessResult();

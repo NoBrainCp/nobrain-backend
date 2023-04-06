@@ -80,23 +80,23 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
     }
 
     @Override
-    public List<Bookmark> searchBookmarksByCondition(String keyword, String condition, Long userId, Boolean isMe) {
+    public List<Bookmark> searchBookmarksByCondition(String keyword, String condition, Long userId) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
-        booleanBuilder.and(bookmark.title.containsIgnoreCase(keyword).or(bookmark.description.containsIgnoreCase(keyword)));
+        booleanBuilder.and(bookmark.title.containsIgnoreCase(keyword)
+                .or(bookmark.description.containsIgnoreCase(keyword)));
 
-        BooleanBuilder bookmarkIsPublicBooleanBuilder = getBookmarkIsPublicBooleanBuilder(isMe);
+        JPAQuery<Bookmark> query = queryFactory.selectFrom(bookmark)
+                .join(category).on(bookmark.category.id.eq(category.id));
 
-        JPAQuery<Bookmark> query = queryFactory.selectFrom(bookmark);
         if (condition.equals(MY.getCondition())) {
-            query.join(category).on(bookmark.category.id.eq(category.id));
             booleanBuilder.and(category.user.id.eq(userId));
         } else if (condition.equals(FOLLOW.getCondition())) {
-            query.join(category).on(bookmark.category.id.eq(category.id))
-                    .join(user).on(category.user.id.eq(user.id))
-                    .join(follow).on(user.id.eq(follow.toUser.id));
-            booleanBuilder.and(follow.fromUser.id.eq(userId)).and(bookmark.isPublic.eq(true));
+            query.join(follow).on(category.user.id.eq(follow.toUser.id));
+            booleanBuilder.and(follow.fromUser.id.eq(userId))
+                    .and(bookmark.isPublic.eq(true));
         } else {
-            booleanBuilder.and(bookmarkIsPublicBooleanBuilder);
+            booleanBuilder.and(category.user.id.ne(userId))
+                    .and(bookmark.isPublic.eq(true));
         }
 
         return query
