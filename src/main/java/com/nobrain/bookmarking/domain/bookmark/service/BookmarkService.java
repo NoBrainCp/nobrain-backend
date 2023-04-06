@@ -1,6 +1,6 @@
 package com.nobrain.bookmarking.domain.bookmark.service;
 
-import com.nobrain.bookmarking.domain.auth.service.TokenService;
+import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkRequest;
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkResponse;
 import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
@@ -29,81 +29,76 @@ import java.util.stream.Collectors;
 @Service
 public class BookmarkService {
 
-    private final BookmarkQueryRepository bookmarkQueryRepository;
-    private final BookmarkRepository bookmarkRepository;
-    private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
-
+    private final CategoryRepository categoryRepository;
+    private final BookmarkRepository bookmarkRepository;
+    private final BookmarkQueryRepository bookmarkQueryRepository;
     private final BookmarkTagService bookmarkTagService;
-    private final TokenService tokenService;
 
-    public List<BookmarkResponse.Info> getAllBookmarksByUsername(String username) {
+    public List<BookmarkResponse.Info> getBookmarksByUsername(UserPayload myPayload, String username) {
         Long userId = findUserByUsername(username).getId();
-        boolean isMe = isMe(userId);
+        boolean isMe = isMe(myPayload.getUserId(), userId);
 
         return bookmarkQueryRepository.findAllByUserId(userId, isMe).stream()
                 .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }
 
-    public List<BookmarkResponse.Info> getBookmarksByCategory(String username, String categoryName) {
+    public List<BookmarkResponse.Info> getBookmarksByCategory(UserPayload myPayload, String username, String categoryName) {
         User user = findUserByUsername(username);
-        Category category = categoryRepository.findByUserAndName(user, categoryName).orElseThrow(() -> new CategoryNotFoundException(categoryName));
-        boolean isMe = isMe(user.getId());
+        Category category = categoryRepository.findByUserAndName(user, categoryName)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryName));
+        boolean isMe = isMe(myPayload.getUserId(), user.getId());
 
         return bookmarkQueryRepository.findAllByCategoryId(category.getId(), isMe).stream()
                 .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }
 
-    public List<BookmarkResponse.Info> getStarredBookmarks(String username) {
+    public List<BookmarkResponse.Info> getStarredBookmarks(UserPayload myPayload, String username) {
         Long userId = findUserByUsername(username).getId();
-        boolean isMe = isMe(userId);
+        boolean isMe = isMe(myPayload.getUserId(), userId);
 
         return bookmarkQueryRepository.findAllStarredBookmarksByUserId(userId, isMe).stream()
                 .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }
 
-    public Long getStarredBookmarksCount(String username) {
+    public Long getStarredBookmarksCount(UserPayload myPayload, String username) {
         Long userId = findUserByUsername(username).getId();
-        boolean isMe = isMe(userId);
+        boolean isMe = isMe(myPayload.getUserId(), userId);
 
         return bookmarkQueryRepository.findStarredBookmarksCountByUserId(userId, isMe);
     }
 
-    public List<BookmarkResponse.Info> getPrivateBookmarks(String username) {
-        Long userId = findUserByUsername(username).getId();
-
-        return bookmarkQueryRepository.findPrivateBookmarksByUserId(userId).stream()
+    public List<BookmarkResponse.Info> getPrivateBookmarks(UserPayload myPayload) {
+        return bookmarkQueryRepository.findPrivateBookmarksByUserId(myPayload.getUserId()).stream()
                 .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }
 
-    public Long getPrivateBookmarksCount(String username) {
-        Long userId = findUserByUsername(username).getId();
-
-        return bookmarkQueryRepository.findPrivateBookmarksCountByUserId(userId);
+    public Long getPrivateBookmarksCount(UserPayload myPayload) {
+        return bookmarkQueryRepository.findPrivateBookmarksCountByUserId(myPayload.getUserId());
     }
 
-    public List<BookmarkResponse.Info> searchBookmarks(String keyword, String condition) {
-        Long userId = tokenService.getId();
-        boolean isMe = isMe(userId);
+    public List<BookmarkResponse.Info> searchBookmarks(UserPayload myPayload, String keyword, String condition) {
+        Long userId = myPayload.getUserId();
 
-        return bookmarkQueryRepository.searchBookmarksByCondition(keyword, condition, userId, isMe).stream()
+        return bookmarkQueryRepository.searchBookmarksByCondition(keyword, condition, userId).stream()
                 .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public void createBookmark(String username, BookmarkRequest.Info requestDto) {
+    public void createBookmark(UserPayload myPayload, BookmarkRequest.Info requestDto) {
         String url = requestDto.getUrl();
         if (!url.contains("https://")) {
             requestDto.addHttpsToUrl(url);
         }
 
-        User user = findUserByUsername(username);
-        Category category = categoryRepository.findByUserAndName(user, requestDto.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(requestDto.getCategoryName()));
+        User user = findUserByUsername(myPayload.getUsername());
+        Category category = categoryRepository.findByUserAndName(user, requestDto.getCategoryName())
+                .orElseThrow(() -> new CategoryNotFoundException(requestDto.getCategoryName()));
         String metaImage = MetaImageCrawler.getMetaImageFromUrl(requestDto.getUrl());
         Bookmark bookmark = requestDto.toEntity(metaImage, category);
 
@@ -143,15 +138,15 @@ public class BookmarkService {
     @Transactional
     public void updatePublic(Long bookmarkId, Boolean isPublic) {
         Bookmark bookmark = findById(bookmarkId);
-
         if (bookmark.isPublic() != isPublic) {
             bookmark.changePublic(isPublic);
         }
     }
 
+    // 수정 필요 ** Update Query **
     @Transactional
-    public void updateAllBookmarksToPrivate(Long userId, String categoryName) {
-        List<Bookmark> bookmarks = bookmarkQueryRepository.findBookmarksByUserIdAndCategoryName(userId, categoryName);
+    public void updateBookmarksToPrivate(UserPayload myPayload, String categoryName) {
+        List<Bookmark> bookmarks = bookmarkQueryRepository.findBookmarksByUserIdAndCategoryName(myPayload.getUserId(), categoryName);
         bookmarks.forEach(bookmark -> {
             if (bookmark.isPublic()) {
                 bookmark.changePublic(false);
@@ -172,9 +167,8 @@ public class BookmarkService {
         return userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
     }
 
-    private boolean isMe(Long userId) {
-        Long myId = tokenService.getId();
-        return Objects.equals(userId, myId);
+    private boolean isMe(Long myId, Long userId) {
+        return Objects.equals(myId, userId);
     }
 
     private void validateBookmark(BookmarkRequest.Info requestDto, Category category) {
