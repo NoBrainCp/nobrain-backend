@@ -30,9 +30,9 @@ public class WebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         List<String> pathsToExclude = List.of(
                 "/api/v1/auth/login",
+                "/api/v1/sign-up",
                 "/api/v1/users/username/*exists",
-                "/api/v1/users/login-id/*/exists",
-                "/api/v1/users/sign-up"
+                "/api/v1/users/login-id/*/exists"
         );
 
         registry.addInterceptor(authInterceptor)
