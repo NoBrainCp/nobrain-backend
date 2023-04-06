@@ -1,6 +1,6 @@
 package com.nobrain.bookmarking.domain.follow.service;
 
-import com.nobrain.bookmarking.domain.auth.service.TokenService;
+import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
 import com.nobrain.bookmarking.domain.follow.dto.FollowResponse;
 import com.nobrain.bookmarking.domain.follow.entity.Follow;
 import com.nobrain.bookmarking.domain.follow.repository.FollowQueryRepository;
@@ -23,7 +23,6 @@ public class FollowService {
     private final FollowRepository followRepository;
     private final FollowQueryRepository followQueryRepository;
     private final UserRepository userRepository;
-    private final TokenService tokenService;
 
     public FollowResponse.FollowCount getFollowCount(String username) {
         Long userId = getUserIdByName(username);
@@ -47,31 +46,26 @@ public class FollowService {
                 .collect(Collectors.toList());
     }
 
-    public List<FollowResponse.FollowCard> getFollowerCardList(String username) {
+    public List<FollowResponse.FollowCard> getFollowerCardList(UserPayload myPayload, String username) {
         Long userId = getUserIdByName(username);
-        Long myId = tokenService.getId();
+        Long myId = myPayload.getUserId();
         return followQueryRepository.findAllFollowerCardsByUserId(userId, myId);
     }
 
-    public List<FollowResponse.FollowCard> getFollowingCardList(String username) {
+    public List<FollowResponse.FollowCard> getFollowingCardList(UserPayload myPayload, String username) {
         Long userId = getUserIdByName(username);
-        Long myId = tokenService.getId();
+        Long myId = myPayload.getUserId();
         return followQueryRepository.findAllFollowingCardsByUserId(userId, myId);
     }
 
-    public Boolean isFollow(Long toUserId) {
-        Long fromUserId = tokenService.getId();
+    public Boolean isFollow(UserPayload myPayload, Long toUserId) {
+        Long fromUserId = myPayload.getUserId();
         return followRepository.existsFollowByToUserIdAndFromUserId(toUserId, fromUserId);
     }
 
-    public void deleteAllFollows(User user) {
-        List<Follow> allFollows = followRepository.findAllByToUserOrFromUser(user, user);
-        followRepository.deleteAllInBatch(allFollows);
-    }
-
     @Transactional
-    public void follow(Long toUserId) {
-        Long fromUserId = tokenService.getId();
+    public void follow(UserPayload myPayload, Long toUserId) {
+        Long fromUserId = myPayload.getUserId();
         Follow follow = followRepository.findByFromUserAndToUser(fromUserId, toUserId)
                 .orElse(null);
 
@@ -97,7 +91,7 @@ public class FollowService {
 
     private User getUserById(Long toUserId) {
         return userRepository.findById(toUserId)
-                .orElseThrow(() -> new UserNotFoundException(String.valueOf("userId: " + toUserId)));
+                .orElseThrow(() -> new UserNotFoundException(String.valueOf(toUserId)));
     }
 
     private Long getUserIdByName(String username) {

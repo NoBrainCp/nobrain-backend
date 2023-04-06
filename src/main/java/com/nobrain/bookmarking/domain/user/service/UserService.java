@@ -1,7 +1,8 @@
 package com.nobrain.bookmarking.domain.user.service;
 
 import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
-import com.nobrain.bookmarking.domain.follow.service.FollowService;
+import com.nobrain.bookmarking.domain.follow.entity.Follow;
+import com.nobrain.bookmarking.domain.follow.repository.FollowRepository;
 import com.nobrain.bookmarking.domain.user.dto.UserRequest;
 import com.nobrain.bookmarking.domain.user.dto.UserResponse;
 import com.nobrain.bookmarking.domain.user.dto.projection.UserInfo;
@@ -18,13 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    private final FollowService followService;
+    private final FollowRepository followRepository;
     private final S3Service s3Service;
     private final Encryptor encryptor;
 
@@ -84,7 +86,7 @@ public class UserService {
         User user = findById(payload.getUserId());
         validatePassword(removeUser.getPassword(), user.getPassword());
 
-        followService.deleteAllFollows(user);
+        deleteAllFollows(user);
         userRepository.delete(user);
     }
 
@@ -112,5 +114,10 @@ public class UserService {
         if (!password.equals(checkPassword)) {
             throw new UserNotCorrectPasswordException(password);
         }
+    }
+
+    private void deleteAllFollows(User user) {
+        List<Follow> allFollows = followRepository.findAllByToUserOrFromUser(user, user);
+        followRepository.deleteAllInBatch(allFollows);
     }
 }
