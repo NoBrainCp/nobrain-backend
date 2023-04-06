@@ -1,7 +1,9 @@
 package com.nobrain.bookmarking.domain.user.resolver;
 
 import com.nobrain.bookmarking.domain.auth.service.JwtTokenProvider;
+import com.nobrain.bookmarking.domain.auth.util.JwtTokenExtractor;
 import com.nobrain.bookmarking.domain.user.annotation.VerifiedUser;
+import com.nobrain.bookmarking.global.type.RoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -24,11 +26,15 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
-        String accessToken = tokenProvider.resolveToken(request);
-        tokenProvider.validateToken(accessToken);
 
-        return tokenProvider.getPayload(request);
+        VerifiedUser verifiedUserParameterAnnotation = parameter.getParameterAnnotation(VerifiedUser.class);
+        if (verifiedUserParameterAnnotation.isOptional() && !JwtTokenExtractor.hasAccessToken(request)) {
+            return RoleType.GUEST;
+        }
+
+        String accessToken = JwtTokenExtractor.extract(request);
+        return tokenProvider.getPayload(accessToken);
     }
 }
