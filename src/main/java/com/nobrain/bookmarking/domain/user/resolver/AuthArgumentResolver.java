@@ -3,7 +3,7 @@ package com.nobrain.bookmarking.domain.user.resolver;
 import com.nobrain.bookmarking.domain.auth.service.JwtTokenProvider;
 import com.nobrain.bookmarking.domain.auth.util.JwtTokenExtractor;
 import com.nobrain.bookmarking.domain.user.annotation.VerifiedUser;
-import com.nobrain.bookmarking.global.type.RoleType;
+import com.nobrain.bookmarking.domain.user.type.RoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
