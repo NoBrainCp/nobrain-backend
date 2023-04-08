@@ -14,7 +14,6 @@ public enum ErrorCode {
     HANDLE_ACCESS_DENIED(403, "G004", "Access is Denied"),
     URL_NOT_FOUND(NOT_FOUND.value(), "G005", "등록하신 URL은 존재하지 않는 URL입니다."),
     FILE_NOT_CONVERT(NOT_ACCEPTABLE.value(), "G006", "등록할 수 없는 파일입니다."),
-    SOCIAL_LOGIN_TYPE_NOT_FOUND(NOT_FOUND.value(), "G007", "알 수 없는 소셜 로그인 형식입니다."),
 
     // User
     USER_NOT_FOUND(400, "U001", "존재하지 않는 유저입니다."),
@@ -40,7 +39,10 @@ public enum ErrorCode {
     INVALID_TOKEN(UNAUTHORIZED.value(), "A003", "잘못된 형식의 토큰입니다."),
     TOKEN_NOT_EXISTS(UNAUTHORIZED.value(), "A004", "토큰이 존재하지 않습니다"),
     TOKEN_EXPIRATION(UNAUTHORIZED.value(), "A005", "토큰의 유효시간이 만료되었습니다."),
-    INVALID_AUTHORIZATION_HEADER(UNAUTHORIZED.value(), "A006", "유효하지 않은 인증 헤더입니다.");
+    INVALID_AUTHORIZATION_HEADER(UNAUTHORIZED.value(), "A006", "유효하지 않은 인증 헤더입니다."),
+
+    // OAuth
+    INVALID_OAUTH_PROVIDER(UNAUTHORIZED.value(), "O001", "지원되지 않은 OAuth 유형입니다.");
 
     private int status;
     private final String code;
