@@ -1,4 +1,4 @@
-package com.nobrain.bookmarking.global.oauth.exception;
+package com.nobrain.bookmarking.domain.oauth.exception;
 
 import com.nobrain.bookmarking.global.error.ErrorCode;
 import com.nobrain.bookmarking.global.error.exception.UnauthorizedException;
