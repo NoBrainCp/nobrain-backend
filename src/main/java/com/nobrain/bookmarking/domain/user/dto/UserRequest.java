@@ -1,7 +1,7 @@
 package com.nobrain.bookmarking.domain.user.dto;
 
 import com.nobrain.bookmarking.domain.user.entity.User;
-import com.nobrain.bookmarking.global.type.RoleType;
+import com.nobrain.bookmarking.domain.user.type.RoleType;
 import lombok.Getter;
 
 import java.time.LocalDate;
