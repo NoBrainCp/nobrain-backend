@@ -44,6 +44,11 @@ public class UserController {
         return responseService.getSingleResult(userRepository.existsByLoginId(loginId));
     }
 
+    @GetMapping("/email/{email}/exists")
+    public SingleResult<Boolean> existsEmail(@PathVariable String email) {
+        return responseService.getSingleResult(userRepository.existsByEmail(email));
+    }
+
     @PutMapping("/username")
     public SingleResult<String> changeName(@VerifiedUser UserPayload payload,
                                            @RequestBody UserRequest.ChangeName changeName) {
