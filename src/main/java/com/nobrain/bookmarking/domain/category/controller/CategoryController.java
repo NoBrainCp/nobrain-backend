@@ -23,9 +23,9 @@ public class CategoryController {
     private final ResponseService responseService;
 
     @GetMapping("/{categoryName}/users/{username}")
-    public SingleResult<CategoryResponse.Header> getCategoryHeader(@PathVariable String username,
-                                                                   @PathVariable String categoryName) {
-        return responseService.getSingleResult(categoryService.getCategoryHeader(username, categoryName));
+    public SingleResult<CategoryResponse.Header> getCategory(@PathVariable String username,
+                                                             @PathVariable String categoryName) {
+        return responseService.getSingleResult(categoryService.getCategory(username, categoryName));
     }
 
     @GetMapping("/users/{username}")

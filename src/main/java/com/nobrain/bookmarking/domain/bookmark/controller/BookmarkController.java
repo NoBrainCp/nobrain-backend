@@ -89,7 +89,7 @@ public class BookmarkController {
         return responseService.getSuccessResult();
     }
 
-    @PutMapping("/private/category/{categoryName}")
+    @PutMapping("/private/categories/{categoryName}")
     public CommonResult updateBookmarksToPrivate(@VerifiedUser UserPayload myPayload, @PathVariable String categoryName) {
         bookmarkService.updateBookmarksToPrivate(myPayload, categoryName);
         return responseService.getSuccessResult();

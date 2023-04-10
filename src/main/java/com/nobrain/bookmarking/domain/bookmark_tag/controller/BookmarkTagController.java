@@ -12,18 +12,18 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("${app.domain}")
+@RequestMapping("${app.domain}/bookmark-tags")
 public class BookmarkTagController {
 
     private final BookmarkTagService bookmarkTagService;
     private final ResponseService responseService;
 
-    @GetMapping("/user/{username}/bookmark-tags")
+    @GetMapping("/user/{username}")
     public ListResult<BookmarkTagResponse.Info> getAllBookmarkTags(@PathVariable String username) {
         return responseService.getListResult(bookmarkTagService.getAllBookmarkTags(username));
     }
 
-    @GetMapping("/user/{username}/bookmark-tags/tags")
+    @GetMapping("/users/{username}/bookmarks")
     public ListResult<BookmarkResponse.Info> getBookmarkTagsByTagList(@PathVariable String username, @RequestParam List<Long> tagIds) {
         return responseService.getListResult(bookmarkTagService.getBookmarkTagsByTagList(username, tagIds));
     }

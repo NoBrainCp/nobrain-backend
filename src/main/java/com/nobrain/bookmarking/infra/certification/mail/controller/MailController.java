@@ -14,19 +14,19 @@ import static com.nobrain.bookmarking.global.error.ErrorCode.INVALID_AUTH_CODE;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("${app.domain}")
+@RequestMapping("${app.domain}/mails")
 public class MailController {
 
     private final MailService mailService;
     private final ResponseService responseService;
 
-    @GetMapping("/mail/{mail}/auth-code")
+    @GetMapping("/{mail}/auth-code")
     public CommonResult sendAuthenticationMail(@PathVariable String mail) throws MessagingException {
         mailService.sendEmailForAuthentication(mail);
         return responseService.getSuccessResult();
     }
 
-    @PostMapping("/mail/{mail}/auth-code/password")
+    @PostMapping("/{mail}/auth-code/password")
     public CommonResult sendEmailAndCode(@PathVariable String mail, @RequestBody CertificationRequest.Code requestDto) {
         if (mailService.verifyEmailCode(mail, requestDto.getCode())) {
             return responseService.getSuccessResult();
@@ -35,7 +35,7 @@ public class MailController {
         return responseService.getFailResult(INVALID_AUTH_CODE.getStatus(), INVALID_AUTH_CODE.getMessage());
     }
 
-    @PostMapping("/mail/{mail}/auth-code/login-id")
+    @PostMapping("/{mail}/auth-code/login-id")
     public CommonResult sendEmailAndLoginId(@PathVariable String mail, @RequestBody CertificationRequest.Code requestDto) {
         if (mailService.verifyEmailCode(mail, requestDto.getCode())) {
             mailService.sendUserLoginIdAsEMail(mail);
@@ -45,7 +45,7 @@ public class MailController {
         return responseService.getFailResult(INVALID_AUTH_CODE.getStatus(), INVALID_AUTH_CODE.getMessage());
     }
 
-    @PostMapping("/mail/users")
+    @PostMapping("/users")
     public CommonResult sendMailToUsers(@RequestBody MailRequest.MultipleMail dto) {
         mailService.sendEmailToUsers(dto.getMails(), dto.getSubject(), dto.getText());
         return responseService.getSuccessResult();

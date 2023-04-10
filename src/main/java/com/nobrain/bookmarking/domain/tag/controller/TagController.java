@@ -12,18 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("${app.domain}")
+@RequestMapping("${app.domain}/tags")
 public class TagController {
 
     private final TagService tagService;
     private final ResponseService responseService;
 
-    @GetMapping("/user/{username}/tags")
+    @GetMapping("/users/{username}")
     public ListResult<TagResponse.Info> getAllTagsOfUser(@PathVariable String username) {
         return responseService.getListResult(tagService.getAllTagsOfUser(username));
     }
 
-    @GetMapping("/user/{username}/bookmark/{bookmarkId}/tags")
+    @GetMapping("/users/{username}/bookmark/{bookmarkId}")
     public ListResult<TagResponse.Info> getTagsOfUserByBookmarkId(@PathVariable String username, @PathVariable Long bookmarkId) {
         return responseService.getListResult(tagService.getTagsOfUserByBookmarkId(username, bookmarkId));
     }
