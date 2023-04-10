@@ -27,7 +27,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
-    public CategoryResponse.Header getCategoryHeader(String username, String categoryName) {
+    public CategoryResponse.Header getCategory(String username, String categoryName) {
         User user = findUserByUsername(username);
         Category category = categoryRepository.findByUserAndName(user, categoryName)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryName));
