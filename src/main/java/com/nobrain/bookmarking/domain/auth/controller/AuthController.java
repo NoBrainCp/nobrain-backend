@@ -1,5 +1,6 @@
 package com.nobrain.bookmarking.domain.auth.controller;
 
+import com.nobrain.bookmarking.domain.auth.dto.AccessTokenRequest;
 import com.nobrain.bookmarking.domain.auth.dto.LoginRequest;
 import com.nobrain.bookmarking.domain.auth.dto.LoginResponse;
 import com.nobrain.bookmarking.domain.auth.entity.RefreshToken;
@@ -35,9 +36,9 @@ public class AuthController {
     }
 
     @PostMapping("/access-token")
-    public SingleResult<String> generateAccessToken(@CookieValue(value = "refresh_token", required = false) String refreshToken) {
-        validateRefreshTokenExists(refreshToken);
-        String accessToken = tokenProvider.generateAccessToken(refreshToken);
+    public SingleResult<String> generateAccessToken(@RequestBody AccessTokenRequest accessTokenRequest) {
+        validateRefreshTokenExists(accessTokenRequest.getRefreshToken());
+        String accessToken = tokenProvider.generateAccessToken(accessTokenRequest.getRefreshToken());
         return responseService.getSingleResult(accessToken);
     }
 

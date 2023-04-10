@@ -31,6 +31,7 @@ public class WebConfig implements WebMvcConfigurer {
         //TODO white list yaml file 분리!!
         List<String> pathsToExclude = List.of(
                 "/api/v1/auth/login",
+                "/api/v1/auth/access-token",
                 "/api/v1/sign-up",
                 "/api/v1/users/username/*/exists",
                 "/api/v1/users/email/*/exists",
