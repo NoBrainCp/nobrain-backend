@@ -1,7 +1,7 @@
 package com.nobrain.bookmarking.domain.user.dto;
 
 import com.nobrain.bookmarking.domain.user.entity.User;
-import com.nobrain.bookmarking.global.type.RoleType;
+import com.nobrain.bookmarking.domain.user.type.RoleType;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -37,7 +37,7 @@ public class UserRequest {
                     .name(this.name)
                     .phoneNumber(this.phoneNumber.replaceAll("[^0-9]", ""))
                     .birthDate(this.birthDate)
-                    .roles(Collections.singletonList(RoleType.USER.getKey()))
+                    .roles(Collections.singletonList(RoleType.USER.getRole()))
                     .build();
         }
     }

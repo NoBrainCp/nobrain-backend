@@ -53,10 +53,6 @@ public class User extends BaseTimeEntity {
         this.roles = roles;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
     public void changeName(String name) {
         this.name = name;
     }

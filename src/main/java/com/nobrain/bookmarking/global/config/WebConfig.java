@@ -28,11 +28,20 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        //TODO white list yaml file 분리!!
         List<String> pathsToExclude = List.of(
                 "/api/v1/auth/login",
                 "/api/v1/sign-up",
-                "/api/v1/users/username/*exists",
-                "/api/v1/users/login-id/*/exists"
+                "/api/v1/users/username/*/exists",
+                "/api/v1/users/login-id/*/exists",
+
+                // Oauth2
+                "/api/v1/oauth2/login/github",
+                "/api/v1/oauth2/login/google",
+                "/api/v1/oauth2/login/naver",
+                "/redirect/oauth2/github",
+                "/redirect/oauth2/google",
+                "/redirect/oauth2/naver"
         );
 
         registry.addInterceptor(authInterceptor)
