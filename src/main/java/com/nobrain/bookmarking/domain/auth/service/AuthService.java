@@ -7,8 +7,8 @@ import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
 import com.nobrain.bookmarking.domain.auth.entity.RefreshToken;
 import com.nobrain.bookmarking.domain.auth.repository.RefreshTokenRepository;
 import com.nobrain.bookmarking.domain.user.entity.User;
-import com.nobrain.bookmarking.domain.user.exception.UserLoginIdNotFoundException;
 import com.nobrain.bookmarking.domain.user.exception.UserNotCorrectPasswordException;
+import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
 import com.nobrain.bookmarking.global.security.Encryptor;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class AuthService {
     private final JwtTokenProvider tokenProvider;
 
     public LoginResponse login(LoginRequest dto) {
-        User user = userRepository.findByLoginId(dto.getLoginId()).orElseThrow(() -> new UserLoginIdNotFoundException(dto.getLoginId()));
+        User user = userRepository.findByName(dto.getUsername()).orElseThrow(() -> new UserNotFoundException(dto.getUsername()));
         if (!encryptor.isMatch(dto.getPassword(), user.getPassword())) {
             throw new UserNotCorrectPasswordException(dto.getPassword());
         }

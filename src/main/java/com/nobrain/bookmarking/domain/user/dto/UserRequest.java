@@ -4,7 +4,6 @@ import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.type.RoleType;
 import lombok.Getter;
 
-import java.time.LocalDate;
 import java.util.Collections;
 
 public class UserRequest {
@@ -17,13 +16,10 @@ public class UserRequest {
 
     @Getter
     public static class SignUp {
-        private String loginId;
+        private String name;
         private String email;
         private String password;
         private String passwordCheck;
-        private String name;
-        private String phoneNumber;
-        private LocalDate birthDate;
 
         public void encodePassword(String encodedPassword) {
             this.password = encodedPassword;
@@ -31,12 +27,9 @@ public class UserRequest {
 
         public User toEntity() {
             return User.builder()
-                    .loginId(this.loginId)
+                    .name(this.name)
                     .email(this.email)
                     .password(this.password)
-                    .name(this.name)
-                    .phoneNumber(this.phoneNumber.replaceAll("[^0-9]", ""))
-                    .birthDate(this.birthDate)
                     .roles(Collections.singletonList(RoleType.USER.getRole()))
                     .build();
         }
