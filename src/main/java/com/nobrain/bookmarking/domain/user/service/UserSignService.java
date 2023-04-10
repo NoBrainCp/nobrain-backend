@@ -28,16 +28,8 @@ public class UserSignService {
             throw new UserEmailDuplicationException(dto.getEmail());
         }
 
-        if (userRepository.existsByLoginId(dto.getLoginId())) {
-            throw new UserLoginIdDuplicationException(dto.getLoginId());
-        }
-
         if (userRepository.existsByName(dto.getName())) {
             throw new UsernameDuplicationException(dto.getName());
-        }
-
-        if (userRepository.existsByPhoneNumber(dto.getPhoneNumber())) {
-            throw new UserPhoneNumberDuplicationException(dto.getPhoneNumber());
         }
 
         if (!dto.getPassword().equals(dto.getPasswordCheck())) {
