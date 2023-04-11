@@ -1,16 +1,20 @@
 package com.nobrain.bookmarking.domain.auth.controller;
 
-import com.nobrain.bookmarking.domain.auth.dto.*;
-import com.nobrain.bookmarking.domain.auth.entity.RefreshToken;
+import com.nobrain.bookmarking.domain.auth.dto.AccessTokenRequest;
+import com.nobrain.bookmarking.domain.auth.dto.LoginRequest;
+import com.nobrain.bookmarking.domain.auth.dto.LoginResponse;
+import com.nobrain.bookmarking.domain.auth.dto.LogoutRequest;
 import com.nobrain.bookmarking.domain.auth.exception.TokenNotExistsException;
 import com.nobrain.bookmarking.domain.auth.service.AuthService;
 import com.nobrain.bookmarking.domain.auth.service.JwtTokenProvider;
-import com.nobrain.bookmarking.domain.user.annotation.VerifiedUser;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.model.SingleResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
@@ -27,10 +31,10 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public CommonResult logout(@VerifiedUser UserPayload payload, @RequestBody LogoutRequest logoutRequest) {
+    public CommonResult logout(@RequestBody LogoutRequest logoutRequest) {
         String refreshToken = logoutRequest.getRefreshToken();
         validateRefreshTokenExists(refreshToken);
-        authService.logout(new RefreshToken(refreshToken, payload.getUserId()));
+        authService.logout(refreshToken);
         return responseService.getSuccessResult();
     }
 

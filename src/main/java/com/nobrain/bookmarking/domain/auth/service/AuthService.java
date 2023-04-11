@@ -53,7 +53,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void logout(RefreshToken refreshToken) {
-        refreshTokenRepository.delete(refreshToken);
+    public void logout(String refreshToken) {
+        refreshTokenRepository.deleteById(refreshToken);
     }
 }
