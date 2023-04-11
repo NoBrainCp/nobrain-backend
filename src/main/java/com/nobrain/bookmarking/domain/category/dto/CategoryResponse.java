@@ -21,6 +21,7 @@ public class CategoryResponse {
                     .id(category.getId())
                     .name(category.getName())
                     .description(category.getDescription())
+                    .isPublic(category.isPublic())
                     .build();
         }
     }
