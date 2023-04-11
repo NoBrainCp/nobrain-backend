@@ -27,6 +27,7 @@ public class AuthService {
     private final Encryptor encryptor;
     private final JwtTokenProvider tokenProvider;
 
+    @Transactional
     public LoginResponse login(LoginRequest dto) {
         User user = userRepository.findByName(dto.getUsername()).orElseThrow(() -> new UserNotFoundException(dto.getUsername()));
         if (!encryptor.isMatch(dto.getPassword(), user.getPassword())) {
@@ -51,6 +52,7 @@ public class AuthService {
                 .build();
     }
 
+    @Transactional
     public void logout(RefreshToken refreshToken) {
         refreshTokenRepository.delete(refreshToken);
     }
