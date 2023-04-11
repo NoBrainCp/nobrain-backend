@@ -1,12 +1,11 @@
 package com.nobrain.bookmarking.domain.auth.controller;
 
-import com.nobrain.bookmarking.domain.auth.dto.AccessTokenRequest;
-import com.nobrain.bookmarking.domain.auth.dto.LoginRequest;
-import com.nobrain.bookmarking.domain.auth.dto.LoginResponse;
+import com.nobrain.bookmarking.domain.auth.dto.*;
 import com.nobrain.bookmarking.domain.auth.entity.RefreshToken;
 import com.nobrain.bookmarking.domain.auth.exception.TokenNotExistsException;
 import com.nobrain.bookmarking.domain.auth.service.AuthService;
 import com.nobrain.bookmarking.domain.auth.service.JwtTokenProvider;
+import com.nobrain.bookmarking.domain.user.annotation.VerifiedUser;
 import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.model.SingleResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
@@ -27,11 +26,11 @@ public class AuthController {
         return responseService.getSingleResult(authService.login(dto));
     }
 
-    @GetMapping("/logout")
-    public CommonResult logout(@CookieValue(value = "user_id", required = false) Long userId,
-                               @CookieValue(value = "refresh_token", required = false) String refreshToken) {
+    @PostMapping("/logout")
+    public CommonResult logout(@VerifiedUser UserPayload payload, @RequestBody LogoutRequest logoutRequest) {
+        String refreshToken = logoutRequest.getRefreshToken();
         validateRefreshTokenExists(refreshToken);
-        authService.logout(new RefreshToken(refreshToken, userId));
+        authService.logout(new RefreshToken(refreshToken, payload.getUserId()));
         return responseService.getSuccessResult();
     }
 
