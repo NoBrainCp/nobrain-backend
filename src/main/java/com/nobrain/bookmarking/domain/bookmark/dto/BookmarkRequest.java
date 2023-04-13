@@ -6,21 +6,22 @@ import com.nobrain.bookmarking.domain.category.entity.Category;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 public class BookmarkRequest {
 
     @Getter
     public static class Info {
-        
-        @NotEmpty(message = "url-empty")
-        @NotBlank(message = "url-blank")
+
+        @NotBlank(message = "url은 필수 입력 항목입니다.")
         private String url;
 
-        @NotEmpty(message = "title-empty")
-        @NotBlank(message = "title-blank")
+        @NotBlank(message = "title은 필수 입력 항목입니다.")
+        @Size(max = 40, message = "title의 최대 길이는 40글자 입니다.")
         private String title;
+
+        @Size(max = 55, message = "description의 최대 길이는 55글자 입니다.")
         private String description;
 
         @JsonProperty("isPublic")
@@ -29,7 +30,9 @@ public class BookmarkRequest {
         @JsonProperty("isStarred")
         private boolean isStarred;
 
+        @NotBlank(message = "카테고리는 필수 입력 항목입니다.")
         private String categoryName;
+
         private String metaImage;
         private List<String> tags;
 
