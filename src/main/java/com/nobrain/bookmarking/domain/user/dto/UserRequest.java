@@ -49,7 +49,7 @@ public class UserRequest {
 
     @Getter
     public static class ChangeForgotPassword {
-        private String loginId;
+        private String username;
         private String password;
         private String passwordCheck;
     }

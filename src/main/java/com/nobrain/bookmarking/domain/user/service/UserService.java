@@ -55,7 +55,7 @@ public class UserService {
     public void changeForgotPassword(UserRequest.ChangeForgotPassword dto) {
         validateCheckPassword(dto.getPassword(), dto.getPasswordCheck());
 
-        User user = findByLoginId(dto.getLoginId());
+        User user = findByName(dto.getUsername());
         user.changePassword(encryptor.encrypt(dto.getPassword()));
     }
 
@@ -98,6 +98,10 @@ public class UserService {
 
     private User findById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(String.valueOf(id)));
+    }
+
+    private User findByName(String username) {
+        return userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
     }
 
     private User findByLoginId(String loginId) {
