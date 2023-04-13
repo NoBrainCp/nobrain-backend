@@ -6,7 +6,6 @@ import com.nobrain.bookmarking.domain.user.entity.User;
 import lombok.Getter;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 public class CategoryRequest {
@@ -21,6 +20,7 @@ public class CategoryRequest {
         @Size(max = 40, message = "설명의 최대 길이는 30글자 입니다.")
         private String description;
 
+        @NotBlank(message = "공개/비공개 선택은 필수 항목입니다.")
         @JsonProperty("isPublic")
         private boolean isPublic;
 
