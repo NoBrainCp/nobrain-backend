@@ -37,7 +37,8 @@ public class WebConfig implements WebMvcConfigurer {
                 "/api/v1/users/email/*/exists",
                 "/api/v1/mails/*/auth-code",
                 "/api/v1/mails/*/auth-code/*",
-                "api/v1/users/password/reset",
+                "/api/v1/users/password/reset",
+
                 // Oauth2
                 "/api/v1/oauth2/login/github",
                 "/api/v1/oauth2/login/google",
