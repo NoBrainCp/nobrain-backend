@@ -4,7 +4,6 @@ import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.type.RoleType;
 import lombok.Getter;
 
-import javax.validation.constraints.*;
 import java.util.Collections;
 
 public class UserRequest {
@@ -17,18 +16,8 @@ public class UserRequest {
 
     @Getter
     public static class SignUp {
-
-        @NotBlank(message = "닉네임은 필수 입력 항목입니다.")
-        @Size(min = 2, max = 8, message = "닉네임의 길이는 최소 2글자에서 최대 8글자까지 가능합니다.")
         private String name;
-
-        @NotBlank(message = "이메일은 필수 입력 항목입니다.")
-        @Email(message = "유효한 이메일 형식이 아닙니다.")
         private String email;
-
-        @NotBlank(message = "비밀번호는 필수 입력 항목입니다.")
-        @Pattern(regexp="(?=.[0-9])(?=.[^A-Za-z0-9])(?=.{8,20})",
-                message = "비밀번호는 영문 대,소문자와 숫자, 특수기호가 적어도 1개 이상씩 포함된 8자 ~ 20자의 비밀번호여야 합니다.")
         private String password;
         private String passwordCheck;
 
@@ -61,10 +50,6 @@ public class UserRequest {
     @Getter
     public static class ChangeForgotPassword {
         private String username;
-
-        @NotBlank(message = "비밀번호는 필수 입력 항목입니다.")
-        @Pattern(regexp="(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}",
-                message = "비밀번호는 숫자와 특수기호가 적어도 1개 이상씩 포함된 8자 ~ 20자의 비밀번호여야 합니다.")
         private String password;
         private String passwordCheck;
     }
@@ -72,18 +57,12 @@ public class UserRequest {
     @Getter
     public static class ChangePassword {
         private String prePassword;
-
-        @NotBlank(message = "비밀번호는 필수 입력 항목입니다.")
-        @Pattern(regexp="(?=.*[0-9])(?=.*[a-zA-Z])(?=.*\\W)(?=\\S+$).{8,20}",
-                message = "비밀번호는 숫자와 특수기호가 적어도 1개 이상씩 포함된 8자 ~ 20자의 비밀번호여야 합니다.")
         private String newPassword;
         private String passwordCheck;
     }
 
     @Getter
     public static class ChangeName {
-        @NotBlank(message = "닉네임은 필수 입력 항목입니다.")
-        @Size(min = 2, max = 8, message = "닉네임의 길이는 최소 2글자에서 최대 8글자까지 가능합니다.")
         private String newName;
     }
 
