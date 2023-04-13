@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 
 @RequiredArgsConstructor
@@ -51,19 +52,19 @@ public class UserController {
 
     @PutMapping("/username")
     public SingleResult<String> changeName(@VerifiedUser UserPayload payload,
-                                           @RequestBody UserRequest.ChangeName changeName) {
+                                           @Valid @RequestBody UserRequest.ChangeName changeName) {
         return responseService.getSingleResult(userService.changeName(payload, changeName));
     }
 
     @PutMapping("/password/reset")
-    public CommonResult changeForgotPassword(@RequestBody UserRequest.ChangeForgotPassword dto) {
+    public CommonResult changeForgotPassword(@Valid @RequestBody UserRequest.ChangeForgotPassword dto) {
         userService.changeForgotPassword(dto);
         return responseService.getSuccessResult();
     }
 
     @PutMapping("/password")
     public CommonResult changePassword(@VerifiedUser final UserPayload payload,
-                                       @RequestBody UserRequest.ChangePassword dto) {
+                                       @Valid @RequestBody UserRequest.ChangePassword dto) {
         userService.changePassword(payload, dto);
         return responseService.getSuccessResult();
     }

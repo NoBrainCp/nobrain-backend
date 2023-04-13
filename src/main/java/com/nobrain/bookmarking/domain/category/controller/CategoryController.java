@@ -55,7 +55,7 @@ public class CategoryController {
     @PutMapping("/{categoryName}")
     public CommonResult updateCategory(@VerifiedUser UserPayload payload,
                                        @PathVariable String categoryName,
-                                       @RequestBody CategoryRequest.Info requestDto) {
+                                       @Valid @RequestBody CategoryRequest.Info requestDto) {
         categoryService.updateCategory(payload, categoryName, requestDto);
         return responseService.getSuccessResult();
     }

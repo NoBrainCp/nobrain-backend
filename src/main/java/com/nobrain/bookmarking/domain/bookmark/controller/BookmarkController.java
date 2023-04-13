@@ -65,14 +65,14 @@ public class BookmarkController {
 
     @PostMapping("")
     public CommonResult addBookmark(@VerifiedUser UserPayload myPayload,
-                                    @RequestBody @Valid BookmarkRequest.Info requestDto) {
+                                    @Valid @RequestBody BookmarkRequest.Info requestDto) {
         bookmarkService.createBookmark(myPayload, requestDto);
         return responseService.getSuccessResult();
     }
 
     @PutMapping("/{bookmarkId}")
     public CommonResult updateBookmark(@PathVariable Long bookmarkId,
-                                       @RequestBody @Valid BookmarkRequest.Info requestDto) {
+                                       @Valid @RequestBody BookmarkRequest.Info requestDto) {
         bookmarkService.updateBookmark(bookmarkId, requestDto);
         return responseService.getSuccessResult();
     }
