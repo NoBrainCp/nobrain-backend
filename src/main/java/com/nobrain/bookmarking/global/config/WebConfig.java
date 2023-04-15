@@ -45,11 +45,7 @@ public class WebConfig implements WebMvcConfigurer {
                 "/api/v1/oauth2/login/naver",
                 "/redirect/oauth2/github",
                 "/redirect/oauth2/google",
-                "/redirect/oauth2/naver",
-
-                // Prometheus
-                "/actuator",
-                "/actuator/health"
+                "/redirect/oauth2/naver"
         );
 
         registry.addInterceptor(authInterceptor)
