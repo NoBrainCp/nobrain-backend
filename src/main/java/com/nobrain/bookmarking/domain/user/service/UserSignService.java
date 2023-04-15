@@ -1,7 +1,9 @@
 package com.nobrain.bookmarking.domain.user.service;
 
 import com.nobrain.bookmarking.domain.user.dto.UserRequest;
-import com.nobrain.bookmarking.domain.user.exception.*;
+import com.nobrain.bookmarking.domain.user.exception.UserEmailDuplicationException;
+import com.nobrain.bookmarking.domain.user.exception.UserNotCorrectPasswordException;
+import com.nobrain.bookmarking.domain.user.exception.UsernameDuplicationException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
 import com.nobrain.bookmarking.global.security.Encryptor;
 import lombok.RequiredArgsConstructor;
