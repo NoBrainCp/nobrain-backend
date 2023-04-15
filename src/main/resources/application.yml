@@ -34,5 +34,10 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
+#  autoconfigure:
+#    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
