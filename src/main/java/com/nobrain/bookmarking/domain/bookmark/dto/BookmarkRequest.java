@@ -24,11 +24,9 @@ public class BookmarkRequest {
         @Size(max = 55, message = "description의 최대 길이는 55글자 입니다.")
         private String description;
 
-        @NotBlank(message = "공개/비공개 선택은 필수 항목입니다.")
         @JsonProperty("isPublic")
         private boolean isPublic;
 
-        @NotBlank(message = "즐겨찾기 선택은 필수 항목입니다.")
         @JsonProperty("isStarred")
         private boolean isStarred;
 

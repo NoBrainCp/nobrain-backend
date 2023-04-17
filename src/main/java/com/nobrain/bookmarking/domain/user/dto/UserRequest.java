@@ -3,6 +3,7 @@ package com.nobrain.bookmarking.domain.user.dto;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.type.RoleType;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.*;
 import java.util.Collections;
@@ -16,6 +17,7 @@ public class UserRequest {
     }
 
     @Getter
+    @Setter
     public static class SignUp {
 
         @NotBlank(message = "닉네임은 필수 입력 항목입니다.")
@@ -27,8 +29,8 @@ public class UserRequest {
         private String email;
 
         @NotBlank(message = "비밀번호는 필수 입력 항목입니다.")
-        @Pattern(regexp="(?=.[0-9])(?=.[^A-Za-z0-9])(?=.{8,20})",
-                message = "비밀번호는 영문 대,소문자와 숫자, 특수기호가 적어도 1개 이상씩 포함된 8자 ~ 20자의 비밀번호여야 합니다.")
+        @Pattern(regexp="^(?=.*[\\d\\W])(?=.*[a-zA-Z]).{8,20}$",
+                message = "비밀번호는 영문 소문자와 숫자, 특수기호가 적어도 1개 이상씩 포함된 8자 이상의 비밀번호여야 합니다.")
         private String password;
         private String passwordCheck;
 
