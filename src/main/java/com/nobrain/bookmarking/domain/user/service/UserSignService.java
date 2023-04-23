@@ -19,19 +19,19 @@ public class UserSignService {
     private final Encryptor encryptor;
 
     @Transactional
-    public void signUp(UserRequest.SignUp dto) {
+    public Long signUp(UserRequest.SignUp dto) {
         validateUser(dto);
         dto.encodePassword(encryptor.encrypt(dto.getPassword()));
-        userRepository.save(dto.toEntity());
+        return userRepository.save(dto.toEntity()).getId();
     }
 
     private void validateUser(UserRequest.SignUp dto) {
-        if (userRepository.existsByEmail(dto.getEmail())) {
-            throw new UserEmailDuplicationException(dto.getEmail());
-        }
-
         if (userRepository.existsByName(dto.getName())) {
             throw new UsernameDuplicationException(dto.getName());
+        }
+
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new UserEmailDuplicationException(dto.getEmail());
         }
 
         if (!dto.getPassword().equals(dto.getPasswordCheck())) {
