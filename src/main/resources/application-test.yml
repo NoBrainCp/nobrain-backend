@@ -12,7 +12,7 @@ spring:
     show-sql: true
 
   datasource:
-    url: jdbc:h2:tcp://localhost/~/nobrain/database/test-h2
+    url: jdbc:h2:mem:testdb;
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -20,3 +20,17 @@ spring:
   redis:
     host: localhost
     port: 6379
+
+security:
+  jwt:
+    secret-key: test_secret_key
+    subject: accessToken
+    expiration-time: 1800000
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+    algorithm: PBEWithMD5AndDes
+    pool-size: 1
+    output-type: base64
+    iterations: 1000
