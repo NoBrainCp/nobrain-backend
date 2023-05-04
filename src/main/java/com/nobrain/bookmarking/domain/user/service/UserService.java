@@ -32,7 +32,7 @@ public class UserService {
 
     public UserResponse.Profile getMyProfile(UserPayload payload) {
         User user = findById(payload.getUserId());
-        return new UserResponse.Profile().toDto(user);
+        return UserResponse.Profile.toDto(user);
     }
 
     public UserResponse.Info getUserInfo(String username) {

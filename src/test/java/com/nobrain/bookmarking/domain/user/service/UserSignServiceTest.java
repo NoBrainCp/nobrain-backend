@@ -1,89 +1,80 @@
 package com.nobrain.bookmarking.domain.user.service;
 
+import com.nobrain.bookmarking.ServiceTest;
 import com.nobrain.bookmarking.domain.user.dto.UserRequest;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserEmailDuplicationException;
 import com.nobrain.bookmarking.domain.user.exception.UserNotCorrectPasswordException;
 import com.nobrain.bookmarking.domain.user.exception.UsernameDuplicationException;
-import com.nobrain.bookmarking.domain.user.repository.UserRepository;
-import com.nobrain.bookmarking.global.security.Encryptor;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class UserSignServiceTest {
+import static com.nobrain.bookmarking.Constants.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 
-    @Autowired private UserSignService userSignService;
-    @Autowired private UserRepository userRepository;
-    @Autowired private Encryptor encryptor;
+class UserSignServiceTest extends ServiceTest {
 
-    @BeforeEach
-    void setUp() {
-        userRepository.deleteAll();
-    }
+    @Autowired
+    private UserSignService userSignService;
 
     @Test
     @DisplayName("회원가입 - 성공")
     void signup() {
-        String name = "test";
-        String email = "test@email.com";
-        String password = "testPassword";
-        UserRequest.SignUp signUpDto = createSignUpDto(name, email, password, password);
+        UserRequest.SignUp signUpRequest = createSignUpDto(USERNAME, EMAIL, PASSWORD, PASSWORD_CHECK);
 
-        Long userId = userSignService.signUp(signUpDto);
-        User user = userRepository.findById(userId).get();
+        User savedUser = User.builder()
+                .id(USER_ID)
+                .name(signUpRequest.getName())
+                .email(signUpRequest.getEmail())
+                .build();
 
-        Assertions.assertThat(signUpDto.getName()).isEqualTo(user.getName());
-        Assertions.assertThat(signUpDto.getEmail()).isEqualTo(user.getEmail());
-        Assertions.assertThat(encryptor.isMatch(password, user.getPassword())).isEqualTo(true);
+        given(users.save(any(User.class)))
+                .willReturn(savedUser);
+
+        assertThat(userSignService.signUp(signUpRequest)).isEqualTo(USER_ID);
     }
 
     @Test
     @DisplayName("회원가입 - 중복 이름 실패")
     void signup_username_duplication() {
-        String name = "test";
-        String email = "test@email.com";
-        String password = "testPassword";
-        String passwordCheck = "testPassword";
-        UserRequest.SignUp signUpDto = createSignUpDto(name, email, password, passwordCheck);
-        userSignService.signUp(signUpDto);
+        // given
+        UserRequest.SignUp signUpRequest = createSignUpDto(USERNAME, EMAIL, PASSWORD, PASSWORD_CHECK);
 
-        UserRequest.SignUp signUpDto2 = createSignUpDto(name, "newEmail", password, passwordCheck);
+        given(users.existsByName(anyString()))
+                .willReturn(true);
 
-        Assertions.assertThatThrownBy(() -> userSignService.signUp(signUpDto2))
+        // when, then
+        assertThatThrownBy(() -> userSignService.signUp(signUpRequest))
                 .isInstanceOf(UsernameDuplicationException.class);
     }
 
     @Test
     @DisplayName("회원가입 - 중복 이메일 실패")
     void signup_email_duplication() {
-        String name = "test";
-        String email = "test@email.com";
-        String password = "testPassword";
-        String passwordCheck = "testPassword";
-        UserRequest.SignUp signUpDto1 = createSignUpDto(name, email, password, passwordCheck);
-        userSignService.signUp(signUpDto1);
+        // given
+        UserRequest.SignUp signUpRequest = createSignUpDto(USERNAME, EMAIL, PASSWORD, PASSWORD_CHECK);
 
-        UserRequest.SignUp signUpDto2 = createSignUpDto("newName", email, password, passwordCheck);
+        given(users.existsByName(anyString()))
+                .willReturn(false);
+        given(users.existsByEmail(anyString()))
+                .willReturn(true);
 
-        Assertions.assertThatThrownBy(() -> userSignService.signUp(signUpDto2))
+        // when, then
+        assertThatThrownBy(() -> userSignService.signUp(signUpRequest))
                 .isInstanceOf(UserEmailDuplicationException.class);
     }
 
     @Test
     @DisplayName("회원가입 - 비밀번호 불일치 실패")
     void signup_password_not_correct() {
-        String name = "test";
-        String email = "test@email.com";
-        String password = "testPassword";
-        String passwordCheck = "newPassword";
-        UserRequest.SignUp signUpDto = createSignUpDto(name, email, password, passwordCheck);
+        UserRequest.SignUp signUpDto = createSignUpDto(USERNAME, EMAIL, PASSWORD, PASSWORD_CHECK_NOT_SAME);
 
-        Assertions.assertThatThrownBy(() -> userSignService.signUp(signUpDto))
+        assertThatThrownBy(() -> userSignService.signUp(signUpDto))
                 .isInstanceOf(UserNotCorrectPasswordException.class);
     }
 
