@@ -57,7 +57,7 @@ public class UserResponse {
         private String profileImage;
         private List<String> roles;
 
-        public Profile toDto(User user) {
+        public static Profile toDto(User user) {
             return Profile.builder()
                     .userId(user.getId())
                     .loginId(user.getLoginId())
