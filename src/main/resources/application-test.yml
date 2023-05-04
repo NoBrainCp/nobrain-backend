@@ -5,14 +5,14 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
     show-sql: true
 
   datasource:
-    url: jdbc:h2:mem:testdb;
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password:
     driver-class-name: org.h2.Driver
@@ -20,6 +20,18 @@ spring:
   redis:
     host: localhost
     port: 6379
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: test
+    password: test-password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 security:
   jwt:
@@ -29,8 +41,14 @@ security:
 
 jasypt:
   encryptor:
+    password: test-jasypt-password
     bean: jasyptStringEncryptor
     algorithm: PBEWithMD5AndDes
     pool-size: 1
     output-type: base64
     iterations: 1000
+
+COOLSMS:
+  API_KEY: test-api-key
+  API_SECRET_KEY: test-api-secret-key
+  PHONE_NUMBER: 01012345678
