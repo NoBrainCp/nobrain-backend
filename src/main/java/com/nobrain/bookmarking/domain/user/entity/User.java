@@ -40,7 +40,8 @@ public class User extends BaseTimeEntity {
     private List<String> roles = new ArrayList<>();
 
     @Builder
-    public User(String loginId, String email, String password, String name, String phoneNumber, LocalDate birthDate, String profileImage, String oauthId, List<Category> categories, List<String> roles) {
+    public User(Long id, String loginId, String email, String password, String name, String phoneNumber, LocalDate birthDate, String profileImage, String oauthId, List<Category> categories, List<String> roles) {
+        this.id = id;
         this.loginId = loginId;
         this.email = email;
         this.password = password;

@@ -2,7 +2,9 @@ package com.nobrain.bookmarking.domain.user.dto;
 
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.type.RoleType;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.*;
@@ -83,6 +85,8 @@ public class UserRequest {
     }
 
     @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ChangeName {
         @NotBlank(message = "닉네임은 필수 입력 항목입니다.")
         @Size(min = 2, max = 8, message = "닉네임의 길이는 최소 2글자에서 최대 8글자까지 가능합니다.")
