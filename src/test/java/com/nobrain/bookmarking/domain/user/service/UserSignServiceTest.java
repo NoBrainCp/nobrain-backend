@@ -22,34 +22,42 @@ class UserSignServiceTest extends ServiceTest {
     @Autowired
     private UserSignService userSignService;
 
+    private final UserRequest.SignUp userSignupRequest = new UserRequest.SignUp(
+            USERNAME,
+            EMAIL,
+            PASSWORD,
+            PASSWORD_CHECK
+    );
+
     @Test
     @DisplayName("회원가입 - 성공")
     void signup() {
-        UserRequest.SignUp signUpRequest = createSignUpDto(USERNAME, EMAIL, PASSWORD, PASSWORD_CHECK);
-
+        // given
         User savedUser = User.builder()
                 .id(USER_ID)
-                .name(signUpRequest.getName())
-                .email(signUpRequest.getEmail())
+                .name(userSignupRequest.getName())
+                .email(userSignupRequest.getEmail())
                 .build();
 
         given(users.save(any(User.class)))
                 .willReturn(savedUser);
 
-        assertThat(userSignService.signUp(signUpRequest)).isEqualTo(USER_ID);
+        // when
+        Long actual = userSignService.signUp(userSignupRequest);
+
+        // then
+        assertThat(actual).isEqualTo(savedUser.getId());
     }
 
     @Test
     @DisplayName("회원가입 - 중복 이름 실패")
     void signup_username_duplication() {
         // given
-        UserRequest.SignUp signUpRequest = createSignUpDto(USERNAME, EMAIL, PASSWORD, PASSWORD_CHECK);
-
         given(users.existsByName(anyString()))
                 .willReturn(true);
 
         // when, then
-        assertThatThrownBy(() -> userSignService.signUp(signUpRequest))
+        assertThatThrownBy(() -> userSignService.signUp(userSignupRequest))
                 .isInstanceOf(UsernameDuplicationException.class);
     }
 
@@ -57,33 +65,29 @@ class UserSignServiceTest extends ServiceTest {
     @DisplayName("회원가입 - 중복 이메일 실패")
     void signup_email_duplication() {
         // given
-        UserRequest.SignUp signUpRequest = createSignUpDto(USERNAME, EMAIL, PASSWORD, PASSWORD_CHECK);
-
         given(users.existsByName(anyString()))
                 .willReturn(false);
         given(users.existsByEmail(anyString()))
                 .willReturn(true);
 
         // when, then
-        assertThatThrownBy(() -> userSignService.signUp(signUpRequest))
+        assertThatThrownBy(() -> userSignService.signUp(userSignupRequest))
                 .isInstanceOf(UserEmailDuplicationException.class);
     }
 
     @Test
     @DisplayName("회원가입 - 비밀번호 불일치 실패")
     void signup_password_not_correct() {
-        UserRequest.SignUp signUpDto = createSignUpDto(USERNAME, EMAIL, PASSWORD, PASSWORD_CHECK_NOT_SAME);
+        // given
+        UserRequest.SignUp signupRequest = new UserRequest.SignUp(
+                USERNAME,
+                EMAIL,
+                PASSWORD,
+                PASSWORD_CHECK_NOT_SAME
+        );
 
-        assertThatThrownBy(() -> userSignService.signUp(signUpDto))
+        // when, then
+        assertThatThrownBy(() -> userSignService.signUp(signupRequest))
                 .isInstanceOf(UserNotCorrectPasswordException.class);
-    }
-
-    private UserRequest.SignUp createSignUpDto(String name, String email, String password, String passwordCheck) {
-        UserRequest.SignUp signUpDto = new UserRequest.SignUp();
-        signUpDto.setName(name);
-        signUpDto.setEmail(email);
-        signUpDto.setPassword(password);
-        signUpDto.setPasswordCheck(passwordCheck);
-        return signUpDto;
     }
 }

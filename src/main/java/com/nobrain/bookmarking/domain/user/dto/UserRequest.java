@@ -2,10 +2,7 @@ package com.nobrain.bookmarking.domain.user.dto;
 
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.type.RoleType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.*;
 import java.util.Collections;
@@ -20,6 +17,8 @@ public class UserRequest {
 
     @Getter
     @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class SignUp {
 
         @NotBlank(message = "닉네임은 필수 입력 항목입니다.")
