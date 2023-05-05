@@ -62,6 +62,8 @@ public class UserRequest {
     }
 
     @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ChangeForgotPassword {
         private String username;
 
@@ -73,6 +75,8 @@ public class UserRequest {
     }
 
     @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ChangePassword {
         private String prePassword;
 
@@ -93,6 +97,8 @@ public class UserRequest {
     }
 
     @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class RemoveUser {
         private String password;
     }

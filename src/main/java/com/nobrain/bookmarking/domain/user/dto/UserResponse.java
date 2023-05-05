@@ -33,7 +33,7 @@ public class UserResponse {
         private String email;
         private String profileImage;
 
-        public Info toDto(UserInfo userInfo) {
+        public static Info toDto(UserInfo userInfo) {
             return UserResponse.Info.builder()
                     .userId(userInfo.getId())
                     .username(userInfo.getName())
