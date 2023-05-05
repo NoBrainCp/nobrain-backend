@@ -36,8 +36,9 @@ public class UserService {
     }
 
     public UserResponse.Info getUserInfo(String username) {
-        UserInfo userInfo = userRepository.findUserInfoByName(username).orElseThrow(() -> new UserNotFoundException(username));
-        return new UserResponse.Info().toDto(userInfo);
+        UserInfo userInfo = userRepository.findUserInfoByName(username)
+                .orElseThrow(() -> new UserNotFoundException(username));
+        return UserResponse.Info.toDto(userInfo);
     }
 
     @Transactional
@@ -71,14 +72,17 @@ public class UserService {
     }
 
     @Transactional
-    public void changeProfileImage(final UserPayload payload, MultipartFile image) throws IOException {
+    public String changeProfileImage(final UserPayload payload, MultipartFile image) throws IOException {
         Long userId = payload.getUserId();
         User user = findById(userId);
 
         if (!image.isEmpty()) {
             String storedFileName = s3Service.upload(image, "images");
             user.changeProfileImage(storedFileName);
+            return storedFileName;
         }
+
+        return null;
     }
 
     @Transactional
@@ -102,10 +106,6 @@ public class UserService {
 
     private User findByName(String username) {
         return userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
-    }
-
-    private User findByLoginId(String loginId) {
-        return userRepository.findByLoginId(loginId).orElseThrow(() -> new UserNotFoundException(loginId));
     }
 
     private void validatePassword(String password, String hashed) {

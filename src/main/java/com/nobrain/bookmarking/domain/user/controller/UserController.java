@@ -70,10 +70,10 @@ public class UserController {
     }
 
     @PutMapping("/profile-image")
-    public CommonResult changeProfileImage(@VerifiedUser final UserPayload payload,
+    public SingleResult<String> changeProfileImage(@VerifiedUser final UserPayload payload,
                                            @RequestBody MultipartFile image) throws IOException {
-        userService.changeProfileImage(payload, image);
-        return responseService.getSuccessResult();
+        String profileImageUrl = userService.changeProfileImage(payload, image);
+        return responseService.getSingleResult(profileImageUrl);
     }
 
     @DeleteMapping("/me")
