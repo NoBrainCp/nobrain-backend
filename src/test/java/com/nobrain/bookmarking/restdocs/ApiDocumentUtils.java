@@ -1,4 +1,4 @@
-package com.nobrain.bookmarking;
+package com.nobrain.bookmarking.restdocs;
 
 import org.springframework.restdocs.operation.preprocess.OperationRequestPreprocessor;
 import org.springframework.restdocs.operation.preprocess.OperationResponsePreprocessor;
