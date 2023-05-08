@@ -42,7 +42,8 @@ public class Category {
     private List<Bookmark> bookmarks = new ArrayList<>();
 
     @Builder
-    public Category(String name, String description, boolean isPublic, User user, List<Bookmark> bookmarks) {
+    public Category(Long id, String name, String description, boolean isPublic, User user, List<Bookmark> bookmarks) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.isPublic = isPublic;
