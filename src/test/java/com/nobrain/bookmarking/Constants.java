@@ -21,4 +21,12 @@ public class Constants {
     public static final String CHANGE_PROFILE_IMG_NAME = "changeProfileImage";
     public static final String CHANGE_PROFILE_IMG_PATH = "changeProfileImage.png";
     public static final String PROFILE_IMG_CONTENT_TYPE_PNG = "image/png";
+
+    // category
+    public static final Long CATEGORY_ID = 1L;
+    public static final Long CATEGORY_BOOKMARK_COUNT = 0L;
+    public static final String CATEGORY_NAME = "categoryTest";
+    public static final String NEW_CATEGORY_NAME = "newCategoryTest";
+    public static final String CATEGORY_DESCRIPTION = "test";
+    public static final boolean CATEGORY_PUBLIC = true;
 }

@@ -45,8 +45,11 @@ public class CategoryService {
         return categoryQueryRepository.findCategoryByBookmarkId(bookmarkId);
     }
 
-    public Boolean getCategoryIdPublic(Long userId, String categoryName) {
-        return categoryQueryRepository.findCategoryIsPublic(userId, categoryName);
+    public Boolean getCategoryIsPublic(UserPayload payload, String categoryName) {
+        User user = findUserByUsername(payload.getUsername());
+        Category category = categoryRepository.findByUserAndName(user, categoryName)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryName));
+        return category.isPublic();
     }
 
     @Transactional

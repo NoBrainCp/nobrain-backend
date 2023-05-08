@@ -49,14 +49,6 @@ public class CategoryQueryRepositoryImpl implements CategoryQueryRepository {
                 .fetchOne();
     }
 
-    @Override
-    public Boolean findCategoryIsPublic(Long userId, String categoryName) {
-        return queryFactory
-                .select(category.isPublic)
-                .from(category)
-                .where(category.user.id.eq(userId).and(category.name.eq(categoryName)))
-                .fetchOne();
-    }
 
     private BooleanBuilder getCategoryIsPublicBooleanBuilder(Boolean isMe) {
         BooleanBuilder booleanBuilder = new BooleanBuilder();
