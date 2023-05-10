@@ -27,4 +27,7 @@ public class Constants {
     public static final String NEW_CATEGORY_NAME = "newCategoryTest";
     public static final String CATEGORY_DESCRIPTION = "test";
     public static final boolean CATEGORY_PUBLIC = true;
+
+    // bookmark
+    public static final Long BOOKMARK_ID = 1L;
 }

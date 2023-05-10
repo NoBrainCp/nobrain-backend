@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,6 +70,7 @@ public class CategoryServiceTest extends ServiceTest {
                 .description(CATEGORY_DESCRIPTION)
                 .isPublic(CATEGORY_PUBLIC)
                 .user(user)
+                .bookmarks(new ArrayList<>())
                 .build();
     }
 
@@ -127,12 +129,17 @@ public class CategoryServiceTest extends ServiceTest {
         // given
         given(users.findByName(anyString()))
                 .willReturn(Optional.of(user));
+        given(categoryQueryRepository.findAllCategoryInfoWithCount(anyString(), anyBoolean()))
+                .willReturn(new ArrayList<>(Arrays.asList(categoryInfoResponse)));
         // when
         List<CategoryResponse.Info> actual = categoryService.getCategories(payload, user.getName());
 
         //then
-        assertThat(actual.size()).isEqualTo(1);
+        assertThat(actual.get(0)).usingRecursiveComparison()
+                        .isEqualTo(categoryInfoResponse);
+
         verify(users).findByName(user.getName());
+        verify(categoryQueryRepository).findAllCategoryInfoWithCount(user.getName(), true);
     }
 
     @Test
@@ -150,8 +157,19 @@ public class CategoryServiceTest extends ServiceTest {
     }
 
     @Test
+    @DisplayName("카테고리 조회 (북마크 아이디) - 성공")
     @Disabled
     void getCategoryByBookmarkId() {
+        // given
+        given(categoryQueryRepository.findCategoryByBookmarkId(anyLong()))
+                .willReturn(categoryInfoResponse);
+        // when
+        CategoryResponse.Info actual = categoryService.getCategoryByBookmarkId(BOOKMARK_ID);
+
+        // then
+        assertThat(actual).usingRecursiveComparison()
+                .isEqualTo(categoryInfoResponse);
+        verify(categoryQueryRepository).findCategoryByBookmarkId(BOOKMARK_ID);
     }
 
     @Test
