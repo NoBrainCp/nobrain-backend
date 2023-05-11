@@ -45,7 +45,8 @@ public class Bookmark extends BaseTimeEntity {
     private List<BookmarkTag> tags = new ArrayList<>();
 
     @Builder
-    public Bookmark(String url, String title, String description, boolean isPublic, boolean isStarred, String metaImage, Category category) {
+    public Bookmark(Long id, String url, String title, String description, boolean isPublic, boolean isStarred, String metaImage, Category category) {
+        this.id = id;
         this.url = url;
         this.title = title;
         this.description = description;
