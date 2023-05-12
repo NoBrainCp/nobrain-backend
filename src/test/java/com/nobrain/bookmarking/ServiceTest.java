@@ -1,6 +1,7 @@
 package com.nobrain.bookmarking;
 
 import com.nobrain.bookmarking.domain.bookmark.repository.BookmarkRepository;
+import com.nobrain.bookmarking.domain.category.repository.CategoryQueryRepository;
 import com.nobrain.bookmarking.domain.category.repository.CategoryRepository;
 import com.nobrain.bookmarking.domain.follow.repository.FollowRepository;
 import com.nobrain.bookmarking.domain.tag.repository.TagRepository;
@@ -20,6 +21,9 @@ public abstract class ServiceTest {
 
     @MockBean
     protected CategoryRepository categories;
+
+    @MockBean
+    protected CategoryQueryRepository categoryQueryRepository;
 
     @MockBean
     protected BookmarkRepository bookmarks;
