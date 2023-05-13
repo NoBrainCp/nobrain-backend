@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -45,7 +46,7 @@ public class Bookmark extends BaseTimeEntity {
     private List<BookmarkTag> tags = new ArrayList<>();
 
     @Builder
-    public Bookmark(Long id, String url, String title, String description, boolean isPublic, boolean isStarred, String metaImage, Category category) {
+    public Bookmark(Long id, String url, String title, String description, boolean isPublic, boolean isStarred, String metaImage, Category category, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.url = url;
         this.title = title;
@@ -54,6 +55,8 @@ public class Bookmark extends BaseTimeEntity {
         this.isStarred = isStarred;
         this.metaImage = metaImage;
         addCategory(category);
+        this.createdAt = createdAt;
+        this.modifiedAt = modifiedAt;
     }
 
     public void update(BookmarkRequest.Info requestDto, String metaImage, Category category) {
