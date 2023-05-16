@@ -32,4 +32,19 @@ public class Constants {
 
     // bookmark
     public static final Long BOOKMARK_ID = 1L;
+    public static final String URL = "www.naver.com";
+    public static final String CHANGE_URL = "www.google.com";
+    public static final String HTTPS = "https://";
+    public static final String TITLE = "네이버";
+    public static final String CHANGE_TITLE = "구글";
+    public static final String DESCRIPTION = "네이버 웹 사이트";
+    public static final String CHANGE_DESCRIPTION = "구글 웹 사이트";
+    public static final boolean IS_PUBLIC = true;
+    public static final boolean IS_PRIVATE = false;
+    public static final boolean IS_STARRED = true;
+    public static final boolean IS_NOT_STARRED = false;
+    public static final String META_IMG = "";
+    public static final String BOOKMARK_SEARCH_CONDITION = "all";
+    public static final String BOOKMARK_SEARCH_KEYWORD = "네";
+
 }
