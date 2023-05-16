@@ -82,9 +82,7 @@ public class BookmarkService {
     }
 
     public List<BookmarkResponse.Info> searchBookmarks(UserPayload myPayload, String keyword, String condition) {
-        Long userId = myPayload.getUserId();
-
-        return bookmarkQueryRepository.searchBookmarksByCondition(keyword, condition, userId).stream()
+        return bookmarkQueryRepository.searchBookmarksByCondition(keyword, condition, myPayload.getUserId()).stream()
                 .map(this::toBookmarkInfoDto)
                 .collect(Collectors.toList());
     }
@@ -102,7 +100,7 @@ public class BookmarkService {
         String metaImage = MetaImageCrawler.getMetaImageFromUrl(requestDto.getUrl());
         Bookmark bookmark = requestDto.toEntity(metaImage, category);
 
-        validateBookmark(requestDto, category);
+        validateBookmark(requestDto.getUrl(), category);
         bookmarkRepository.save(bookmark);
 
         if (requestDto.getTags() != null) {
@@ -143,10 +141,10 @@ public class BookmarkService {
         }
     }
 
-    // 수정 필요 ** Update Query **
+    //TODO ** Update Query - public인 북마크만 조회 **
     @Transactional
     public void updateBookmarksToPrivate(UserPayload myPayload, String categoryName) {
-        List<Bookmark> bookmarks = bookmarkQueryRepository.findBookmarksByUserIdAndCategoryName(myPayload.getUserId(), categoryName);
+        List<Bookmark> bookmarks = bookmarkQueryRepository.findPublicBookmarksByUserIdAndCategoryName(myPayload.getUserId(), categoryName);
         bookmarks.forEach(bookmark -> {
             if (bookmark.isPublic()) {
                 bookmark.changePublic(false);
@@ -171,9 +169,9 @@ public class BookmarkService {
         return Objects.equals(myId, userId);
     }
 
-    private void validateBookmark(BookmarkRequest.Info requestDto, Category category) {
-        if (!bookmarkRepository.existsByUrlAndCategory(requestDto.getUrl(), category)) {
-            throw new BookmarkDuplicationException(requestDto.getUrl());
+    private void validateBookmark(String url, Category category) {
+        if (bookmarkRepository.existsByUrlAndCategory(url, category)) {
+            throw new BookmarkDuplicationException(url);
         }
     }
 

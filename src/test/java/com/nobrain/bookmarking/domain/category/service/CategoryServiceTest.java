@@ -11,13 +11,11 @@ import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.global.security.PasswordEncryptor;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,16 +29,20 @@ public class CategoryServiceTest extends ServiceTest {
 
     @Autowired
     private CategoryService categoryService;
+
     @Autowired
     private PasswordEncryptor encryptor;
+
     private User user;
     private UserPayload payload;
     private Category category;
+
     private final CategoryRequest.Info categoryInfoRequest = new CategoryRequest.Info(
             NEW_CATEGORY_NAME,
             CATEGORY_DESCRIPTION,
             CATEGORY_PUBLIC
     );
+
     private final CategoryResponse.Info categoryInfoResponse = new CategoryResponse.Info(
             CATEGORY_ID,
             CATEGORY_NAME,
@@ -130,7 +132,7 @@ public class CategoryServiceTest extends ServiceTest {
         given(users.findByName(anyString()))
                 .willReturn(Optional.of(user));
         given(categoryQueryRepository.findAllCategoryInfoWithCount(anyString(), anyBoolean()))
-                .willReturn(new ArrayList<>(Arrays.asList(categoryInfoResponse)));
+                .willReturn(List.of(categoryInfoResponse));
         // when
         List<CategoryResponse.Info> actual = categoryService.getCategories(payload, user.getName());
 
@@ -158,11 +160,11 @@ public class CategoryServiceTest extends ServiceTest {
 
     @Test
     @DisplayName("카테고리 조회 (북마크 아이디) - 성공")
-    @Disabled
     void getCategoryByBookmarkId() {
         // given
         given(categoryQueryRepository.findCategoryByBookmarkId(anyLong()))
                 .willReturn(categoryInfoResponse);
+
         // when
         CategoryResponse.Info actual = categoryService.getCategoryByBookmarkId(BOOKMARK_ID);
 
@@ -185,6 +187,7 @@ public class CategoryServiceTest extends ServiceTest {
 
         // then
         assertThat(actual).isEqualTo(category.isPublic());
+
         verify(users).findByName(user.getName());
         verify(categories).findByUserAndName(user, category.getName());
     }
@@ -225,11 +228,13 @@ public class CategoryServiceTest extends ServiceTest {
                 .willReturn(Optional.of(user));
         given(categories.save(any(Category.class)))
                 .willReturn(categoryInfoRequest.toEntity(user));
+
         // when
         String actual = categoryService.create(payload, categoryInfoRequest);
 
         // then
         assertThat(actual).isEqualTo(NEW_CATEGORY_NAME);
+
         verify(users).findByName(user.getName());
         verify(categories).save(categoryInfoRequest.toEntity(user));
     }
@@ -244,6 +249,7 @@ public class CategoryServiceTest extends ServiceTest {
         // when, then
         assertThatThrownBy(() -> categoryService.create(payload, categoryInfoRequest))
                 .isInstanceOf(UserNotFoundException.class);
+
         verify(users).findByName(user.getName());
     }
 
@@ -264,6 +270,7 @@ public class CategoryServiceTest extends ServiceTest {
         // when, then
         assertThatThrownBy(() -> categoryService.create(payload, categoryInfoRequest))
                 .isInstanceOf(CategoryNameDuplicationException.class);
+
         verify(users).findByName(user.getName());
         verify(categories).existsByUserAndName(user, categoryInfoRequest.getName());
     }
@@ -279,8 +286,10 @@ public class CategoryServiceTest extends ServiceTest {
                 .willReturn(Optional.of(category));
         // when
         categoryService.updateCategory(payload, category.getName(), categoryInfoRequest);
+
         // then
         assertThat(category.getName()).isEqualTo(NEW_CATEGORY_NAME);
+
         verify(users).findByName(user.getName());
         verify(categories).findByUserAndName(user, CATEGORY_NAME);
     }
@@ -295,6 +304,7 @@ public class CategoryServiceTest extends ServiceTest {
         // when, then
         assertThatThrownBy(() -> categoryService.updateCategory(payload, category.getName(), categoryInfoRequest))
                 .isInstanceOf(CategoryNotFoundException.class);
+
         verify(users).findByName(user.getName());
     }
 
@@ -312,6 +322,7 @@ public class CategoryServiceTest extends ServiceTest {
         // when, then
         assertThatThrownBy(() -> categoryService.updateCategory(payload, category.getName(), categoryInfoRequest))
                 .isInstanceOf(CategoryNameDuplicationException.class);
+
         verify(users).findByName(user.getName());
         verify(categories).findByUserAndName(user, category.getName());
         verify(categories).existsByUserAndName(user, categoryInfoRequest.getName());

@@ -3,7 +3,9 @@ package com.nobrain.bookmarking.domain.bookmark.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
 import com.nobrain.bookmarking.domain.category.entity.Category;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -12,6 +14,8 @@ import java.util.List;
 public class BookmarkRequest {
 
     @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Info {
 
         @NotBlank(message = "url은 필수 입력 항목입니다.")
