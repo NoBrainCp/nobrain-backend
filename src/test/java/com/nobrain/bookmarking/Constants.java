@@ -47,4 +47,8 @@ public class Constants {
     public static final String BOOKMARK_SEARCH_CONDITION = "all";
     public static final String BOOKMARK_SEARCH_KEYWORD = "네";
 
+
+    // tag
+    public static final Long TAG_ID = 1L;
+    public static final String TAG_NAME = "tagTest";
 }

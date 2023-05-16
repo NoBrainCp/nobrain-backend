@@ -2,6 +2,7 @@ package com.nobrain.bookmarking.domain.bookmark_tag.entity;
 
 import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
 import com.nobrain.bookmarking.domain.tag.entity.Tag;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,6 +28,7 @@ public class BookmarkTag {
     @JoinColumn(name = "tag_id")
     private Tag tag;
 
+    @Builder
     public BookmarkTag(Bookmark bookmark, Tag tag) {
         this.bookmark = bookmark;
         this.tag = tag;

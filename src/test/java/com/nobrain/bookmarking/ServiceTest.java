@@ -5,6 +5,7 @@ import com.nobrain.bookmarking.domain.bookmark.repository.BookmarkRepository;
 import com.nobrain.bookmarking.domain.category.repository.CategoryQueryRepository;
 import com.nobrain.bookmarking.domain.category.repository.CategoryRepository;
 import com.nobrain.bookmarking.domain.follow.repository.FollowRepository;
+import com.nobrain.bookmarking.domain.tag.repository.TagQueryRepository;
 import com.nobrain.bookmarking.domain.tag.repository.TagRepository;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,6 +35,9 @@ public abstract class ServiceTest {
 
     @MockBean
     protected TagRepository tags;
+
+    @MockBean
+    protected TagQueryRepository tagQueryRepository;
 
     @MockBean
     protected FollowRepository follows;
