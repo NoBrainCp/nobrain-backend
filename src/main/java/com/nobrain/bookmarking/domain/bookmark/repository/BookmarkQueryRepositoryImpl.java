@@ -105,10 +105,12 @@ public class BookmarkQueryRepositoryImpl implements BookmarkQueryRepository {
     }
 
     @Override
-    public List<Bookmark> findBookmarksByUserIdAndCategoryName(Long userId, String categoryName) {
+    public List<Bookmark> findPublicBookmarksByUserIdAndCategoryName(Long userId, String categoryName) {
         return queryFactory.selectFrom(bookmark)
                 .join(category).on(bookmark.category.id.eq(category.id))
-                .where(category.user.id.eq(userId).and(category.name.eq(categoryName)))
+                .where(category.user.id.eq(userId)
+                        .and(category.name.eq(categoryName))
+                        .and(bookmark.isPublic.eq(true)))
                 .fetch();
     }
 
