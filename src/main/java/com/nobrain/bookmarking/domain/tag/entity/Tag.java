@@ -31,7 +31,8 @@ public class Tag {
     List<BookmarkTag> bookmarks = new ArrayList<>();
 
     @Builder
-    public Tag(String name) {
+    public Tag(Long id, String name) {
+        this.id = id;
         this.name = name;
     }
 
