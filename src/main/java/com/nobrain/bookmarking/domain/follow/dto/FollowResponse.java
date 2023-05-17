@@ -8,7 +8,7 @@ public class FollowResponse {
     @Data
     @Builder
     @NoArgsConstructor
-    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
     public static class FollowCount {
         private Integer followerCnt;
         private Integer followingCnt;
@@ -29,6 +29,7 @@ public class FollowResponse {
     }
 
     @Data
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     public static class FollowCard {
