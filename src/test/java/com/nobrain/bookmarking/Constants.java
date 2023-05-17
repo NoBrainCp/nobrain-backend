@@ -51,4 +51,16 @@ public class Constants {
     // tag
     public static final Long TAG_ID = 1L;
     public static final String TAG_NAME = "tagTest";
+
+    // follow
+    public static final Long FOLLOW_ID = 1L;
+    public static final int FOLLOWER_COUNT = 1;
+    public static final int FOLLOWING_COUNT = 1;
+    public static final Long TO_USER_ID = 2L;
+    public static final String TO_USERNAME = "toUserName";
+    public static final String TO_USER_EMAIL = "toUser@email.com";
+    public static final String TO_USER_PASSWORD = "toUserPassword12!";
+    public static final String TO_USER_PROFILE_IMG = "";
+    public static final Long FROM_USER_BOOKMARK_COUNT = 1L;
+    public static final boolean IS_FOLLOW = true;
 }
