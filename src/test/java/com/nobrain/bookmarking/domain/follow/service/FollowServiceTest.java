@@ -271,6 +271,7 @@ class FollowServiceTest extends ServiceTest {
     }
 
     @Test
+    @DisplayName("팔로우 취소 - 성공")
     void unfollow() {
         assertThatCode(() -> followService.unfollow(follow))
                 .doesNotThrowAnyException();
