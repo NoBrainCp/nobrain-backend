@@ -5,6 +5,7 @@ import com.nobrain.bookmarking.domain.auth.entity.RefreshToken;
 import com.nobrain.bookmarking.domain.auth.exception.TokenExpiredException;
 import com.nobrain.bookmarking.domain.auth.exception.TokenInvalidException;
 import com.nobrain.bookmarking.domain.auth.repository.RefreshTokenRepository;
+import com.nobrain.bookmarking.domain.auth.util.JwtTokenExtractor;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
 import com.nobrain.bookmarking.domain.user.repository.UserRepository;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -82,19 +84,18 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
     }
 
     @Override
-    public void validateToken(String token) {
+    public boolean validateToken(HttpServletRequest request) {
+        String token = JwtTokenExtractor.extract(request);
         try {
-            jwtParser.parseClaimsJws(token);
-        } catch (ExpiredJwtException e) {
-            throw new TokenExpiredException(token);
-        } catch (JwtException e) {
-            throw new TokenInvalidException(token);
+            Jws<Claims> claims = jwtParser.parseClaimsJws(token);
+            return isAccessToken(claims) && isNotExpired(claims);
+        } catch (JwtException | IllegalArgumentException e) {
+            return false;
         }
     }
 
     @Override
     public UserPayload getPayload(String token) {
-
         try {
             Claims body = jwtParser.parseClaimsJws(token).getBody();
             return UserPayload.builder()
@@ -107,5 +108,17 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
         } catch (JwtException | NullPointerException | IllegalArgumentException e) {
             throw new TokenInvalidException(token);
         }
+    }
+
+    private boolean isAccessToken(Jws<Claims> claims) {
+        return claims.getBody()
+                .getSubject()
+                .equals(accessTokenSubject);
+    }
+
+    private boolean isNotExpired(Jws<Claims> claims) {
+        return claims.getBody()
+                .getExpiration()
+                .after(new Date());
     }
 }
