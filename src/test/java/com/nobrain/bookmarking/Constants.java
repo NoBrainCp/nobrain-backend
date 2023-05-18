@@ -63,4 +63,9 @@ public class Constants {
     public static final String TO_USER_PROFILE_IMG = "";
     public static final Long FROM_USER_BOOKMARK_COUNT = 1L;
     public static final boolean IS_FOLLOW = true;
+
+
+    // common controller
+    public static final String AUTHORIZATION_HEADER = "Bearer Token";
+    public static final String ACCESS_TOKEN = "accessToken";
 }
