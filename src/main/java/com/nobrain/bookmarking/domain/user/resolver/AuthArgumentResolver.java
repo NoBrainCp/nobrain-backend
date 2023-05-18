@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
 
     private final JwtTokenProvider tokenProvider;
+    private final JwtTokenExtractor tokenExtractor;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
@@ -30,11 +31,11 @@ public class AuthArgumentResolver implements HandlerMethodArgumentResolver {
         HttpServletRequest request = webRequest.getNativeRequest(HttpServletRequest.class);
 
         VerifiedUser verifiedUserParameterAnnotation = parameter.getParameterAnnotation(VerifiedUser.class);
-        if (verifiedUserParameterAnnotation.isOptional() && !JwtTokenExtractor.hasAccessToken(request)) {
+        if (verifiedUserParameterAnnotation.isOptional() && !tokenExtractor.hasAccessToken(request)) {
             return RoleType.GUEST;
         }
 
-        String accessToken = JwtTokenExtractor.extract(request);
+        String accessToken = tokenExtractor.extract(request);
         return tokenProvider.getPayload(accessToken);
     }
 }

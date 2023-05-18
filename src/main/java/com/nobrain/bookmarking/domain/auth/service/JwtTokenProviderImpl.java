@@ -32,6 +32,7 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
     private final long expirationTimeMilliseconds;
 
     private final JwtParser jwtParser;
+    private final JwtTokenExtractor tokenExtractor;
     private final UserRepository userRepository;
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -39,11 +40,13 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
             @Value("${security.jwt.secret-key}") String secretKey,
             @Value("${security.jwt.subject}") String accessTokenSubject,
             @Value("${security.jwt.expiration-time}") long expirationTimeMilliseconds,
+            JwtTokenExtractor tokenExtractor,
             UserRepository userRepository,
             RefreshTokenRepository refreshTokenRepository) {
 
         this.secretKey = new SecretKeySpec(secretKey.getBytes(), SignatureAlgorithm.HS256.getJcaName());
         this.jwtParser = Jwts.parserBuilder().setSigningKey(this.secretKey).build();
+        this.tokenExtractor = tokenExtractor;
         this.accessTokenSubject = accessTokenSubject;
         this.expirationTimeMilliseconds = expirationTimeMilliseconds;
         this.userRepository = userRepository;
@@ -85,7 +88,7 @@ public class JwtTokenProviderImpl implements JwtTokenProvider {
 
     @Override
     public boolean validateToken(HttpServletRequest request) {
-        String token = JwtTokenExtractor.extract(request);
+        String token = tokenExtractor.extract(request);
         try {
             Jws<Claims> claims = jwtParser.parseClaimsJws(token);
             return isAccessToken(claims) && isNotExpired(claims);
