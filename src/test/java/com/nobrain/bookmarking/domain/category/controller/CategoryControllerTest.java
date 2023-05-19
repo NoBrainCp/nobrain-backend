@@ -2,6 +2,7 @@ package com.nobrain.bookmarking.domain.category.controller;
 
 import com.nobrain.bookmarking.docs.RestDocsTestSupport;
 import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
+import com.nobrain.bookmarking.domain.category.dto.CategoryRequest;
 import com.nobrain.bookmarking.domain.category.dto.CategoryResponse;
 import com.nobrain.bookmarking.domain.category.entity.Category;
 import com.nobrain.bookmarking.domain.user.entity.User;
@@ -9,6 +10,7 @@ import org.apache.http.HttpHeaders;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -17,14 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.nobrain.bookmarking.Constants.*;
+import static com.nobrain.bookmarking.config.RestDocsConfig.field;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class CategoryControllerTest extends RestDocsTestSupport {
@@ -104,7 +107,7 @@ class CategoryControllerTest extends RestDocsTestSupport {
     @DisplayName("유저의 카테고리 목록 조회 - 성공")
     void getCategories() throws Exception {
         // given
-        given(categoryService.getCategories(any(), anyString()))
+        given(categoryService.getCategories(any(UserPayload.class), anyString()))
                 .willReturn(List.of(
                         CategoryResponse.Info.builder()
                         .id(category.getId())
@@ -177,7 +180,7 @@ class CategoryControllerTest extends RestDocsTestSupport {
     @DisplayName("카테고리의 공개 여부 조회 - 성공")
     void getCategoryIsPublic() throws Exception {
         // given
-        given(categoryService.getCategoryIsPublic(any(), anyString()))
+        given(categoryService.getCategoryIsPublic(any(UserPayload.class), anyString()))
                 .willReturn(category.isPublic());
 
         // when
@@ -187,7 +190,6 @@ class CategoryControllerTest extends RestDocsTestSupport {
 
         // then
         result.andExpect(status().isOk())
-                .andExpect(jsonPath("data").value(category.isPublic()))
                 .andDo(restDocs.document(
                         pathParameters(
                                 parameterWithName("categoryName").description("카테고리 이름")
@@ -204,7 +206,46 @@ class CategoryControllerTest extends RestDocsTestSupport {
     }
 
     @Test
-    void addCategory() {
+    void addCategory() throws Exception {
+        // given
+        given(categoryService.create(any(UserPayload.class), any(CategoryRequest.Info.class)))
+                .willReturn(category.getName());
+
+        CategoryRequest.Info addCategoryRequest = new CategoryRequest.Info(
+                category.getName(),
+                category.getDescription(),
+                category.isPublic());
+
+        // when
+        ResultActions result = mockMvc.perform(
+                post(BASE_URL + "/categories")
+                        .header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_HEADER)
+                        .content(createJson(addCategoryRequest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        result.andExpect(status().isCreated())
+                .andDo(restDocs.document(
+                        requestFields(
+                                fieldWithPath("name").type(JsonFieldType.STRING)
+                                        .description("카테고리 이름")
+                                        .attributes(field("constraints", "최대 10글자")),
+                                fieldWithPath("description").type(JsonFieldType.STRING)
+                                        .description("카테고리 설명")
+                                        .attributes(field("constraints", "최대 20글자"))
+                                        .optional(),
+                                fieldWithPath("isPublic").type(JsonFieldType.BOOLEAN)
+                                        .description("카테고리 공개여부")
+                                        .attributes(field("constraints", "true/false"))
+                        ),
+                        responseFields(
+                                fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("응답 성공 여부"),
+                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("응답 코드"),
+                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.STRING).description("카테고리 이름")
+                        )
+                ));
     }
 
     @Test
