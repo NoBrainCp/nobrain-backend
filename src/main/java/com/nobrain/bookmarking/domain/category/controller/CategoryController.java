@@ -39,7 +39,7 @@ public class CategoryController {
         return responseService.getSingleResult(categoryService.getCategoryByBookmarkId(bookmarkId));
     }
 
-    @GetMapping("/{categoryName}/public/users")
+    @GetMapping("/{categoryName}/public")
     public SingleResult<Boolean> getCategoryIsPublic(@VerifiedUser UserPayload payload,
                                                      @PathVariable String categoryName) {
         return responseService.getSingleResult(categoryService.getCategoryIsPublic(payload, categoryName));
