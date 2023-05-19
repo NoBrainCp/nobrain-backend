@@ -23,8 +23,7 @@ import static com.nobrain.bookmarking.config.RestDocsConfig.field;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -206,6 +205,7 @@ class CategoryControllerTest extends RestDocsTestSupport {
     }
 
     @Test
+    @DisplayName("카테고리 생성 - 성공")
     void addCategory() throws Exception {
         // given
         given(categoryService.create(any(UserPayload.class), any(CategoryRequest.Info.class)))
@@ -249,10 +249,54 @@ class CategoryControllerTest extends RestDocsTestSupport {
     }
 
     @Test
-    void updateCategory() {
+    @DisplayName("카테고리 수정 - 성공")
+    void updateCategory() throws Exception {
+        // given
+        CategoryRequest.Info updateCategoryRequest = new CategoryRequest.Info(
+                category.getName(),
+                category.getDescription(),
+                category.isPublic());
+
+        // when
+        ResultActions result = mockMvc.perform(
+                put(BASE_URL + "/categories/{categoryName}", category.getName())
+                        .header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_HEADER)
+                        .content(createJson(updateCategoryRequest))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON));
+
+        // then
+        result.andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        pathParameters(
+                                parameterWithName("categoryName").description("카테고리 이름")
+                        ),
+                        requestFields(
+                                fieldWithPath("name").type(JsonFieldType.STRING)
+                                        .description("카테고리 이름")
+                                        .attributes(field("constraints", "최대 10글자")),
+                                fieldWithPath("description").type(JsonFieldType.STRING)
+                                        .description("카테고리 설명")
+                                        .attributes(field("constraints", "최대 20글자"))
+                                        .optional(),
+                                fieldWithPath("isPublic").type(JsonFieldType.BOOLEAN)
+                                        .description("카테고리 공개여부")
+                                        .attributes(field("constraints", "true/false"))
+                        )
+                ));
     }
 
     @Test
-    void deleteCategory() {
+    @DisplayName("카테고리 삭제 - 성공")
+    void deleteCategory() throws Exception {
+        mockMvc.perform(
+                delete(BASE_URL + "/categories/{categoryName}", category.getName())
+                        .header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_HEADER))
+                .andExpect(status().isOk())
+                .andDo(restDocs.document(
+                        pathParameters(
+                                parameterWithName("categoryName").description("카테고리 이름")
+                        )
+                ));
     }
 }
