@@ -14,7 +14,7 @@ public class JwtTokenExtractor {
     private static final int TOKEN_INDEX = 1;
     private static final String BLANK = " ";
 
-    public static String extract(HttpServletRequest request) {
+    public String extract(HttpServletRequest request) {
         Enumeration<String> headers = request.getHeaders(HttpHeaders.AUTHORIZATION);
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();
@@ -26,7 +26,7 @@ public class JwtTokenExtractor {
         throw new AuthorizationHeaderInvalidException();
     }
 
-    public static boolean hasAccessToken(HttpServletRequest request) {
+    public boolean hasAccessToken(HttpServletRequest request) {
         Enumeration<String> headers = request.getHeaders(HttpHeaders.AUTHORIZATION);
         while (headers.hasMoreElements()) {
             String value = headers.nextElement();

@@ -2,6 +2,7 @@ package com.nobrain.bookmarking.global.config;
 
 import com.nobrain.bookmarking.domain.auth.interceptor.AuthInterceptor;
 import com.nobrain.bookmarking.domain.auth.service.JwtTokenProvider;
+import com.nobrain.bookmarking.domain.auth.util.JwtTokenExtractor;
 import com.nobrain.bookmarking.domain.user.resolver.AuthArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
 
     private final JwtTokenProvider tokenProvider;
+    private final JwtTokenExtractor tokenExtractor;
     private final AuthInterceptor authInterceptor;
 
     @Override
@@ -54,6 +56,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(new AuthArgumentResolver(tokenProvider));
+        resolvers.add(new AuthArgumentResolver(tokenProvider, tokenExtractor));
     }
 }
