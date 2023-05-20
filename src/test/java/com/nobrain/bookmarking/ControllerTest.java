@@ -1,6 +1,8 @@
 package com.nobrain.bookmarking;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nobrain.bookmarking.domain.auth.service.JwtTokenProvider;
+import com.nobrain.bookmarking.domain.auth.util.JwtTokenExtractor;
 import com.nobrain.bookmarking.domain.bookmark.service.BookmarkService;
 import com.nobrain.bookmarking.domain.category.service.CategoryService;
 import com.nobrain.bookmarking.domain.follow.service.FollowService;
@@ -42,4 +44,10 @@ public abstract class ControllerTest {
 
     @MockBean
     protected FollowService followService;
+
+    @MockBean
+    protected JwtTokenProvider tokenProvider;
+
+    @MockBean
+    protected JwtTokenExtractor tokenExtractor;
 }

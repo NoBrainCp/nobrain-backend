@@ -10,6 +10,7 @@ import com.nobrain.bookmarking.global.response.model.ListResult;
 import com.nobrain.bookmarking.global.response.model.SingleResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -39,13 +40,14 @@ public class CategoryController {
         return responseService.getSingleResult(categoryService.getCategoryByBookmarkId(bookmarkId));
     }
 
-    @GetMapping("/{categoryName}/public/users")
+    @GetMapping("/{categoryName}/public")
     public SingleResult<Boolean> getCategoryIsPublic(@VerifiedUser UserPayload payload,
                                                      @PathVariable String categoryName) {
         return responseService.getSingleResult(categoryService.getCategoryIsPublic(payload, categoryName));
     }
 
     @PostMapping("")
+    @ResponseStatus(HttpStatus.CREATED)
     public SingleResult<String> addCategory(
             @VerifiedUser UserPayload payload,
             @Valid @RequestBody CategoryRequest.Info requestDto) {

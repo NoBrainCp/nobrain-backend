@@ -2,6 +2,7 @@ package com.nobrain.bookmarking.domain.user.controller;
 
 import com.nobrain.bookmarking.docs.RestDocsTestSupport;
 import com.nobrain.bookmarking.domain.user.dto.UserRequest;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -19,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserSignControllerTest extends RestDocsTestSupport {
 
     @Test
+    @DisplayName("회원가입 - 성공")
     void signUp() throws Exception {
         // given
         given(userSignService.signUp(any(UserRequest.SignUp.class)))
@@ -59,22 +61,5 @@ class UserSignControllerTest extends RestDocsTestSupport {
                             )
                         )
                 );
-//        result.andExpect(status().isCreated())
-//                .andDo(document("sign-up",
-//                        getDocumentRequest(),
-//                        getDocumentResponse(),
-//                        requestFields(
-//                                fieldWithPath("name").type(JsonFieldType.STRING).description("이름"),
-//                                fieldWithPath("email").type(JsonFieldType.STRING).description("이메일"),
-//                                fieldWithPath("password").type(JsonFieldType.STRING).description("비밀번호"),
-//                                fieldWithPath("passwordCheck").type(JsonFieldType.STRING).description("비밀번호 확인")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
-//                                fieldWithPath("code").type(JsonFieldType.NUMBER).description("결과 코드"),
-//                                fieldWithPath("message").type(JsonFieldType.STRING).description("결과 메시지"),
-//                                fieldWithPath("data").type(JsonFieldType.NUMBER).description("유저 아이디")
-//                        )
-//                ));
     }
 }

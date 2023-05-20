@@ -54,7 +54,7 @@ public class Category {
     public void update(CategoryRequest.Info dto) {
         this.name = dto.getName();
         this.description = dto.getDescription();
-        this.isPublic = dto.isPublic();
+        this.isPublic = dto.getIsPublic();
     }
 
     @Override

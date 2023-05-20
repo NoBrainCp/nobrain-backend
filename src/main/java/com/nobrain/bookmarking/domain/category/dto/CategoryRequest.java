@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class CategoryRequest {
@@ -24,8 +25,9 @@ public class CategoryRequest {
         @Size(max = 40, message = "설명의 최대 길이는 30글자 입니다.")
         private String description;
 
+        @NotNull
         @JsonProperty("isPublic")
-        private boolean isPublic;
+        private Boolean isPublic;
 
         public Category toEntity(User user) {
             return Category.builder()
