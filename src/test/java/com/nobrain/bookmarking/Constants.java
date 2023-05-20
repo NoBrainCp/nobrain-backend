@@ -68,4 +68,6 @@ public class Constants {
     // common controller
     public static final String AUTHORIZATION_HEADER = "Bearer Token";
     public static final String ACCESS_TOKEN = "accessToken";
+    public static final String NEW_TAG_NAME = "tagTest";
+
 }

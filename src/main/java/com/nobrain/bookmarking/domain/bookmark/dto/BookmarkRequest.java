@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
 import com.nobrain.bookmarking.domain.category.entity.Category;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 public class BookmarkRequest {
 
+    @Builder
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
