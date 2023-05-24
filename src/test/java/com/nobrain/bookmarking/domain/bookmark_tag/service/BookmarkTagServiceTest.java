@@ -4,7 +4,6 @@ import com.nobrain.bookmarking.ServiceTest;
 import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkRequest;
 import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
 import com.nobrain.bookmarking.domain.bookmark_tag.dto.projection.BookmarkTagProjection;
-import com.nobrain.bookmarking.domain.bookmark_tag.entity.BookmarkTag;
 import com.nobrain.bookmarking.domain.category.entity.Category;
 import com.nobrain.bookmarking.domain.tag.entity.Tag;
 import com.nobrain.bookmarking.domain.user.entity.User;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.nobrain.bookmarking.Constants.*;
@@ -35,7 +33,6 @@ class BookmarkTagServiceTest extends ServiceTest {
     private User user;
     private Category category;
     private Bookmark bookmark;
-    private BookmarkTag bookmarkTag;
     private Tag tag;
 
     @BeforeEach
@@ -74,17 +71,12 @@ class BookmarkTagServiceTest extends ServiceTest {
                 .createdAt(LocalDateTime.now())
                 .modifiedAt(LocalDateTime.now())
                 .build();
-
-        bookmarkTag = BookmarkTag.builder()
-                .tag(tag)
-                .bookmark(bookmark)
-                .build();
     }
     @Test
     @DisplayName("복마크 태그 저장 - 성공")
     void saveTags() {
         // given
-        List<String> tagList = Arrays.asList(TAG_NAME);
+        List<String> tagList = List.of(TAG_NAME);
 
         //when, then
         assertThatCode(() -> bookmarkTagService.saveTags(bookmark, tagList))
@@ -135,7 +127,7 @@ class BookmarkTagServiceTest extends ServiceTest {
                 .isPublic(bookmark.isPublic())
                 .isStarred(bookmark.isStarred())
                 .categoryName(category.getName())
-                .tags(Arrays.asList(tag.getName()))
+                .tags(List.of(tag.getName()))
                 .build();
     }
     private BookmarkTagProjection.BookmarkAndTag toBookmarkAntTagDto(Bookmark bookmark, Tag tag) {
