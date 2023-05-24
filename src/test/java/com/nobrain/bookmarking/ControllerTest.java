@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nobrain.bookmarking.domain.auth.service.JwtTokenProvider;
 import com.nobrain.bookmarking.domain.auth.util.JwtTokenExtractor;
 import com.nobrain.bookmarking.domain.bookmark.service.BookmarkService;
+import com.nobrain.bookmarking.domain.bookmark_tag.service.BookmarkTagService;
 import com.nobrain.bookmarking.domain.category.service.CategoryService;
 import com.nobrain.bookmarking.domain.follow.service.FollowService;
 import com.nobrain.bookmarking.domain.tag.service.TagService;
@@ -41,6 +42,9 @@ public abstract class ControllerTest {
 
     @MockBean
     protected TagService tagService;
+
+    @MockBean
+    protected BookmarkTagService bookmarkTagService;
 
     @MockBean
     protected FollowService followService;
