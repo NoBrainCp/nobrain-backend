@@ -2,6 +2,7 @@ package com.nobrain.bookmarking.domain.bookmark_tag.controller;
 
 import com.nobrain.bookmarking.docs.RestDocsTestSupport;
 import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
+import com.nobrain.bookmarking.domain.bookmark.dto.BookmarkResponse;
 import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
 import com.nobrain.bookmarking.domain.bookmark_tag.dto.BookmarkTagResponse;
 import com.nobrain.bookmarking.domain.category.entity.Category;
@@ -19,14 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.nobrain.bookmarking.Constants.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class BookmarkTagControllerTest extends RestDocsTestSupport {
@@ -116,6 +115,51 @@ class BookmarkTagControllerTest extends RestDocsTestSupport {
     }
 
     @Test
-    void getBookmarkTagsByTagList() {
+    @DisplayName("태그 아이디 리스트를 통한 전체 북마크 조회 - 성공")
+    void getBookmarkTagsByTagList() throws Exception {
+        // given
+        given(tokenProvider.validateToken(any(HttpServletRequest.class)))
+                .willReturn(true);
+        given(bookmarkTagService.getBookmarkTagsByTagList(anyString(), anyList()))
+                .willReturn(List.of(BookmarkResponse.Info.builder()
+                        .id(bookmark.getId())
+                        .url(bookmark.getUrl())
+                        .title(bookmark.getTitle())
+                        .description(bookmark.getDescription())
+                        .isPublic(bookmark.isPublic())
+                        .isStarred(bookmark.isStarred())
+                        .image(bookmark.getMetaImage())
+                        .createdAt(bookmark.getCreatedAt().toLocalDate())
+                        .modifiedAt(bookmark.getModifiedAt().toLocalDate())
+                        .build()));
+
+        // when
+        ResultActions result = mockMvc.perform(
+                get(BASE_URL + "/bookmark-tags/users/{username}/bookmarks", user.getName())
+                        .param("tagIds", "1")
+                        .header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_HEADER));
+
+        // then
+        result.andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                pathParameters(
+                                        parameterWithName("username").description("유저 이름")
+                                ),
+                                requestParameters(
+                                        parameterWithName("tagIds").description("태그 아이디 리스트")
+                                ),
+                                responseFields(beneathPath("list[]").withSubsectionId("list"),
+                                        fieldWithPath("id").type(JsonFieldType.NUMBER).description("북마크 아이디"),
+                                        fieldWithPath("url").type(JsonFieldType.STRING).description("북마크 URL"),
+                                        fieldWithPath("title").type(JsonFieldType.STRING).description("북마크 제목"),
+                                        fieldWithPath("description").type(JsonFieldType.STRING).description("북마크 설명"),
+                                        fieldWithPath("image").type(JsonFieldType.STRING).description("북마크 메타 이미지").optional(),
+                                        fieldWithPath("public").type(JsonFieldType.BOOLEAN).description("북마크 공개"),
+                                        fieldWithPath("starred").type(JsonFieldType.BOOLEAN).description("북마크 즐겨찾기"),
+                                        fieldWithPath("createdAt").type(JsonFieldType.STRING).description("북마크 생성 시간"),
+                                        fieldWithPath("modifiedAt").type(JsonFieldType.STRING).description("북마크 수정 시간")
+                                )
+                        ));
     }
 }
