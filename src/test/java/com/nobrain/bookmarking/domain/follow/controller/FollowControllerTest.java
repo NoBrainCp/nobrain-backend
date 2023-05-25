@@ -1,6 +1,7 @@
 package com.nobrain.bookmarking.domain.follow.controller;
 
 import com.nobrain.bookmarking.docs.RestDocsTestSupport;
+import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
 import com.nobrain.bookmarking.domain.follow.dto.FollowResponse;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import org.apache.http.HttpHeaders;
@@ -43,6 +44,16 @@ class FollowControllerTest extends RestDocsTestSupport {
             .password(TO_USER_PASSWORD)
             .profileImage(TO_USER_PROFILE_IMG)
             .categories(new ArrayList<>())
+            .build();
+
+    private final UserPayload fromUserPayload = UserPayload.builder()
+            .userId(USER_ID)
+            .username(USERNAME)
+            .build();
+
+    private final UserPayload toUserPayload = UserPayload.builder()
+            .userId(TO_USER_ID)
+            .username(TO_USERNAME)
             .build();
 
     @Test
@@ -144,7 +155,51 @@ class FollowControllerTest extends RestDocsTestSupport {
     }
 
     @Test
-    void getFollowerCardList() {
+    @DisplayName("팔로워 카드 리스트 조회 - 성공")
+    void getFollowerCardList() throws Exception {
+        // given
+        List<FollowResponse.FollowCard> followerCardList = List.of(FollowResponse.FollowCard.builder()
+                .userId(fromUser.getId())
+                .username(fromUser.getName())
+                .profileImage(fromUser.getProfileImage())
+                .bookmarkCount(BOOKMARK_COUNT)
+                .followerCount((long) FOLLOWER_COUNT)
+                .followingCount((long) FOLLOWING_COUNT)
+                .isFollow(IS_FOLLOW)
+                .build());
+
+        given(tokenProvider.validateToken(any(HttpServletRequest.class)))
+                .willReturn(true);
+        given(tokenProvider.getPayload(ACCESS_TOKEN))
+                .willReturn(toUserPayload);
+        given(tokenExtractor.extract(any(HttpServletRequest.class)))
+                .willReturn(ACCESS_TOKEN);
+        given(followService.getFollowerCardList(any(UserPayload.class), anyString()))
+                .willReturn(followerCardList);
+
+        // when
+        ResultActions result = mockMvc.perform(
+                get(BASE_URL + "/users/{username}/follower-cards", toUser.getName())
+                        .header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_HEADER));
+
+        // then
+        result.andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                pathParameters(
+                                        parameterWithName("username").description("유저 이름")
+                                ),
+                                responseFields(beneathPath("list[]").withSubsectionId("list"),
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER).description("유저 아이디"),
+                                        fieldWithPath("username").type(JsonFieldType.STRING).description("유저 이름"),
+                                        fieldWithPath("profileImage").type(JsonFieldType.STRING).description("유저 프로필 이미지"),
+                                        fieldWithPath("bookmarkCount").type(JsonFieldType.NUMBER).description("북마크 개수"),
+                                        fieldWithPath("followerCount").type(JsonFieldType.NUMBER).description("팔로워 수"),
+                                        fieldWithPath("followingCount").type(JsonFieldType.NUMBER).description("팔로잉 수"),
+                                        fieldWithPath("isFollow").type(JsonFieldType.BOOLEAN).description("팔로우 여부")
+                                )
+                        )
+                );
     }
 
     @Test
