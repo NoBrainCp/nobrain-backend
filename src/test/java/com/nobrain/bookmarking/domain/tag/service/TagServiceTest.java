@@ -7,7 +7,6 @@ import com.nobrain.bookmarking.domain.category.entity.Category;
 import com.nobrain.bookmarking.domain.tag.dto.TagResponse;
 import com.nobrain.bookmarking.domain.tag.entity.Tag;
 import com.nobrain.bookmarking.domain.user.entity.User;
-import com.nobrain.bookmarking.global.security.PasswordEncryptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,15 +28,11 @@ class TagServiceTest extends ServiceTest {
 
     @Autowired
     private TagService tagService;
-    @Autowired
-    private PasswordEncryptor encryptor;
     private User user;
     private Category category;
     private Bookmark bookmark;
     private BookmarkTag bookmarkTag;
     private Tag tag;
-
-
 
     @BeforeEach
     void setUp() {
@@ -46,7 +40,7 @@ class TagServiceTest extends ServiceTest {
                 .id(USER_ID)
                 .name(USERNAME)
                 .email(EMAIL)
-                .password(encryptor.encrypt(PASSWORD))
+                .password(PASSWORD)
                 .profileImage(PROFILE_IMG)
                 .categories(new ArrayList<>())
                 .build();
@@ -124,7 +118,7 @@ class TagServiceTest extends ServiceTest {
     @DisplayName("태그 전체 삭제 - 성공")
     void deleteAllByBookmarkTags() {
         // given
-        List<BookmarkTag> bookmarkTagList = Arrays.asList(bookmarkTag);
+        List<BookmarkTag> bookmarkTagList = List.of(bookmarkTag);
 
         // when, then
         assertThatCode(() -> tagService.deleteAllByBookmarkTags(bookmarkTagList))
@@ -142,7 +136,7 @@ class TagServiceTest extends ServiceTest {
         List<TagResponse.Info> actual = tagService.getAllTagsOfUser(user.getName());
 
         //then
-        List<TagResponse.Info> expected = Arrays.asList(toTagInfoDto(tag));
+        List<TagResponse.Info> expected = List.of(toTagInfoDto(tag));
 
         assertThat(actual).usingRecursiveComparison()
                 .isEqualTo(expected);
@@ -161,7 +155,7 @@ class TagServiceTest extends ServiceTest {
         List<TagResponse.Info> actual = tagService.getTagsOfUserByBookmarkId(user.getName(), bookmark.getId());
 
         // then
-        List<TagResponse.Info> expected = Arrays.asList(toTagInfoDto(tag));
+        List<TagResponse.Info> expected = List.of(toTagInfoDto(tag));
 
         assertThat(actual).usingRecursiveComparison()
                 .isEqualTo(expected);
