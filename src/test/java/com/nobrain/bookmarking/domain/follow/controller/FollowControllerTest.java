@@ -18,6 +18,7 @@ import static com.nobrain.bookmarking.Constants.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -74,6 +75,8 @@ class FollowControllerTest extends RestDocsTestSupport {
                                 )
                         )
                 );
+
+        verify(followService).getFollowCount(fromUser.getName());
     }
 
     @Test
@@ -104,10 +107,40 @@ class FollowControllerTest extends RestDocsTestSupport {
                                 )
                         )
                 );
+
+        verify(followService).getFollowerList(toUser.getName());
     }
 
     @Test
-    void getFollowingList() {
+    @DisplayName("팔로잉 리스트 조회 - 성공")
+    void getFollowingList() throws Exception {
+        // given
+        given(tokenProvider.validateToken(any(HttpServletRequest.class)))
+                .willReturn(true);
+        given(followService.getFollowingList(anyString()))
+                .willReturn(List.of(FollowResponse.Info.toResponse(toUser)));
+
+        // when
+        ResultActions result = mockMvc.perform(
+                get(BASE_URL + "/users/{username}/followings", fromUser.getName())
+                        .header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_HEADER));
+
+        // then
+        result.andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                pathParameters(
+                                        parameterWithName("username").description("유저 이름")
+                                ),
+                                responseFields(beneathPath("list[]").withSubsectionId("list"),
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER).description("유저 아이디"),
+                                        fieldWithPath("username").type(JsonFieldType.STRING).description("유저 이름"),
+                                        fieldWithPath("profileImage").type(JsonFieldType.STRING).description("유저 프로필 이미지")
+                                )
+                        )
+                );
+
+        verify(followService).getFollowingList(fromUser.getName());
     }
 
     @Test
