@@ -5,6 +5,7 @@ import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
 import com.nobrain.bookmarking.domain.follow.dto.FollowResponse;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import org.apache.http.HttpHeaders;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -87,6 +88,7 @@ class FollowControllerTest extends RestDocsTestSupport {
                         )
                 );
 
+        verify(tokenProvider).validateToken(any(HttpServletRequest.class));
         verify(followService).getFollowCount(fromUser.getName());
     }
 
@@ -119,6 +121,7 @@ class FollowControllerTest extends RestDocsTestSupport {
                         )
                 );
 
+        verify(tokenProvider).validateToken(any(HttpServletRequest.class));
         verify(followService).getFollowerList(toUser.getName());
     }
 
@@ -151,6 +154,7 @@ class FollowControllerTest extends RestDocsTestSupport {
                         )
                 );
 
+        verify(tokenProvider).validateToken(any(HttpServletRequest.class));
         verify(followService).getFollowingList(fromUser.getName());
     }
 
@@ -170,7 +174,7 @@ class FollowControllerTest extends RestDocsTestSupport {
 
         given(tokenProvider.validateToken(any(HttpServletRequest.class)))
                 .willReturn(true);
-        given(tokenProvider.getPayload(ACCESS_TOKEN))
+        given(tokenProvider.getPayload(anyString()))
                 .willReturn(toUserPayload);
         given(tokenExtractor.extract(any(HttpServletRequest.class)))
                 .willReturn(ACCESS_TOKEN);
@@ -179,7 +183,7 @@ class FollowControllerTest extends RestDocsTestSupport {
 
         // when
         ResultActions result = mockMvc.perform(
-                get(BASE_URL + "/users/{username}/follower-cards", toUser.getName())
+                get(BASE_URL + "/users/{username}/follower-cards", fromUser.getName())
                         .header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_HEADER));
 
         // then
@@ -200,17 +204,73 @@ class FollowControllerTest extends RestDocsTestSupport {
                                 )
                         )
                 );
+
+        verify(tokenProvider).validateToken(any(HttpServletRequest.class));
+        verify(tokenProvider).getPayload(ACCESS_TOKEN);
+        verify(tokenExtractor).extract(any(HttpServletRequest.class));
+        verify(followService).getFollowerCardList(toUserPayload, fromUser.getName());
     }
 
     @Test
-    void getFollowingCardList() {
+    @DisplayName("팔로잉 카드 리스트 조회 - 성")
+    void getFollowingCardList() throws Exception {
+        // given
+        List<FollowResponse.FollowCard> followingCardList = List.of(FollowResponse.FollowCard.builder()
+                .userId(toUser.getId())
+                .username(toUser.getName())
+                .profileImage(toUser.getProfileImage())
+                .bookmarkCount(BOOKMARK_COUNT)
+                .followerCount((long) FOLLOWER_COUNT)
+                .followingCount((long) FOLLOWING_COUNT)
+                .isFollow(IS_FOLLOW)
+                .build());
+
+        given(tokenProvider.validateToken(any(HttpServletRequest.class)))
+                .willReturn(true);
+        given(tokenProvider.getPayload(anyString()))
+                .willReturn(fromUserPayload);
+        given(tokenExtractor.extract(any(HttpServletRequest.class)))
+                .willReturn(ACCESS_TOKEN);
+        given(followService.getFollowingCardList(any(UserPayload.class), anyString()))
+                .willReturn(followingCardList);
+
+        // when
+        ResultActions result = mockMvc.perform(
+                get(BASE_URL + "/users/{username}/following-cards", toUser.getName())
+                        .header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_HEADER));
+
+        // then
+        result.andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                pathParameters(
+                                        parameterWithName("username").description("유저 이름")
+                                ),
+                                responseFields(beneathPath("list[]").withSubsectionId("list"),
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER).description("유저 아이디"),
+                                        fieldWithPath("username").type(JsonFieldType.STRING).description("유저 이름"),
+                                        fieldWithPath("profileImage").type(JsonFieldType.STRING).description("유저 프로필 이미지"),
+                                        fieldWithPath("bookmarkCount").type(JsonFieldType.NUMBER).description("북마크 개수"),
+                                        fieldWithPath("followerCount").type(JsonFieldType.NUMBER).description("팔로워 수"),
+                                        fieldWithPath("followingCount").type(JsonFieldType.NUMBER).description("팔로잉 수"),
+                                        fieldWithPath("isFollow").type(JsonFieldType.BOOLEAN).description("팔로우 여부")
+                                )
+                        )
+                );
+
+        verify(tokenProvider).validateToken(any(HttpServletRequest.class));
+        verify(tokenProvider).getPayload(ACCESS_TOKEN);
+        verify(tokenExtractor).extract(any(HttpServletRequest.class));
+        verify(followService).getFollowingCardList(fromUserPayload, toUser.getName());
     }
 
     @Test
+    @Disabled
     void isFollow() {
     }
 
     @Test
+    @Disabled
     void follow() {
     }
 }
