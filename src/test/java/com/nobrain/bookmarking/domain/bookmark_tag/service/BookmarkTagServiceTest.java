@@ -7,7 +7,6 @@ import com.nobrain.bookmarking.domain.bookmark_tag.dto.projection.BookmarkTagPro
 import com.nobrain.bookmarking.domain.category.entity.Category;
 import com.nobrain.bookmarking.domain.tag.entity.Tag;
 import com.nobrain.bookmarking.domain.user.entity.User;
-import com.nobrain.bookmarking.global.security.PasswordEncryptor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,8 +27,6 @@ class BookmarkTagServiceTest extends ServiceTest {
 
     @Autowired
     private BookmarkTagService bookmarkTagService;
-    @Autowired
-    private PasswordEncryptor encryptor;
     private User user;
     private Category category;
     private Bookmark bookmark;
@@ -41,7 +38,7 @@ class BookmarkTagServiceTest extends ServiceTest {
                 .id(USER_ID)
                 .name(USERNAME)
                 .email(EMAIL)
-                .password(encryptor.encrypt(PASSWORD))
+                .password(PASSWORD)
                 .profileImage(PROFILE_IMG)
                 .categories(new ArrayList<>())
                 .build();
