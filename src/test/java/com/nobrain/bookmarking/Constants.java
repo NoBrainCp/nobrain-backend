@@ -46,6 +46,7 @@ public class Constants {
     public static final String META_IMG = "";
     public static final String BOOKMARK_SEARCH_CONDITION = "all";
     public static final String BOOKMARK_SEARCH_KEYWORD = "네";
+    public static final Long BOOKMARK_COUNT = 1L;
 
 
     // tag
@@ -61,7 +62,6 @@ public class Constants {
     public static final String TO_USER_EMAIL = "toUser@email.com";
     public static final String TO_USER_PASSWORD = "toUserPassword12!";
     public static final String TO_USER_PROFILE_IMG = "";
-    public static final Long FROM_USER_BOOKMARK_COUNT = 1L;
     public static final boolean IS_FOLLOW = true;
 
 
