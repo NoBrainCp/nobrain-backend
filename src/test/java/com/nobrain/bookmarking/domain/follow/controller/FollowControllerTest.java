@@ -10,7 +10,9 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.nobrain.bookmarking.Constants.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -70,13 +72,38 @@ class FollowControllerTest extends RestDocsTestSupport {
                                         fieldWithPath("followerCnt").type(JsonFieldType.NUMBER).description("팔로워 수"),
                                         fieldWithPath("followingCnt").type(JsonFieldType.NUMBER).description("팔로잉 수")
                                 )
-                        ));
+                        )
+                );
     }
 
     @Test
     @DisplayName("팔로워 리스트 조회 - 성공")
     void getFollowerList() throws Exception {
+        // given
+        given(tokenProvider.validateToken(any(HttpServletRequest.class)))
+                .willReturn(true);
+        given(followService.getFollowerList(anyString()))
+                .willReturn(List.of(FollowResponse.Info.toResponse(fromUser)));
 
+        // when
+        ResultActions result = mockMvc.perform(
+                get(BASE_URL + "/users/{username}/followers", toUser.getName())
+                        .header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_HEADER));
+
+        // then
+        result.andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                pathParameters(
+                                        parameterWithName("username").description("유저 이름")
+                                ),
+                                responseFields(beneathPath("list[]").withSubsectionId("list"),
+                                        fieldWithPath("userId").type(JsonFieldType.NUMBER).description("유저 아이디"),
+                                        fieldWithPath("username").type(JsonFieldType.STRING).description("유저 이름"),
+                                        fieldWithPath("profileImage").type(JsonFieldType.STRING).description("유저 프로필 이미지")
+                                )
+                        )
+                );
     }
 
     @Test
