@@ -1,0 +1,101 @@
+package com.nobrain.bookmarking.domain.follow.controller;
+
+import com.nobrain.bookmarking.docs.RestDocsTestSupport;
+import com.nobrain.bookmarking.domain.follow.dto.FollowResponse;
+import com.nobrain.bookmarking.domain.user.entity.User;
+import org.apache.http.HttpHeaders;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.web.servlet.ResultActions;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+
+import static com.nobrain.bookmarking.Constants.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+class FollowControllerTest extends RestDocsTestSupport {
+
+    private final User fromUser = User.builder()
+            .id(USER_ID)
+            .name(USERNAME)
+            .email(EMAIL)
+            .password(PASSWORD)
+            .profileImage(PROFILE_IMG)
+            .categories(new ArrayList<>())
+            .build();
+
+    private final User toUser = User.builder()
+            .id(TO_USER_ID)
+            .name(TO_USERNAME)
+            .email(TO_USER_EMAIL)
+            .password(TO_USER_PASSWORD)
+            .profileImage(TO_USER_PROFILE_IMG)
+            .categories(new ArrayList<>())
+            .build();
+
+    @Test
+    @DisplayName("유저의 팔로우, 팔로잉 수 조회 - 성공")
+    void getFollowCount() throws Exception {
+        // given
+        given(tokenProvider.validateToken(any(HttpServletRequest.class)))
+                .willReturn(true);
+        given(followService.getFollowCount(anyString()))
+                .willReturn(FollowResponse.FollowCount.builder()
+                        .followerCnt(FOLLOWER_COUNT)
+                        .followingCnt(FOLLOWING_COUNT)
+                        .build());
+
+        // when
+        ResultActions result = mockMvc.perform(
+                get(BASE_URL + "/users/{username}/follow-cnt", fromUser.getName())
+                        .header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_HEADER));
+
+        // then
+        result.andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                pathParameters(
+                                        parameterWithName("username").description("유저 이름")
+                                ),
+                                responseFields(beneathPath("data").withSubsectionId("data"),
+                                        fieldWithPath("followerCnt").type(JsonFieldType.NUMBER).description("팔로워 수"),
+                                        fieldWithPath("followingCnt").type(JsonFieldType.NUMBER).description("팔로잉 수")
+                                )
+                        ));
+    }
+
+    @Test
+    @DisplayName("팔로워 리스트 조회 - 성공")
+    void getFollowerList() throws Exception {
+
+    }
+
+    @Test
+    void getFollowingList() {
+    }
+
+    @Test
+    void getFollowerCardList() {
+    }
+
+    @Test
+    void getFollowingCardList() {
+    }
+
+    @Test
+    void isFollow() {
+    }
+
+    @Test
+    void follow() {
+    }
+}
