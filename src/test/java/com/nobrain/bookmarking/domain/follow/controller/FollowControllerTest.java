@@ -5,14 +5,12 @@ import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
 import com.nobrain.bookmarking.domain.follow.dto.FollowResponse;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import org.apache.http.HttpHeaders;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +19,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -304,7 +303,34 @@ class FollowControllerTest extends RestDocsTestSupport {
     }
 
     @Test
-    @Disabled
-    void follow() {
+    @DisplayName("팔로우 - 성공")
+    void follow() throws Exception {
+        // given
+        given(tokenProvider.validateToken(any(HttpServletRequest.class)))
+                .willReturn(true);
+        given(tokenProvider.getPayload(anyString()))
+                .willReturn(fromUserPayload);
+        given(tokenExtractor.extract(any(HttpServletRequest.class)))
+                .willReturn(ACCESS_TOKEN);
+
+        // when
+        ResultActions result = mockMvc.perform(
+                post(BASE_URL + "/users/{toUserId}/follow", toUser.getId())
+                        .header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_HEADER));
+
+        // then
+        result.andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                pathParameters(
+                                        parameterWithName("toUserId").description("팔로우할 유저의 아이디")
+                                ),
+                                responseFields(
+                                        fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                                        fieldWithPath("code").type(JsonFieldType.NUMBER).description("코드"),
+                                        fieldWithPath("message").type(JsonFieldType.STRING).description("메시지")
+                                )
+                        )
+                );
     }
 }
