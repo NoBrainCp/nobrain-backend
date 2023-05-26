@@ -17,8 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.nobrain.bookmarking.Constants.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -265,8 +264,43 @@ class FollowControllerTest extends RestDocsTestSupport {
     }
 
     @Test
-    @Disabled
-    void isFollow() {
+    @DisplayName("팔로우 여부 조회 - 성공")
+    void isFollow() throws Exception {
+        // given
+        given(tokenProvider.validateToken(any(HttpServletRequest.class)))
+                .willReturn(true);
+        given(tokenProvider.getPayload(anyString()))
+                .willReturn(fromUserPayload);
+        given(tokenExtractor.extract(any(HttpServletRequest.class)))
+                .willReturn(ACCESS_TOKEN);
+        given(followService.isFollow(any(UserPayload.class), anyLong()))
+                .willReturn(true);
+
+        // when
+        ResultActions result = mockMvc.perform(
+                get(BASE_URL + "/users/{userId}/is-follow", toUser.getId())
+                        .header(HttpHeaders.AUTHORIZATION, AUTHORIZATION_HEADER));
+
+        // then
+        result.andExpect(status().isOk())
+                .andDo(
+                        restDocs.document(
+                                pathParameters(
+                                        parameterWithName("userId").description("유저 아이디")
+                                ),
+                                responseFields(
+                                    fieldWithPath("success").type(JsonFieldType.BOOLEAN).description("성공 여부"),
+                                    fieldWithPath("code").type(JsonFieldType.NUMBER).description("코드"),
+                                    fieldWithPath("message").type(JsonFieldType.STRING).description("메시지"),
+                                    fieldWithPath("data").type(JsonFieldType.BOOLEAN).description("팔로우 여부")
+                                )
+                        )
+                );
+
+        verify(tokenProvider).validateToken(any(HttpServletRequest.class));
+        verify(tokenProvider).getPayload(ACCESS_TOKEN);
+        verify(tokenExtractor).extract(any(HttpServletRequest.class));
+        verify(followService).isFollow(fromUserPayload, toUser.getId());
     }
 
     @Test
