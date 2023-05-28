@@ -29,7 +29,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        return true;
+        return false;
     }
 
     private boolean isPreflight(final HttpServletRequest request) {
