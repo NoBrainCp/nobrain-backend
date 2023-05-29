@@ -1,6 +1,4 @@
-# nobrain-backend
-<br/>
-<div style="font-size: 30px" align="center"> 📚 No Brain: 소셜 북마킹 웹 사이트 </div>
+<h1 align="center"> 📚 No Brain: 소셜 북마킹 웹 사이트 </h1>
 <br/>
 <img width="100%" height="850px" src="https://user-images.githubusercontent.com/75934088/236386046-75dbe329-02cf-41cd-bb8c-3f821f1e17f6.gif">
 
@@ -132,5 +130,7 @@
 </table>
 
 <br/>
+
+## 🧩 ERD
 
 ## 🏛️ Architecture
