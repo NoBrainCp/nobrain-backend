@@ -24,7 +24,7 @@
 ## 🪄 Skill Stack
 
 <table>
-  <tr style="height: 120px; border: none">
+  <tr style="height: 120px">
     <td align="center" width="140">
         <img src="https://skillicons.dev/icons?i=java&theme=light" width="65" height="65" alt="Java 11 logo" />
         <br>Java 11
@@ -50,7 +50,7 @@
         <br>JWT
     </td>
   </tr>
-  <tr style="height: 120px; border: none">
+  <tr style="height: 120px">
     <td align="center" width="140">
         <img style="border-radius: 12px" src="https://storage.semalt.com/uploads/articles/e179d86b4554d4c5b238f86bcaf2f6342.png" width="65" height="65" alt="Jsoup logo" />
         <br>Jsoup
@@ -60,7 +60,7 @@
         <br>Oauth2
     </td>
   </tr>
-  <tr style="border: none">
+  <tr>
     <td align="center" width="140">
         <img style="border-radius: 12px" src="https://images.velog.io/images/new_wisdom/post/1fc8bd41-ec1d-4272-99f3-d2f90bc4056f/junit5.jpeg" width="65" height="65" alt="Junit 5 logo" />
         <br>Junit 5
@@ -74,7 +74,7 @@
         <br>Spring Rest Docs
     </td>
   </tr>
-  <tr style="border: none">
+  <tr>
     <td align="center" width="140">
         <img src="https://skillicons.dev/icons?i=mysql&theme=light" width="65" height="65" alt="MySQL logo" />
         <br>MySQL
@@ -95,7 +95,7 @@
 ## 🎛️ Infra
 
 <table>
-  <tr style="border: none">
+  <tr>
     <td align="center" width="140">
       <img style="border-radius: 12px" src="https://skillicons.dev/icons?i=jenkins&theme=light" width="65" height="65" alt="Jenkins logo">
       <br/>Jenkins
@@ -113,7 +113,7 @@
       <br/>Prometheus
     </td>
   </tr>
-  <tr style="border: none">
+  <tr>
     <td align="center" width="140">
       <img style="border-radius: 12px" src="https://d2tag017dbhslw.cloudfront.net/icon/d88319dfa5d204f019b4284149886c59-7d586ea82f792b61a8c87de60565133d.svg" width="65" height="65" alt="AWS EC2 logo">
       <br/>AWS EC2
