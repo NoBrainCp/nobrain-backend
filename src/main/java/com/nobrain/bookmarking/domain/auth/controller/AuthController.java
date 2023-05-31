@@ -1,9 +1,13 @@
 package com.nobrain.bookmarking.domain.auth.controller;
 
 import com.nobrain.bookmarking.domain.auth.dto.AccessTokenRequest;
-import com.nobrain.bookmarking.domain.auth.dto.RefreshTokenRequest;
-import com.nobrain.bookmarking.domain.auth.entity.RefreshToken;
-import com.nobrain.bookmarking.domain.auth.service.TokenService;
+import com.nobrain.bookmarking.domain.auth.dto.LoginRequest;
+import com.nobrain.bookmarking.domain.auth.dto.LoginResponse;
+import com.nobrain.bookmarking.domain.auth.dto.LogoutRequest;
+import com.nobrain.bookmarking.domain.auth.exception.TokenNotExistsException;
+import com.nobrain.bookmarking.domain.auth.service.AuthService;
+import com.nobrain.bookmarking.domain.auth.service.JwtTokenProvider;
+import com.nobrain.bookmarking.global.response.model.CommonResult;
 import com.nobrain.bookmarking.global.response.model.SingleResult;
 import com.nobrain.bookmarking.global.response.service.ResponseService;
 import lombok.RequiredArgsConstructor;
@@ -14,19 +18,36 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("${app.domain}/auth")
 public class AuthController {
 
-    private final TokenService tokenService;
     private final ResponseService responseService;
+    private final AuthService authService;
+    private final JwtTokenProvider tokenProvider;
 
-    @PostMapping("/refresh-token")
-    public SingleResult<RefreshToken> generateRefreshToken(@RequestBody RefreshTokenRequest request) {
-        return responseService.getSingleResult(tokenService.generateRefreshToken(request));
+    @PostMapping("/login")
+    public SingleResult<LoginResponse> login(@RequestBody LoginRequest dto) {
+        return responseService.getSingleResult(authService.login(dto));
+    }
+
+    @PostMapping("/logout")
+    public CommonResult logout(@RequestBody LogoutRequest logoutRequest) {
+        String refreshToken = logoutRequest.getRefreshToken();
+        validateRefreshTokenExists(refreshToken);
+        authService.logout(refreshToken);
+        return responseService.getSuccessResult();
     }
 
     @PostMapping("/access-token")
-    public SingleResult<String> generateAccessToken(@RequestBody AccessTokenRequest request) {
-        return responseService.getSingleResult(tokenService.generateAccessToken(request));
+    public SingleResult<String> generateAccessToken(@RequestBody AccessTokenRequest accessTokenRequest) {
+        validateRefreshTokenExists(accessTokenRequest.getRefreshToken());
+        String accessToken = tokenProvider.generateAccessToken(accessTokenRequest.getRefreshToken());
+        return responseService.getSingleResult(accessToken);
+    }
+
+    private void validateRefreshTokenExists(String refreshToken) {
+        if (refreshToken == null) {
+            throw new TokenNotExistsException("Refresh Token");
+        }
     }
 }

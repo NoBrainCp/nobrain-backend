@@ -1,6 +1,7 @@
 package com.nobrain.bookmarking.domain.category.entity;
 
 import com.nobrain.bookmarking.domain.bookmark.entity.Bookmark;
+import com.nobrain.bookmarking.domain.category.dto.CategoryRequest;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,37 +9,52 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.*;
+import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 public class Category {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = IDENTITY)
     @Column(name = "category_id")
     private Long id;
 
+    @NotBlank
     private String name;
 
     @Lob
     private String description;
     private boolean isPublic;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "category")
+    @OneToMany(mappedBy = "category", cascade = ALL)
     private List<Bookmark> bookmarks = new ArrayList<>();
 
     @Builder
-    public Category(String name, String description, boolean isPublic, User user, List<Bookmark> bookmarks) {
+    public Category(Long id, String name, String description, boolean isPublic, User user, List<Bookmark> bookmarks) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.isPublic = isPublic;
         addUser(user);
         this.bookmarks = bookmarks;
+    }
+
+    public void update(CategoryRequest.Info dto) {
+        this.name = dto.getName();
+        this.description = dto.getDescription();
+        this.isPublic = dto.getIsPublic();
     }
 
     @Override
@@ -59,6 +75,6 @@ public class Category {
      */
     public void addUser(User user) {
         this.user = user;
-        user.getCategory().add(this);
+        user.getCategories().add(this);
     }
 }

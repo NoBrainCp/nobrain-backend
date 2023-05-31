@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: ENC(itu2+6u52iN9BbDTvugHyUYS9ZT9L7WE0Ikn5zBqDRveJpsA2b6SD/OuXGK273u0dVU86RTm6urfLusiIULErklql9YSiXAY8jSMflNOgywBMD9dGirryWkQFnsEUJFf9lx8QlAOAV4wdhjmypVwxsRZz1YH74JdUFDYekshyExxE31xM3TMCV/kZa7/7+zs73pDIwDnpmk=)
+    username: ENC(++igq5vlq69jELYCl5i/kg==)
+    password: ENC(PUWPyNf79K7oxgcTV2BDpcqvRpPU58ST)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  redis:
+    host: ENC(8x8LKSr+q33Dl2nmNTosfuUUrDpOhTI5)
+    port: 6379
+
+  jpa:
+    hibernate:
+      ddl-auto: none

@@ -8,7 +8,7 @@ public class FollowResponse {
     @Data
     @Builder
     @NoArgsConstructor
-    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @AllArgsConstructor
     public static class FollowCount {
         private Integer followerCnt;
         private Integer followingCnt;
@@ -19,10 +19,26 @@ public class FollowResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Info {
+        private Long userId;
         private String username;
+        private String profileImage;
 
         public static Info toResponse(User user) {
-            return new Info(user.getUsername());
+            return new Info(user.getId(), user.getName(), user.getProfileImage());
         }
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FollowCard {
+        Long userId;
+        String username;
+        String profileImage;
+        Long bookmarkCount;
+        Long followerCount;
+        Long followingCount;
+        Boolean isFollow;
     }
 }

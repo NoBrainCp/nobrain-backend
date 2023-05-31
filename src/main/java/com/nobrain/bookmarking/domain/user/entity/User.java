@@ -6,22 +6,19 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static javax.persistence.CascadeType.REMOVE;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "users")
 @Entity
-public class User extends BaseTimeEntity implements UserDetails {
+public class User extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
@@ -33,58 +30,39 @@ public class User extends BaseTimeEntity implements UserDetails {
     private String name;
     private String phoneNumber;
     private LocalDate birthDate;
+    private String profileImage;
+    private String oauthId;
 
-    @OneToMany(mappedBy = "user")
-    private List<Category> category;
+    @OneToMany(mappedBy = "user", cascade = REMOVE)
+    private List<Category> categories;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();
 
     @Builder
-    public User(String loginId, String email, String password, String name, String phoneNumber, LocalDate birthDate, List<Category> category, List<String> roles) {
+    public User(Long id, String loginId, String email, String password, String name, String phoneNumber, LocalDate birthDate, String profileImage, String oauthId, List<Category> categories, List<String> roles) {
+        this.id = id;
         this.loginId = loginId;
         this.email = email;
         this.password = password;
         this.name = name;
         this.phoneNumber = phoneNumber;
         this.birthDate = birthDate;
-        this.category = category;
+        this.profileImage = profileImage;
+        this.oauthId = oauthId;
+        this.categories = categories;
         this.roles = roles;
     }
 
-    public void updateName(String name) {
+    public void changeName(String name) {
         this.name = name;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+    public void changePassword(String password) {
+        this.password = password;
     }
 
-    @Override
-    public String getUsername() {
-        return String.valueOf(id);
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public void changeProfileImage(String profileImage) {
+        this.profileImage = profileImage;
     }
 }

@@ -11,11 +11,14 @@ public class BookmarkResponse {
     @NoArgsConstructor
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public static class Info {
+        private Long id;
         private String url;
         private String title;
         private String description;
         private boolean isPublic;
-        private boolean isStar;
+        private boolean isStarred;
+        private String image;
         private LocalDate createdAt;
+        private LocalDate modifiedAt;
     }
 }

@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * Authentication 객체가 필요한 권한을 보유하지 않은 경우 발생
+     * Code 객체가 필요한 권한을 보유하지 않은 경우 발생
      */
     @ExceptionHandler(AccessDeniedException.class)
     protected ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException e) {

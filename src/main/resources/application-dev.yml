@@ -1,0 +1,25 @@
+server:
+  port: 8089
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/nobrain/database/nobrain-h2
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  redis:
+    host: localhost
+    port: 6379

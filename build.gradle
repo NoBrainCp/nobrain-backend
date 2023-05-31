@@ -1,7 +1,16 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.7'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+
+    id 'org.asciidoctor.convert' version '1.5.9.2'
 }
 
 group = 'com.nobrain'
@@ -18,32 +27,88 @@ repositories {
     mavenCentral()
 }
 
+asciidoctor {
+    dependsOn test
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from('$/html5') {
+        into 'static/docs'
+    }
+}
+
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.security:spring-security-test'
+    implementation 'mysql:mysql-connector-java:8.0.28'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-    // redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.3.1.RELEASE'
+    implementation 'ognl:ognl:3.1.12'
 
-    // jwt
+    implementation 'org.mindrot:jbcrypt:0.4'
+
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}"
+
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+    testImplementation 'org.projectlombok:lombok:1.18.22'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
-    // swagger
-    implementation 'io.springfox:springfox-swagger2:2.9.2'
-    implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'net.nurigo:sdk:4.2.7'
+
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.4'
+
+    implementation 'org.jsoup:jsoup:1.15.3'
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+//querydsl start
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+sourceSets {
+    main.java.srcDir querydslDir
+}
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
+}
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+compileQuerydsl.doFirst {
+    if(file(querydslDir).exists() )
+        delete(file(querydslDir))
+}
+//querydsl end

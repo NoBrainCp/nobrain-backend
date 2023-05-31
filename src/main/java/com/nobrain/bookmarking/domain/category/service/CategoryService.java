@@ -1,8 +1,12 @@
 package com.nobrain.bookmarking.domain.category.service;
 
+import com.nobrain.bookmarking.domain.auth.dto.UserPayload;
 import com.nobrain.bookmarking.domain.category.dto.CategoryRequest;
 import com.nobrain.bookmarking.domain.category.dto.CategoryResponse;
+import com.nobrain.bookmarking.domain.category.entity.Category;
 import com.nobrain.bookmarking.domain.category.exception.CategoryNameDuplicationException;
+import com.nobrain.bookmarking.domain.category.exception.CategoryNotFoundException;
+import com.nobrain.bookmarking.domain.category.repository.CategoryQueryRepository;
 import com.nobrain.bookmarking.domain.category.repository.CategoryRepository;
 import com.nobrain.bookmarking.domain.user.entity.User;
 import com.nobrain.bookmarking.domain.user.exception.UserNotFoundException;
@@ -12,34 +16,82 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Service
 public class CategoryService {
 
+    private final CategoryQueryRepository categoryQueryRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
 
-    public List<CategoryResponse.Info> getCategories(String username) {
-        User user = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
-        return categoryRepository.findAllByUser(user).stream()
-                .map(category -> CategoryResponse.Info.builder()
-                .name(category.getName())
-                .description(category.getDescription())
-                .isPublic(category.isPublic())
-                .build())
-                .collect(Collectors.toList());
+    public CategoryResponse.Header getCategory(String username, String categoryName) {
+        User user = findUserByUsername(username);
+        Category category = categoryRepository.findByUserAndName(user, categoryName)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryName));
+
+        return CategoryResponse.Header.toDto(category);
+    }
+
+    public List<CategoryResponse.Info> getCategories(UserPayload myPayload, String username) {
+        Long userId = findUserByUsername(username).getId();
+        boolean isMe = isMe(myPayload.getUserId(), userId);
+        return categoryQueryRepository.findAllCategoryInfoWithCount(username, isMe);
+    }
+
+    public CategoryResponse.Info getCategoryByBookmarkId(Long bookmarkId) {
+        return categoryQueryRepository.findCategoryByBookmarkId(bookmarkId);
+    }
+
+    public Boolean getCategoryIsPublic(UserPayload payload, String categoryName) {
+        User user = findUserByUsername(payload.getUsername());
+        Category category = categoryRepository.findByUserAndName(user, categoryName)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryName));
+        return category.isPublic();
     }
 
     @Transactional
-    public String create(String username, CategoryRequest.Create dto) {
-        if (categoryRepository.existsByName(dto.getName())) {
-            throw new CategoryNameDuplicationException(dto.getName());
-        }
+    public String create(UserPayload payload, CategoryRequest.Info categoryInfo) {
+        User user = findUserByUsername(payload.getUsername());
+        validateCategoryDuplication(user, categoryInfo.getName());
+        return categoryRepository.save(categoryInfo.toEntity(user)).getName();
+    }
 
-        User user = userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
-        return categoryRepository.save(dto.toEntity(user)).getName();
+    @Transactional
+    public void updateCategory(UserPayload payload, String originCategoryName, CategoryRequest.Info categoryInfo) {
+        User user = findUserByUsername(payload.getUsername());
+        Category category = categoryRepository.findByUserAndName(user, originCategoryName)
+                .orElseThrow(() -> new CategoryNotFoundException(originCategoryName));
+
+        validateUpdateCategoryDuplication(user, originCategoryName, categoryInfo.getName());
+        category.update(categoryInfo);
+    }
+
+    @Transactional
+    public void deleteCategory(UserPayload payload, String categoryName) {
+        User user = findUserByUsername(payload.getUsername());
+        categoryRepository.deleteByUserAndName(user, categoryName);
+    }
+
+    private void validateCategoryDuplication(User user, String categoryName) {
+        if (categoryRepository.existsByUserAndName(user, categoryName)) {
+            throw new CategoryNameDuplicationException(categoryName);
+        }
+    }
+
+    private void validateUpdateCategoryDuplication(User user, String originName, String changeName) {
+        if (!originName.equals(changeName) && categoryRepository.existsByUserAndName(user, changeName)) {
+            throw new CategoryNameDuplicationException(changeName);
+        }
+    }
+
+    private User findUserByUsername(String username) {
+        return userRepository.findByName(username).orElseThrow(() -> new UserNotFoundException(username));
+    }
+
+    private boolean isMe(Long myId, Long userId) {
+        return Objects.equals(myId, userId);
     }
 }
