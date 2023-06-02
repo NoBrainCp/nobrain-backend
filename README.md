@@ -133,4 +133,8 @@
 
 ## 🧩 ERD
 
+![ERD](https://github.com/NoBrainCp/nobrain-backend/assets/85760471/4aadc6c1-5d5e-4d94-bdfa-c0d2d423842f)
+
+<br/>
+
 ## 🏛️ Architecture
