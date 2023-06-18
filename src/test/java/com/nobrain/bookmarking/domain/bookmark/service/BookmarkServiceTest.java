@@ -359,7 +359,7 @@ class BookmarkServiceTest extends ServiceTest {
                 .category(category)
                 .build();
 
-        assertThatCode(() -> bookmarkService.updateBookmark(BOOKMARK_ID, request))
+        assertThatCode(() -> bookmarkService.updateBookmark(payload, BOOKMARK_ID, request))
                 .doesNotThrowAnyException();
         assertThat(bookmark).usingRecursiveComparison()
                 .comparingOnlyFields("url", "title", "description")
@@ -388,7 +388,7 @@ class BookmarkServiceTest extends ServiceTest {
         );
 
         // when, then
-        assertThatThrownBy(() -> bookmarkService.updateBookmark(BOOKMARK_ID, request))
+        assertThatThrownBy(() -> bookmarkService.updateBookmark(payload, BOOKMARK_ID, request))
                 .isInstanceOf(BookmarkNotFoundException.class);
 
         verify(bookmarks).findById(bookmark.getId());
