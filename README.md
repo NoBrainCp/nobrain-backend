@@ -21,6 +21,11 @@
 
 <br/>
 
+## 🎬 Demo Video
+[시연 영상](https://youtu.be/hCuEJBDORtE)
+
+<br/>
+
 ## 🪄 Skill Stack
 
 <table>
