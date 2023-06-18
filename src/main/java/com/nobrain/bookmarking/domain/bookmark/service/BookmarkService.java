@@ -100,7 +100,7 @@ public class BookmarkService {
         String metaImage = MetaImageCrawler.getMetaImageFromUrl(requestDto.getUrl());
         Bookmark bookmark = requestDto.toEntity(metaImage, category);
 
-        validateBookmark(requestDto.getUrl(), category);
+//        validateBookmark(requestDto.getUrl(), category);
         bookmarkRepository.save(bookmark);
 
         if (requestDto.getTags() != null) {
@@ -109,14 +109,14 @@ public class BookmarkService {
     }
 
     @Transactional
-    public void updateBookmark(Long bookmarkId, BookmarkRequest.Info requestDto) {
+    public void updateBookmark(UserPayload myPayload, Long bookmarkId, BookmarkRequest.Info requestDto) {
         String url = requestDto.getUrl();
         if (!url.contains("https://")) {
             requestDto.addHttpsToUrl(url);
         }
-
+        User user = findUserByUsername(myPayload.getUsername());
         Bookmark bookmark = findById(bookmarkId);
-        Category category = categoryRepository.findByName(requestDto.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(requestDto.getCategoryName()));
+        Category category = categoryRepository.findByUserAndName(user, requestDto.getCategoryName()).orElseThrow(() -> new CategoryNotFoundException(requestDto.getCategoryName()));
         String metaImage = MetaImageCrawler.getMetaImageFromUrl(requestDto.getUrl());
 
         bookmark.update(requestDto, metaImage, category);

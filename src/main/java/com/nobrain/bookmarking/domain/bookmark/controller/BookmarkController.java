@@ -71,9 +71,10 @@ public class BookmarkController {
     }
 
     @PutMapping("/{bookmarkId}")
-    public CommonResult updateBookmark(@PathVariable Long bookmarkId,
+    public CommonResult updateBookmark(@VerifiedUser UserPayload myPayload,
+                                       @PathVariable Long bookmarkId,
                                        @Valid @RequestBody BookmarkRequest.Info requestDto) {
-        bookmarkService.updateBookmark(bookmarkId, requestDto);
+        bookmarkService.updateBookmark(myPayload, bookmarkId, requestDto);
         return responseService.getSuccessResult();
     }
 

@@ -64,8 +64,8 @@ public class MailService {
     }
 
     public void sendUserLoginIdAsEMail(String mail) {
-        String loginId = userRepository.findByEmail(mail).orElseThrow(() -> new UserEmailNotFoundException(mail)).getLoginId();
-        String text = SEND_LOGIN_ID_MESSAGE_PREFIX + loginId;
+        String username = userRepository.findByEmail(mail).orElseThrow(() -> new UserEmailNotFoundException(mail)).getName();
+        String text = SEND_LOGIN_ID_MESSAGE_PREFIX + username;
         SimpleMailMessage simpleMailMessage = createSimpleMailMessage(mail, SEND_LOGIN_ID_MESSAGE_SUBJECT, text);
 
         mailSender.send(simpleMailMessage);
